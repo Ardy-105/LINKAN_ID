@@ -16,9 +16,4 @@ class AdminController extends Controller
     {
         return view('homeadminS.mylinkan');
     }
-
-    public function digitalProduct()
-    {
-        return view('homeadminS.digital-product');
-    }
 }

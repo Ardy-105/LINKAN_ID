@@ -5,16 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Linkan - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/shared.css') }}">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f6fa;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
         .my-linkan-header {
             background: white;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 10px;
         }
 
         .my-linkan-url {
@@ -22,19 +65,15 @@
             padding: 8px 15px;
             border-radius: 5px;
             flex-grow: 1;
-            margin-right: 10px;
+            color: #666;
         }
 
         .share-button {
-            background: #FF9040;
-            color: white;
+            background: none;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            color: #FF9040;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            padding: 5px;
         }
 
         .your-pages {
@@ -44,9 +83,35 @@
             margin-bottom: 15px;
         }
 
+        .your-pages h2 {
+            font-size: 18px;
+            color: #333;
+        }
+
         .settings-icon {
             color: #666;
             cursor: pointer;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding-right: 40px;
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
         }
 
         .home-button {
@@ -57,12 +122,14 @@
             text-decoration: none;
             display: inline-block;
             margin-bottom: 15px;
+            border: none;
+            cursor: pointer;
         }
 
         .add-block-button {
             background: #FF9040;
             color: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
             border: none;
             width: 100%;
@@ -79,26 +146,11 @@
             margin-top: 20px;
         }
 
-        .block-list h3 {
-            margin-bottom: 15px;
-        }
-
         .block-item {
             background: white;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .block-item:hover {
-            background: #f8f9fa;
-        }
-
-        .block-left {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -109,12 +161,73 @@
             cursor: move;
         }
 
-        .folder-icon {
+        .block-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #FF9040;
+        }
+
+        .block-title {
+            flex-grow: 1;
+            color: #333;
         }
 
         .block-actions {
             color: #666;
+            cursor: pointer;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background: #eee;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            margin-left: 20px;
+        }
+
+        .preview-header {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .phone-preview {
+            background: white;
+            border-radius: 40px;
+            padding: 20px;
+            width: 100%;
+            aspect-ratio: 9/19;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .phone-content {
+            width: 100%;
+            height: 100%;
+            background: #f0f0f0;
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+
+        .profile-circle {
+            width: 80px;
+            height: 80px;
+            background: #ddd;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+
+        .preview-name {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
         }
 
         /* Modal Styles */
@@ -127,25 +240,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-        }
-
-        .modal.active {
-            display: block;
-        }
-
-        .modal.active ~ .container {
-            filter: blur(5px);
-            pointer-events: none;
-        }
-
-        body.modal-open {
-            overflow: hidden;
-        }
-
-        body.modal-open .container {
-            filter: blur(5px);
-            pointer-events: none;
-            transition: filter 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
@@ -160,24 +255,31 @@
         }
 
         .modal-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #eee;
         }
 
         .modal-header h2 {
             font-size: 18px;
             font-weight: 600;
+            color: #333;
         }
 
         .close-button {
             background: none;
             border: none;
             font-size: 24px;
-            cursor: pointer;
             color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-body {
@@ -198,45 +300,61 @@
             background-color: #f5f5f5;
         }
 
-        .block-icon {
-            width: 40px;
-            height: 40px;
+        .block-option .block-icon {
+            width: 48px;
+            height: 48px;
             background: #FFE5D3;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            overflow: hidden;
         }
 
-        .block-icon img {
-            width: 100%;
-            height: 100%;
+        .block-option .block-icon img {
+            width: 24px;
+            height: 24px;
             object-fit: contain;
-            padding: 8px;
         }
 
-        .block-info {
-            flex: 1;
-        }
-
-        .block-info h3 {
+        .block-option .block-info h3 {
             font-size: 16px;
             margin-bottom: 5px;
+            color: #333;
         }
 
-        .block-info p {
+        .block-option .block-info p {
             font-size: 14px;
             color: #666;
             margin: 0;
+        }
+
+        /* Blur effect when modal is open */
+        body.modal-open .container {
+            filter: blur(5px);
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* Coming Soon Block */
+        .block-option.coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .block-option.coming-soon .block-icon {
+            background: #f5f5f5;
         }
     </style>
 </head>
 <body>
     <div class="container">
         @include('homeadminS.sidebar.sidebar')
-        
+
         <div class="main-content">
             <div class="header">
                 <h1>My Linkan</h1>
@@ -249,7 +367,6 @@
                 <div class="my-linkan-url">My Linkan: https://Linkan.id/Budi</div>
                 <button class="share-button">
                     <i class="fas fa-share-alt"></i>
-                    Share
                 </button>
             </div>
 
@@ -258,28 +375,63 @@
                 <i class="fas fa-cog settings-icon"></i>
             </div>
 
-            <a href="#" class="home-button">Home</a>
+            <div class="search-box">
+                <input type="text" placeholder="Paste Long URL here">
+                <i class="fas fa-search search-icon"></i>
+            </div>
 
-            <button class="add-block-button">
+            <button class="home-button">Home</button>
+
+            <button class="add-block-button" onclick="showAddBlockModal()">
                 <i class="fas fa-plus"></i>
                 Add new block
             </button>
 
-            <div class="block-list" style="display: none;">
-                <h3>Block List</h3>
-                <div id="blockListContainer">
-                    <!-- Block items will be added here dynamically -->
+            <div class="block-list">
+                <div class="block-item">
+                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <div class="block-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="block-title">Pembelajaran</div>
+                    <div class="block-actions">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                </div>
+
+                <div class="block-item">
+                    <i class="fas fa-grip-vertical drag-handle"></i>
+                    <div class="block-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="block-title">Book</div>
+                    <div class="block-actions">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div class="preview-header">
+                <h3>Page Preview</h3>
+            </div>
+            <div class="phone-preview">
+                <div class="phone-content">
+                    <div class="profile-circle"></div>
+                    <div class="preview-name">Budi</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal untuk Add New Block -->
-    <div id="addBlockModal" class="modal" style="display: none;">
+    <div id="addBlockModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Add new block</h2>
-                <button class="close-button" onclick="closeModal()">&times;</button>
+                <button class="close-button" onclick="closeModal()">×</button>
             </div>
             <div class="modal-body">
                 <div class="block-option" onclick="selectBlockType('digital')">
@@ -311,31 +463,38 @@
                         <p>Share your skills and knowledge</p>
                     </div>
                 </div>
+
+                <div class="block-option coming-soon">
+                    <div class="block-icon">
+                        <i class="fas fa-question" style="color: #FF9040; font-size: 24px;"></i>
+                    </div>
+                    <div class="block-info">
+                        <h3>COMMING SOON</h3>
+                        <p>Let's see</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Fungsi untuk menampilkan modal
-        document.querySelector('.add-block-button').addEventListener('click', function() {
+        function showAddBlockModal() {
             document.getElementById('addBlockModal').style.display = 'block';
             document.body.classList.add('modal-open');
-        });
+        }
 
-        // Fungsi untuk menutup modal
         function closeModal() {
             document.getElementById('addBlockModal').style.display = 'none';
             document.body.classList.remove('modal-open');
         }
 
-        // Menutup modal jika user mengklik di luar modal
+        // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.className === 'modal') {
                 closeModal();
             }
         }
 
-        // Fungsi untuk memilih tipe block
         function selectBlockType(type) {
             switch(type) {
                 case 'digital':

@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class DigitalProductController extends Controller
 {
+    public function create()
+    {
+        return view('homeadminS.digital-product');
+    }
+
     public function store(Request $request)
     {
         $request->validate([

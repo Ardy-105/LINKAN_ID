@@ -5,6 +5,7 @@ use App\Http\Controllers\login\LoginController;
 use App\Http\Controllers\login\RegisterController;
 use App\Http\Controllers\Auth\LoginController as GoogleLoginController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DigitalProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,7 +43,10 @@ Route::get('/faq', function () {
 // Admin Routes
 Route::get('/homeadminS/beranda', [AdminController::class, 'beranda'])->name('beranda.admins');
 Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
-Route::get('/homeadminS/digital-product', [AdminController::class, 'digitalProduct'])->name('digital-product');
+
+// Digital Product Routes
+Route::get('/homeadminS/digital-product/create', [DigitalProductController::class, 'create'])->name('digital-product.create');
+Route::post('/homeadminS/digital-product', [DigitalProductController::class, 'store'])->name('digital-product.store');
 
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
