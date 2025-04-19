@@ -8,12 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/homeadminS/beranda';
 
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/dashboard');
+            return redirect()->route('beranda.admins');
         }
         return view('login');
     }
@@ -27,7 +27,7 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            return redirect()->route('beranda.admins');
         }
 
         return back()->withErrors([
@@ -43,4 +43,4 @@ class LoginController extends Controller
 
         return redirect('/login');
     }
-} 
+}

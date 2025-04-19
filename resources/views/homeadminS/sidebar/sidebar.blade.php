@@ -1,5 +1,5 @@
 <style>
-    
+
         /* Sidebar Styles */
         .sidebar {
             width: 250px;
@@ -36,8 +36,8 @@
 </style>
 <div class="sidebar">
     <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" class="logo">
-    
-    <a href="{{ route('beranda.admnins') }}"><i class="fas fa-home"></i>Home</a>
+
+    <a href="{{ route('beranda.admins') }}"><i class="fas fa-home"></i>Home</a>
     <a href="{{ route('mylinkan') }}"><i class="fas fa-user"></i>My Linkan</a>
     <a href="#"><i class="fas fa-paint-brush"></i>Appearance</a>
     <a href="#"><i class="fas fa-chart-bar"></i>Statistic</a>
