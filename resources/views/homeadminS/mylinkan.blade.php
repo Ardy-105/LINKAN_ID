@@ -18,9 +18,11 @@
         }
 
         .container {
-            display: flex;
-            min-height: 100vh;
-        }
+    display: flex;
+    min-height: 100vh;
+    gap: 20px; /* Tambahan opsional untuk jarak antar elemen */
+}
+
 
         .main-content {
             flex: 1;
@@ -406,9 +408,7 @@
                 </div>
             @endif
             </div>
-        </div>
-
-        <!-- Preview Section -->
+             <!-- Preview Section -->
         <div class="preview-section">
             <div class="preview-header">
                 <h3>Page Preview</h3>
@@ -419,6 +419,7 @@
                     <div class="preview-name">Budi</div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 
