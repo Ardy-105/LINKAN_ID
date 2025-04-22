@@ -278,17 +278,42 @@
 <body>
     <div class="container">
         @include('homeadminS.sidebar.sidebar')
-        
+
         <div class="main-content">
             <div class="page-header">
                 <h1 class="page-title">Add Digital Product</h1>
             </div>
 
-            <form id="digitalProductForm" action="{{ route('digital-product.store') }}" method="POST" enctype="multipart/form-data">
+            <!-- ✅ Alert messages -->
+            @if (session('success'))
+                <div class="alert alert-success" style="background: #e0ffe0; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #007500;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger" style="background: #ffe3e3; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+                    <ul style="margin: 0; padding-left: 20px; color: #b30000;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            
+            <form id="digitalProductForm"
+      action="{{ isset($product) ? route('digital-product.update', $product->id) : route('digital-product.store') }}"
+      method="POST" enctype="multipart/form-data">
+    @csrf
+    @if (isset($product))
+        @method('PUT')
+    @endif
+
                 @csrf
                 <div class="content-card">
                     <h2 class="card-title">Details</h2>
-                    
+
                     <div class="form-group">
                         <label>Image</label>
                         <div class="image-upload" onclick="document.getElementById('productImage').click()">
@@ -301,12 +326,12 @@
 
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Title">
+                        <input type="text" name="title" class="form-control" placeholder="Title" value="{{ old('title') }}">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Description"></textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Description">{{ old('description') }}</textarea>
                     </div>
 
                     <div class="form-group">
@@ -319,7 +344,7 @@
                                 <button type="button" class="platform-button" data-platform="other">Other</button>
                             </div>
                             <input type="hidden" name="platform_type" value="upload">
-                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: none;">
+                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: none;" value="{{ old('platform_url') }}">
                             <div class="select-file-button form-control" onclick="document.getElementById('platform_file').click()" style="text-align: center; cursor: pointer;">
                                 <i class="fas fa-paperclip"></i> <span id="selected-file-name">Select File</span>
                             </div>
@@ -330,12 +355,14 @@
 
                 <div class="content-card">
                     <h2 class="card-title">Pricing</h2>
-                    
+
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <label style="margin: 0;">Allow Customer to pay what they want</label>
+                            <!-- ✅ Hidden input + checkbox -->
+                            <input type="hidden" name="pay_what_want" value="0">
                             <label class="toggle-switch">
-                                <input type="checkbox" name="pay_what_want">
+                                <input type="checkbox" name="pay_what_want" value="1" {{ old('pay_what_want') ? 'checked' : '' }}>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -345,7 +372,7 @@
                         <div class="price-group">
                             <div class="price-input">
                                 <label>Price</label>
-                                <input type="number" name="price" class="form-control" placeholder="0">
+                                <input type="number" name="price" class="form-control" placeholder="0" value="{{ old('price') }}">
                             </div>
                             <div class="currency-input">
                                 <label>Currency</label>
@@ -356,27 +383,29 @@
 
                     <div class="form-group">
                         <label>Sale Price (Optional)</label>
-                        <input type="number" name="sale_price" class="form-control" placeholder="Sale Price (Optional)">
+                        <input type="number" name="sale_price" class="form-control" placeholder="Sale Price" value="{{ old('sale_price') }}">
                     </div>
 
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <label style="margin: 0;">Item Quantity</label>
+                            <!-- ✅ Hidden input + checkbox -->
+                            <input type="hidden" name="has_quantity_limit" value="0">
                             <label class="toggle-switch">
-                                <input type="checkbox" name="has_quantity_limit">
+                                <input type="checkbox" name="has_quantity_limit" value="1" {{ old('has_quantity_limit') ? 'checked' : '' }}>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
                         <div id="quantityStatus" style="color: #666; margin-bottom: 10px;">Unlimited</div>
-                        <input type="number" name="quantity" class="form-control" placeholder="Enter maximum quantity" style="display: none;">
+                        <input type="number" name="quantity" class="form-control" placeholder="Enter maximum quantity" style="display: none;" value="{{ old('quantity') }}">
                     </div>
 
                     <div class="form-group">
                         <label>Purchase Button</label>
                         <select name="button_text" class="select-dropdown">
-                            <option value="buy_now">Buy Now</option>
-                            <option value="purchase">Purchase</option>
-                            <option value="get_now">Get Now</option>
+                            <option value="buy_now" {{ old('button_text') == 'buy_now' ? 'selected' : '' }}>Buy Now</option>
+                            <option value="purchase" {{ old('button_text') == 'purchase' ? 'selected' : '' }}>Purchase</option>
+                            <option value="get_now" {{ old('button_text') == 'get_now' ? 'selected' : '' }}>Get Now</option>
                         </select>
                     </div>
                 </div>
@@ -413,13 +442,13 @@
             button.addEventListener('click', function() {
                 document.querySelectorAll('.platform-button').forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 const platform = this.getAttribute('data-platform');
                 const urlInput = document.querySelector('.platform-input');
                 const fileButton = document.querySelector('.select-file-button');
-                
+
                 document.querySelector('input[name="platform_type"]').value = platform;
-                
+
                 if (platform === 'upload') {
                     urlInput.style.display = 'none';
                     fileButton.style.display = 'block';
@@ -431,18 +460,22 @@
         });
 
         // Toggle quantity input
-        document.querySelector('input[name="has_quantity_limit"]').addEventListener('change', function() {
-            const quantityInput = document.querySelector('input[name="quantity"]');
-            const quantityStatus = document.querySelector('#quantityStatus');
-            
-            if (this.checked) {
+        const quantityToggle = document.querySelector('input[name="has_quantity_limit"]');
+        const quantityInput = document.querySelector('input[name="quantity"]');
+        const quantityStatus = document.querySelector('#quantityStatus');
+
+        function toggleQuantityInput() {
+            if (quantityToggle.checked) {
                 quantityInput.style.display = 'block';
                 quantityStatus.style.display = 'none';
             } else {
                 quantityInput.style.display = 'none';
                 quantityStatus.style.display = 'block';
             }
-        });
+        }
+
+        toggleQuantityInput(); // run on page load
+        quantityToggle.addEventListener('change', toggleQuantityInput);
     </script>
 </body>
-</html> 
+</html>

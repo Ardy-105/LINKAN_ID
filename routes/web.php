@@ -48,6 +48,15 @@ Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('
 Route::get('/homeadminS/digital-product/create', [DigitalProductController::class, 'create'])->name('digital-product.create');
 Route::post('/homeadminS/digital-product', [DigitalProductController::class, 'store'])->name('digital-product.store');
 
+
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/digital-products/{id}/edit', [DigitalProductController::class, 'edit'])->name('digital-products.edit');
+    Route::put('/digital-products/{id}', [DigitalProductController::class, 'update'])->name('digital-products.update');
+    Route::resource('digital-product', DigitalProductController::class);
+
+});
+

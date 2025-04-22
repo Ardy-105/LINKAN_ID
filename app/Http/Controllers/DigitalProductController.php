@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DigitalProduct;
 use Illuminate\Http\Request;
+use App\Models\DigitalProduct;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DigitalProductController extends Controller
 {
@@ -17,44 +17,89 @@ class DigitalProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'platform_type' => 'required|in:upload,dropbox,gdrive,other',
-            'platform_url' => 'required_unless:platform_type,upload|nullable|url',
-            'platform_file' => 'required_if:platform_type,upload|nullable|file|max:10240',
-            'price' => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'has_quantity_limit' => 'boolean',
-            'quantity' => 'required_if:has_quantity_limit,1|nullable|integer|min:1',
-            'button_text' => 'required|string|max:50'
+            'description' => 'nullable|string',
+            'platform_type' => 'required|string|in:upload,dropbox,gdrive,other',
+            'platform_url' => 'nullable|url|required_if:platform_type,dropbox,gdrive,other',
+            'platform_file' => 'nullable|file|mimes:pdf,zip,rar|required_if:platform_type,upload',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'has_quantity_limit' => 'nullable|boolean',
+            'quantity' => 'nullable|integer|required_if:has_quantity_limit,1',
+            'button_text' => 'required|string',
         ]);
 
-        // Handle image upload
-        $imagePath = $request->file('image')->store('product-images', 'public');
+        $data = $request->only([
+            'title', 'description', 'platform_type', 'platform_url',
+            'price', 'sale_price', 'has_quantity_limit', 'quantity', 'button_text'
+        ]);
 
-        // Handle platform file if uploaded
-        $platformFilePath = null;
-        if ($request->platform_type === 'upload' && $request->hasFile('platform_file')) {
-            $platformFilePath = $request->file('platform_file')->store('product-files', 'public');
+        $data['user_id'] = Auth::id(); // ID user yang sedang login
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
+            $data['image'] = $imagePath;
         }
 
-        // Create digital product
-        DigitalProduct::create([
-            'user_id' => Auth::id(),
-            'image' => $imagePath,
-            'title' => $request->title,
-            'description' => $request->description,
-            'platform_type' => $request->platform_type,
-            'platform_url' => $request->platform_url,
-            'platform_file' => $platformFilePath,
-            'price' => $request->price,
-            'sale_price' => $request->sale_price,
-            'has_quantity_limit' => $request->has_quantity_limit ?? false,
-            'quantity' => $request->has_quantity_limit ? $request->quantity : null,
-            'button_text' => $request->button_text
-        ]);
+        if ($request->platform_type === 'upload' && $request->hasFile('platform_file')) {
+            $filePath = $request->file('platform_file')->store('digital_products', 'public');
+            $data['platform_file'] = $filePath;
+        }
 
-        return redirect()->route('mylinkan')->with('success', 'Digital product has been added successfully');
+        $data['has_quantity_limit'] = $request->has('has_quantity_limit');
+
+        DigitalProduct::create($data);
+
+        return redirect()->route('mylinkan')->with('success', 'Digital product added successfully!');
+    }
+
+    public function edit($id)
+    {
+        $product = DigitalProduct::findOrFail($id);
+        return view('homeadminS.digital-product', compact('product'));
+    }
+    
+    public function update(Request $request, $id)
+    {
+        $product = DigitalProduct::findOrFail($id);
+    
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'platform_type' => 'required|string',
+            'platform_url' => 'nullable|string',
+            'price' => 'nullable|numeric',
+            'currency' => 'required|string',
+            'sale_price' => 'nullable|numeric',
+            'pay_what_want' => 'nullable|boolean',
+            'has_quantity_limit' => 'nullable|boolean',
+            'quantity' => 'nullable|integer',
+            'button_text' => 'nullable|string',
+            'image' => 'nullable|image',
+            'platform_file' => 'nullable|file',
+        ]);
+    
+        // Upload baru jika ada
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('product_images', 'public');
+        }
+    
+        if ($request->hasFile('platform_file')) {
+            $data['platform_file'] = $request->file('platform_file')->store('platform_files', 'public');
+        }
+    
+        $product->update($data);
+    
+        return redirect()->route('mylinkan.index')->with('success', 'Product updated successfully!');
+    }
+    
+
+    public function destroy($id)
+    {
+        $product = DigitalProduct::findOrFail($id);
+        $product->delete();
+
+        return redirect()->back()->with('success', 'Produk berhasil dihapus.');
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\DigitalProduct;
 
 class AdminController extends Controller
 {
@@ -14,6 +14,9 @@ class AdminController extends Controller
 
     public function myLinkan()
     {
-        return view('homeadminS.mylinkan');
+        // Ambil semua produk (atau bisa dibatasi jika perlu)
+        $digitalProducts = DigitalProduct::latest()->get();
+
+        return view('homeadminS.mylinkan', compact('digitalProducts'));
     }
 }

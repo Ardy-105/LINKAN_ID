@@ -18,9 +18,11 @@
         }
 
         .container {
-            display: flex;
-            min-height: 100vh;
-        }
+    display: flex;
+    min-height: 100vh;
+    gap: 20px; /* Tambahan opsional untuk jarak antar elemen */
+}
+
 
         .main-content {
             flex: 1;
@@ -386,33 +388,27 @@
                 <i class="fas fa-plus"></i>
                 Add new block
             </button>
+                        @if($digitalProducts->count())
+                <div class="block-list">
+                    <h3 style="margin-bottom: 10px; color: #333;">Produk Digital Terbaru</h3>
+                    @foreach($digitalProducts as $product)
+                    <div class="block-item" onclick="showActionModal({{ $product->id }}, '{{ $product->title }}')">
 
-            <div class="block-list">
-                <div class="block-item">
-                    <i class="fas fa-grip-vertical drag-handle"></i>
-                    <div class="block-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="block-title">Pembelajaran</div>
-                    <div class="block-actions">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
-                </div>
 
-                <div class="block-item">
-                    <i class="fas fa-grip-vertical drag-handle"></i>
-                    <div class="block-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <div class="block-title">Book</div>
-                    <div class="block-actions">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </div>
+                            <i class="fas fa-grip-vertical drag-handle"></i>
+                            <div class="block-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="block-title">{{ $product->title }}</div>
+                            <div class="block-actions">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
+            @endif
             </div>
-        </div>
-
-        <!-- Preview Section -->
+             <!-- Preview Section -->
         <div class="preview-section">
             <div class="preview-header">
                 <h3>Page Preview</h3>
@@ -423,6 +419,7 @@
                     <div class="preview-name">Budi</div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 
@@ -476,6 +473,43 @@
             </div>
         </div>
     </div>
+    <div id="actionModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Action</h2>
+            <button class="close-button" onclick="closeActionModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Tombol Edit dihapus -->
+            <form id="deleteForm" method="POST" action="">
+                @csrf
+                @method('DELETE')
+                <button type="button" class="add-block-button" style="background-color: #e3342f;" onclick="confirmDelete()">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id="confirmDeleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Konfirmasi Hapus</h2>
+            <button class="close-button" onclick="closeConfirmDeleteModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <p id="deleteMessage" style="margin-bottom: 20px;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button onclick="closeConfirmDeleteModal()" class="add-block-button" style="background-color: gray;">No</button>
+                <form id="finalDeleteForm" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="add-block-button" style="background-color: #e3342f;">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script>
         function showAddBlockModal() {
@@ -508,6 +542,58 @@
                     break;
             }
         }
+
+        function showActionModal(productId, productTitle) {
+    // Simpan ID dan judul produk untuk keperluan penghapusan
+    window.currentDeleteId = productId;
+    window.currentDeleteTitle = productTitle;
+
+    // Set action tombol Delete untuk modal
+    document.getElementById('deleteForm').action = `/digital-product/${productId}`;
+
+    // Tampilkan modal
+    document.getElementById('actionModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+}
+
+function closeActionModal() {
+    // Menutup modal
+    document.getElementById('actionModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+function confirmDelete() {
+    // Menampilkan pesan konfirmasi
+    const title = window.currentDeleteTitle;
+    const productId = window.currentDeleteId;
+
+    document.getElementById('deleteMessage').innerText = `Apakah kamu yakin ingin menghapus produk "${title}"?`;
+    document.getElementById('finalDeleteForm').action = `/digital-product/${productId}`;
+
+    // Menutup modal sebelumnya dan menampilkan konfirmasi hapus
+    closeActionModal();
+    document.getElementById('confirmDeleteModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+}
+
+
+function confirmDelete() {
+    const title = window.currentDeleteTitle;
+    const productId = window.currentDeleteId;
+
+    document.getElementById('deleteMessage').innerText = `Apakah kamu yakin ingin menghapus produk "${title}"?`;
+    document.getElementById('finalDeleteForm').action = `/digital-product/${productId}`;
+
+    closeActionModal(); // Tutup modal sebelumnya
+    document.getElementById('confirmDeleteModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+}
+
+function closeConfirmDeleteModal() {
+    document.getElementById('confirmDeleteModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
     </script>
 </body>
 </html>
