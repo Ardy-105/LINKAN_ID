@@ -6,6 +6,7 @@ use App\Http\Controllers\login\RegisterController;
 use App\Http\Controllers\Auth\LoginController as GoogleLoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DigitalProductController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,22 +42,21 @@ Route::get('/faq', function () {
 })->name('FAQ');
 
 // Admin Routes
-Route::get('/homeadminS/beranda', [AdminController::class, 'beranda'])->name('beranda.admins');
+Route::get('/homeadminS/beranda', [DashboardController::class, 'beranda'])
+    ->name('beranda.admins')
+    ->middleware('auth');
 Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
 
-// Digital Product Routes
-Route::get('/homeadminS/digital-product/create', [DigitalProductController::class, 'create'])->name('digital-product.create');
-Route::post('/homeadminS/digital-product', [DigitalProductController::class, 'store'])->name('digital-product.store');
-
+// Digital Product Routes - semua route digital product dalam middleware auth
+Route::middleware(['auth'])->group(function () {
+    Route::resource('digital-product', DigitalProductController::class);
+});
 
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/digital-products/{id}/edit', [DigitalProductController::class, 'edit'])->name('digital-products.edit');
-    Route::put('/digital-products/{id}', [DigitalProductController::class, 'update'])->name('digital-products.update');
-    Route::resource('digital-product', DigitalProductController::class);
-
-});
+Route::get('/get-chart-data', [DashboardController::class, 'getChartData'])
+    ->name('dashboard.chart-data')
+    ->middleware('auth');
 
