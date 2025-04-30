@@ -14,8 +14,8 @@ class AdminController extends Controller
 
     public function myLinkan()
     {
-        // Ambil semua produk (atau bisa dibatasi jika perlu)
-        $digitalProducts = DigitalProduct::latest()->get();
+
+        $digitalProducts = DigitalProduct::where('user_id', auth()->id())->latest()->get();
 
         return view('homeadminS.mylinkan', compact('digitalProducts'));
     }

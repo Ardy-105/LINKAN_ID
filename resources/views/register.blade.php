@@ -224,16 +224,32 @@
             <div class="register-box">
                 <h2>Create your account</h2>
                 
+                @if(session('error'))
+                    <div class="error-message" style="margin-bottom: 20px;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                
                 <form method="POST" action="{{ route('register.submit') }}">
                     @csrf
+                    @if(isset($googleData))
+                        <input type="hidden" name="google_id" value="{{ $googleData['google_id'] }}">
+                    @endif
+
                     <div class="form-group">
                         <label for="name">Full Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your full name" value="{{ old('name') }}" required>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" value="{{ $googleData['name'] ?? old('name') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Choose your username" value="{{ old('username') }}" required>
+                        <small style="color: #666; font-size: 12px;">This will be your link: linkan.id/username</small>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Example@gmail.com" value="{{ old('email') }}" required>
+                        <input type="email" id="email" name="email" placeholder="Example@gmail.com" value="{{ $googleData['email'] ?? old('email') }}" required>
                     </div>
 
                     <div class="form-group">
@@ -247,6 +263,10 @@
                     </div>
 
                     @error('name')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+
+                    @error('username')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
 
