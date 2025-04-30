@@ -345,6 +345,12 @@
             <div class="login-box">
                 <h2>Sign in to your account</h2>
                 
+                @if(session('success'))
+                    <div class="success-message" style="background: #e0ffe0; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #007500;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                
                 <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
                     <div class="form-group">
