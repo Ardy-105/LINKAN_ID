@@ -44,12 +44,4 @@
     <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
     <a href="#"><i class="fas fa-box"></i>My Purchase</a>
     <a href="#"><i class="fas fa-cog"></i>Settings</a>
-    <a href="#"><i class="fas fa-users"></i>Affiliates</a>
-
-    <div class="marketing-tools">
-        <h3>MARKETING TOOLS</h3>
-        <a href="#"><i class="fas fa-envelope"></i>E-Mail Marketing</a>
-        <a href="#"><i class="fab fa-whatsapp"></i>WhatsApp</a>
-        <a href="#"><i class="fas fa-ticket-alt"></i>Vouchers</a>
-    </div>
 </div>
