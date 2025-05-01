@@ -43,6 +43,7 @@
     <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
     <a href="#"><i class="fas fa-box"></i>My Purchase</a>
     <a href="#"><i class="fas fa-cog"></i>Settings</a>
+<<<<<<< HEAD
     <a href="#"><i class="fas fa-users"></i>Affiliates</a>
 
     <div class="marketing-tools">
@@ -57,4 +58,6 @@
             </span>
         </a>
     </div>
+=======
+>>>>>>> 3575b8d2c43ef489f143c13b5f7b72f67a85e5d0
 </div>

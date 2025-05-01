@@ -361,11 +361,6 @@
                     <div class="number">{{ $lifetimeOrders }}</div>
                 </div>
                 <div class="summary-card">
-                    <i class="fas fa-users"></i>
-                    <div class="label">Affiliate Product</div>
-                    <div class="number">{{ $affiliateProducts }}</div>
-                </div>
-                <div class="summary-card">
                     <i class="fas fa-chart-line"></i>
                     <div class="label">Lifetime sales (IDR)</div>
                     <div class="number">{{ number_format($lifetimeSales, 0, ',', '.') }}</div>
