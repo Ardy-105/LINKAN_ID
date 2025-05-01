@@ -43,14 +43,8 @@
     <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
     <a href="#"><i class="fas fa-box"></i>My Purchase</a>
     <a href="#"><i class="fas fa-cog"></i>Settings</a>
-<<<<<<< HEAD
-    <a href="#"><i class="fas fa-users"></i>Affiliates</a>
 
     <div class="marketing-tools">
-        <h3>MARKETING TOOLS</h3>
-        <a href="#"><i class="fas fa-envelope"></i>E-Mail Marketing</a>
-        <a href="#"><i class="fab fa-whatsapp"></i>WhatsApp</a>
-        <a href="#"><i class="fas fa-ticket-alt"></i>Vouchers</a>
         <a href="{{ route('welcome') }}">
             <span style="display: flex; align-items: center;">
                 <img src="{{ asset('images/logout.png') }}" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
@@ -58,6 +52,4 @@
             </span>
         </a>
     </div>
-=======
->>>>>>> 3575b8d2c43ef489f143c13b5f7b72f67a85e5d0
 </div>
