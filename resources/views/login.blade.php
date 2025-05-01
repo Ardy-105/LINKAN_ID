@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Linkan</title>
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
             * {
@@ -344,6 +344,12 @@
             
             <div class="login-box">
                 <h2>Sign in to your account</h2>
+                
+                @if(session('success'))
+                    <div class="success-message" style="background: #e0ffe0; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #007500;">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 
                 <form method="POST" action="{{ route('login.submit') }}">
                     @csrf

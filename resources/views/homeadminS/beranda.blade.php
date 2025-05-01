@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linkan Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -358,11 +359,6 @@
                     <i class="fas fa-shopping-cart"></i>
                     <div class="label">Lifetime Orders</div>
                     <div class="number">{{ $lifetimeOrders }}</div>
-                </div>
-                <div class="summary-card">
-                    <i class="fas fa-users"></i>
-                    <div class="label">Affiliate Product</div>
-                    <div class="number">{{ $affiliateProducts }}</div>
                 </div>
                 <div class="summary-card">
                     <i class="fas fa-chart-line"></i>

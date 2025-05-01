@@ -36,7 +36,6 @@
 </style>
 <div class="sidebar">
     <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" class="logo">
-
     <a href="{{ route('beranda.admins') }}"><i class="fas fa-home"></i>Home</a>
     <a href="{{ route('mylinkan') }}"><i class="fas fa-user"></i>My Linkan</a>
     <a href="#"><i class="fas fa-paint-brush"></i>Appearance</a>
@@ -44,12 +43,13 @@
     <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
     <a href="#"><i class="fas fa-box"></i>My Purchase</a>
     <a href="#"><i class="fas fa-cog"></i>Settings</a>
-    <a href="#"><i class="fas fa-users"></i>Affiliates</a>
 
     <div class="marketing-tools">
-        <h3>MARKETING TOOLS</h3>
-        <a href="#"><i class="fas fa-envelope"></i>E-Mail Marketing</a>
-        <a href="#"><i class="fab fa-whatsapp"></i>WhatsApp</a>
-        <a href="#"><i class="fas fa-ticket-alt"></i>Vouchers</a>
+        <a href="{{ route('welcome') }}">
+            <span style="display: flex; align-items: center;">
+                <img src="{{ asset('images/logout.png') }}" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
+                LogOut
+            </span>
+        </a>
     </div>
 </div>
