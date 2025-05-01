@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Linkan - Dashboard</title>
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -367,7 +367,9 @@
             </div>
 
             <div class="my-linkan-header">
-                <div class="my-linkan-url">My Linkan: https://Linkan.id/Budi</div>
+                <div class="my-linkan-url">
+                    My Linkan: <a href="https://Linkan.id/{{ Auth::user()->username }}">https://Linkan.id/{{ Auth::user()->username }}</a>
+                </div>
                 <button class="share-button">
                     <i class="fas fa-share-alt"></i>
                 </button>
