@@ -189,7 +189,7 @@
             padding: 20px;
             border-radius: 10px;
             width: 300px;
-            margin-left: 20px;
+            height: fit-content;
         }
 
         .preview-header {
@@ -225,12 +225,77 @@
             background: #ddd;
             border-radius: 50%;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .preview-name {
             font-size: 18px;
             color: #333;
             margin-bottom: 10px;
+        }
+
+        .preview-products {
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-product-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .preview-product-image {
+            width: 40px;
+            height: 40px;
+            background: #FFE5D3;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-product-image i {
+            color: #FF9040;
+            font-size: 20px;
+        }
+
+        .preview-product-info {
+            flex: 1;
+        }
+
+        .preview-product-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-product-button {
+            background: #FF9040;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: none;
         }
 
         /* Modal Styles */
@@ -413,20 +478,48 @@
                 </div>
             @endif
             </div>
-             <!-- Preview Section -->
-        <div class="preview-section">
-            <div class="preview-header">
-                <h3>Page Preview</h3>
-            </div>
-            <div class="phone-preview">
-                <div class="phone-content">
-                    <div class="profile-circle"></div>
-                    <div class="preview-name">Budi</div>
-                </div>
-            </div>
+    <!-- Preview Section -->
+    <div class="preview-section">
+        <div class="preview-header">
+            <h3>Page Preview</h3>
         </div>
+        <div class="phone-preview">
+            <div class="phone-content">
+                <div class="profile-circle">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile">
+                    @else
+                        <i class="fas fa-user"></i>
+                    @endif
+                </div>
+                <div class="preview-name">{{ Auth::user()->name }}</div>
+                @if(Auth::user()->bio)
+                    <p style="color: #666; font-size: 14px; text-align: center;">{{ Auth::user()->bio }}</p>
+                @endif
+
+                @if($digitalProducts->count() > 0)
+                    <div class="preview-products">
+                        @foreach($digitalProducts as $product)
+                            <div class="preview-product-item">
+                                <div class="preview-product-image">
+                                    @if($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
+                                    @else
+                                        <i class="fas fa-file-alt"></i>
+                                    @endif
+                                </div>
+                                <div class="preview-product-info">
+                                    <div class="preview-product-title">{{ $product->title }}</div>
+                                </div>
+                                <button class="preview-product-button">{{ $product->button_text ?? 'Beli' }}</button>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
+</div>
 
     <!-- Modal untuk Add New Block -->
     <div id="addBlockModal" class="modal">
