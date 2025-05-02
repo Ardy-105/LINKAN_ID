@@ -40,10 +40,8 @@ class RegisterController extends Controller
             $userData['google_id'] = $request->google_id;
         }
 
-        $user = User::create($userData);
+        User::create($userData);
 
-        Auth::login($user);
-
-        return redirect()->route('beranda.admins')->with('success', 'Registrasi berhasil!');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login dengan akun Anda.');
     }
 } 
