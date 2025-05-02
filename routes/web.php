@@ -7,6 +7,12 @@ use App\Http\Controllers\Auth\LoginController as GoogleLoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DigitalProductController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ShortlinkController;
+
+Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index'); // form input
+Route::post('/shorten', [ShortlinkController::class, 'store']); // simpan link
+Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
+
 
 Route::get('/', function () {
     return view('welcome');
