@@ -79,43 +79,16 @@
             padding: 5px;
         }
 
-        .your-pages {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .your-pages h2 {
-            font-size: 18px;
-            color: #333;
-        }
+    
 
         .settings-icon {
             color: #666;
             cursor: pointer;
         }
 
-        .search-box {
-            position: relative;
-            margin-bottom: 15px;
-        }
+  
 
-        .search-box input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding-right: 40px;
-        }
-
-        .search-box .search-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-        }
+ 
 
         .home-button {
             background: #FF9040;
@@ -440,16 +413,6 @@
                 <button class="share-button">
                     <i class="fas fa-share-alt"></i>
                 </button>
-            </div>
-
-            <div class="your-pages">
-                <h2>Your Pages</h2>
-                <i class="fas fa-cog settings-icon"></i>
-            </div>
-
-            <div class="search-box">
-                <input type="text" placeholder="Paste Long URL here">
-                <i class="fas fa-search search-icon"></i>
             </div>
 
             <button class="home-button">Home</button>
