@@ -38,20 +38,40 @@
             border-top: 3px solid #000;
             margin: 15px 0;
         }
+/* Tambahkan ini ke dalam tag <style> di bagian atas */
+    .sidebar a.active {
+    background-color: #FF9040;
+    color: white;
+}
 
 </style>
 <div class="sidebar">
     <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" class="logo">
-    <a href="{{ route('beranda.admins') }}"><i class="fas fa-home"></i>Home</a>
-    <a href="{{ route('mylinkan') }}"><i class="fas fa-user"></i>My Linkan</a>
-    <a href="{{ route('appearance') }}"><i class="fas fa-paint-brush"></i>Appearance</a>
-    <a href="{{ route('shortlink.index') }}"><i class="fas fa-link"></i>Shortlink</a>
-    <a href="#"><i class="fas fa-chart-bar"></i>Statistic</a>
-    <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
-    <a href="#"><i class="fas fa-box"></i>My Purchase</a>
-    <a href="{{ route('settings') }}"><i class="fas fa-cog"></i>Settings</a>
+    <a href="{{ route('beranda.admins') }}" class="{{ request()->routeIs('beranda.admins') ? 'active' : '' }}">
+        <i class="fas fa-home"></i>Home
+    </a>
+    <a href="{{ route('mylinkan') }}" class="{{ request()->routeIs('mylinkan') ? 'active' : '' }}">
+        <i class="fas fa-user"></i>My Linkan
+    </a>
+    <a href="{{ route('appearance') }}" class="{{ request()->routeIs('appearance') ? 'active' : '' }}">
+        <i class="fas fa-paint-brush"></i>Appearance
+    </a>
+    <a href="{{ route('shortlink.index') }}" class="{{ request()->routeIs('shortlink.index') ? 'active' : '' }}">
+        <i class="fas fa-link"></i>Shortlink
+    </a>
+    <a href="#" class="{{ request()->routeIs('statistic') ? 'active' : '' }}">
+        <i class="fas fa-chart-bar"></i>Statistic
+    </a>
+    <a href="#" class="{{ request()->routeIs('orders') ? 'active' : '' }}">
+        <i class="fas fa-shopping-cart"></i>Orders
+    </a>
+    <a href="#" class="{{ request()->routeIs('mypurchase') ? 'active' : '' }}">
+        <i class="fas fa-box"></i>My Purchase
+    </a>
+    <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">
+        <i class="fas fa-cog"></i>Settings
+    </a>
 
-    <!-- Garis di atas Logout -->
     <hr>
 
     <div class="marketing-tools">
@@ -63,3 +83,4 @@
         </a>
     </div>
 </div>
+

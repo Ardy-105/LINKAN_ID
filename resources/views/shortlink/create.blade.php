@@ -7,33 +7,59 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        body {
+      * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
+
+        body {
+            background-color: #f5f6fa;
+        }
+
         .container {
             display: flex;
             min-height: 100vh;
         }
+
         .main-content {
             flex: 1;
-            padding: 30px;
-            background: #fff;
+            padding: 25px 30px;
+            background-color: #f5f6fa;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 25px;
         }
+
         .header h1 {
-            margin: 0;
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: bold;
+            color: #000;
         }
+
+        .notification-icon {
+            background-color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
         .notification-icon i {
-            font-size: 20px;
-            color: #555;
+            color: #333;
+            font-size: 16px;
         }
+
+
         form input, form button {
             font-size: 14px;
         }
@@ -73,8 +99,9 @@
     </style>
 </head>
 <body>
-    <div class="container">
-            @include('homeadminS.sidebar.sidebar')
+     <div class="container">
+        @include('homeadminS.sidebar.sidebar')
+
         <div class="main-content">
             <div class="header">
                 <h1>Buat Shortlink</h1>
