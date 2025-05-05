@@ -16,11 +16,6 @@
             display: flex;
             min-height: 100vh;
         }
-        .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: #fff;
-        }
         .main-content {
             flex: 1;
             padding: 30px;
@@ -79,10 +74,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
             @include('homeadminS.sidebar.sidebar')
-        </div>
-
         <div class="main-content">
             <div class="header">
                 <h1>Buat Shortlink</h1>

@@ -274,6 +274,50 @@
             vertical-align: middle;
             color: #FF9040;
         }
+
+        .preview-product-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .preview-product-image {
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            background: #FFE5D3;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .preview-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .preview-product-info {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .preview-product-title {
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -318,8 +362,12 @@
                     <div class="form-group">
                         <label>Image</label>
                         <div class="image-upload" onclick="document.getElementById('productImage').click()">
-                            <i class="fas fa-image"></i>
-                            <span>Add Image</span>
+                            @if(isset($product) && $product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" style="max-width: 100%; max-height: 100%; border-radius: 5px;">
+                            @else
+                                <i class="fas fa-image"></i>
+                                <span>Add Image</span>
+                            @endif
                         </div>
                         <div class="format-info">Format: PNG, JPEG, JPG</div>
                         <input type="file" id="productImage" name="image" accept=".png,.jpg,.jpeg" style="display: none">
@@ -327,27 +375,34 @@
 
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Title" value="{{ old('title') }}">
+                        <input type="text" name="title" class="form-control" placeholder="Title" value="{{ isset($product) ? $product->title : old('title') }}">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Description">{{ old('description') }}</textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Description">{{ isset($product) ? $product->description : old('description') }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Platform</label>
                         <div class="platform-container">
                             <div class="platform-options">
-                                <button type="button" class="platform-button active" data-platform="upload">Upload</button>
-                                <button type="button" class="platform-button" data-platform="dropbox">Dropbox</button>
-                                <button type="button" class="platform-button" data-platform="gdrive">G-Drive</button>
-                                <button type="button" class="platform-button" data-platform="other">Other</button>
+                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'upload' ? 'active' : '' }}" data-platform="upload">Upload</button>
+                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'dropbox' ? 'active' : '' }}" data-platform="dropbox">Dropbox</button>
+                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'gdrive' ? 'active' : '' }}" data-platform="gdrive">G-Drive</button>
+                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'other' ? 'active' : '' }}" data-platform="other">Other</button>
                             </div>
-                            <input type="hidden" name="platform_type" value="upload">
-                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: none;" value="{{ old('platform_url') }}">
-                            <div class="select-file-button form-control" onclick="document.getElementById('platform_file').click()" style="text-align: center; cursor: pointer;">
-                                <i class="fas fa-paperclip"></i> <span id="selected-file-name">Select File</span>
+                            <input type="hidden" name="platform_type" value="{{ isset($product) ? $product->platform_type : 'upload' }}">
+                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: {{ isset($product) && $product->platform_type != 'upload' ? 'block' : 'none' }};" value="{{ isset($product) ? $product->platform_url : old('platform_url') }}">
+                            <div class="select-file-button form-control" onclick="document.getElementById('platform_file').click()" style="text-align: center; cursor: pointer; display: {{ isset($product) && $product->platform_type == 'upload' ? 'block' : 'none' }};">
+                                <i class="fas fa-paperclip"></i> 
+                                <span id="selected-file-name">
+                                    @if(isset($product) && $product->platform_file)
+                                        {{ basename($product->platform_file) }}
+                                    @else
+                                        Select File
+                                    @endif
+                                </span>
                             </div>
                             <input type="file" id="platform_file" name="platform_file" style="display: none;">
                         </div>
@@ -373,7 +428,7 @@
                         <div class="price-group">
                             <div class="price-input">
                                 <label>Price</label>
-                                <input type="number" name="price" class="form-control" placeholder="0" value="{{ old('price') }}">
+                                <input type="number" name="price" class="form-control" placeholder="0" value="{{ isset($product) ? $product->price : old('price') }}">
                             </div>
                             <div class="currency-input">
                                 <label>Currency</label>
@@ -384,29 +439,28 @@
 
                     <div class="form-group">
                         <label>Sale Price (Optional)</label>
-                        <input type="number" name="sale_price" class="form-control" placeholder="Sale Price" value="{{ old('sale_price') }}">
+                        <input type="number" name="sale_price" class="form-control" placeholder="Sale Price" value="{{ isset($product) ? $product->sale_price : old('sale_price') }}">
                     </div>
 
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <label style="margin: 0;">Item Quantity</label>
-                            <!-- ✅ Hidden input + checkbox -->
                             <input type="hidden" name="has_quantity_limit" value="0">
                             <label class="toggle-switch">
-                                <input type="checkbox" name="has_quantity_limit" value="1" {{ old('has_quantity_limit') ? 'checked' : '' }}>
+                                <input type="checkbox" name="has_quantity_limit" value="1" {{ (isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'checked' : '' }}>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-                        <div id="quantityStatus" style="color: #666; margin-bottom: 10px;">Unlimited</div>
-                        <input type="number" name="quantity" class="form-control" placeholder="Enter maximum quantity" style="display: none;" value="{{ old('quantity') }}">
+                        <div id="quantityStatus" style="color: #666; margin-bottom: 10px; display: {{ (isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'none' : 'block' }};">Unlimited</div>
+                        <input type="number" name="quantity" class="form-control" placeholder="Enter maximum quantity" style="display: {{ (isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'block' : 'none' }};" value="{{ isset($product) ? $product->quantity : old('quantity') }}">
                     </div>
 
                     <div class="form-group">
                         <label>Purchase Button</label>
                         <select name="button_text" class="select-dropdown">
-                            <option value="buy_now" {{ old('button_text') == 'buy_now' ? 'selected' : '' }}>Buy Now</option>
-                            <option value="purchase" {{ old('button_text') == 'purchase' ? 'selected' : '' }}>Purchase</option>
-                            <option value="get_now" {{ old('button_text') == 'get_now' ? 'selected' : '' }}>Get Now</option>
+                            <option value="buy_now" {{ (isset($product) && $product->button_text == 'buy_now') || old('button_text') == 'buy_now' ? 'selected' : '' }}>Buy Now</option>
+                            <option value="purchase" {{ (isset($product) && $product->button_text == 'purchase') || old('button_text') == 'purchase' ? 'selected' : '' }}>Purchase</option>
+                            <option value="get_now" {{ (isset($product) && $product->button_text == 'get_now') || old('button_text') == 'get_now' ? 'selected' : '' }}>Get Now</option>
                         </select>
                     </div>
                 </div>

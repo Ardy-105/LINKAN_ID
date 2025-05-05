@@ -541,7 +541,9 @@
             <button class="close-button" onclick="closeActionModal()">×</button>
         </div>
         <div class="modal-body">
-            <!-- Tombol Edit dihapus -->
+            <!-- Tombol Edit -->
+            <a href="#" id="editButton" class="add-block-button" style="background-color: #FF9040; margin-bottom: 10px; text-decoration: none; text-align: center;">Edit</a>
+            <!-- Tombol Delete -->
             <form id="deleteForm" method="POST" action="">
                 @csrf
                 @method('DELETE')
@@ -605,56 +607,45 @@
         }
 
         function showActionModal(productId, productTitle) {
-    // Simpan ID dan judul produk untuk keperluan penghapusan
-    window.currentDeleteId = productId;
-    window.currentDeleteTitle = productTitle;
+            // Simpan ID dan judul produk untuk keperluan penghapusan
+            window.currentDeleteId = productId;
+            window.currentDeleteTitle = productTitle;
 
-    // Set action tombol Delete untuk modal
-    document.getElementById('deleteForm').action = `/digital-product/${productId}`;
+            // Set action tombol Delete untuk modal
+            document.getElementById('deleteForm').action = `/digital-product/${productId}`;
+            
+            // Set URL tombol Edit
+            document.getElementById('editButton').href = `/digital-product/${productId}/edit`;
 
-    // Tampilkan modal
-    document.getElementById('actionModal').style.display = 'block';
-    document.body.classList.add('modal-open');
-}
+            // Tampilkan modal
+            document.getElementById('actionModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
 
-function closeActionModal() {
-    // Menutup modal
-    document.getElementById('actionModal').style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
+        function closeActionModal() {
+            // Menutup modal
+            document.getElementById('actionModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
 
-function confirmDelete() {
-    // Menampilkan pesan konfirmasi
-    const title = window.currentDeleteTitle;
-    const productId = window.currentDeleteId;
+        function confirmDelete() {
+            // Menampilkan pesan konfirmasi
+            const title = window.currentDeleteTitle;
+            const productId = window.currentDeleteId;
 
-    document.getElementById('deleteMessage').innerText = `Apakah kamu yakin ingin menghapus produk "${title}"?`;
-    document.getElementById('finalDeleteForm').action = `/digital-product/${productId}`;
+            document.getElementById('deleteMessage').innerText = `Apakah kamu yakin ingin menghapus produk "${title}"?`;
+            document.getElementById('finalDeleteForm').action = `/digital-product/${productId}`;
 
-    // Menutup modal sebelumnya dan menampilkan konfirmasi hapus
-    closeActionModal();
-    document.getElementById('confirmDeleteModal').style.display = 'block';
-    document.body.classList.add('modal-open');
-}
+            // Menutup modal sebelumnya dan menampilkan konfirmasi hapus
+            closeActionModal();
+            document.getElementById('confirmDeleteModal').style.display = 'block';
+            document.body.classList.add('modal-open');
+        }
 
-
-function confirmDelete() {
-    const title = window.currentDeleteTitle;
-    const productId = window.currentDeleteId;
-
-    document.getElementById('deleteMessage').innerText = `Apakah kamu yakin ingin menghapus produk "${title}"?`;
-    document.getElementById('finalDeleteForm').action = `/digital-product/${productId}`;
-
-    closeActionModal(); // Tutup modal sebelumnya
-    document.getElementById('confirmDeleteModal').style.display = 'block';
-    document.body.classList.add('modal-open');
-}
-
-function closeConfirmDeleteModal() {
-    document.getElementById('confirmDeleteModal').style.display = 'none';
-    document.body.classList.remove('modal-open');
-}
-
+        function closeConfirmDeleteModal() {
+            document.getElementById('confirmDeleteModal').style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
     </script>
 </body>
 </html>
