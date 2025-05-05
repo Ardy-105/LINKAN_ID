@@ -398,7 +398,7 @@
         <div class="main-content">
             <div class="url-section">
                 <div class="url-input-group">
-                    <input type="text" class="url-input" value="My Linkan: https://Linkan.id/{{ Auth::user()->name }}" readonly>
+                    <input type="text" class="url-input" value="My Linkan: http://localhost:8000/linkan.id/{{ Auth::user()->username }}" readonly>
                     <button class="share-button">
                         <i class="fas fa-share-alt"></i>
                     </button>

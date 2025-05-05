@@ -499,9 +499,10 @@
 
             <div class="my-linkan-header">
                 <div class="my-linkan-url">
-                    My Linkan: <a href="https://Linkan.id/{{ Auth::user()->username }}" style="color: #FF9040;">
-                    https://Linkan.id/{{ Auth::user()->username }}
-                </a>
+                    <a href="{{ url('/linkan.id/' . Auth::user()->username) }}" style="color: #FF9040;">
+                        {{ url('/linkan.id/' . Auth::user()->username) }}
+                    </a>
+                    
                 </div>
                 <button class="share-button">
                     <i class="fas fa-share-alt"></i>

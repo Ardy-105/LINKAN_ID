@@ -318,9 +318,11 @@
                     </div>
                     <div class="profile-info">
                         <h3>{{ Auth::user()->name }}</h3>
-                        <a href="https://Linkan.id/{{ Auth::user()->username }}">https://Linkan.id/{{ Auth::user()->username }}</a>
+                        <a href="{{ url('/linkan.id/' . Auth::user()->username) }}" style="color: #FF9040;">
+                            {{ url('/linkan.id/' . Auth::user()->username) }}
+                        </a>
                     </div>
-                    <button class="share-button" onclick="copyToClipboard('https://Linkan.id/{{ Auth::user()->username }}')">
+                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/{{ Auth::user()->username }}')">
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>

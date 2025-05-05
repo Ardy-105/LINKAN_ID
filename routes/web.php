@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShortlinkController;
 use App\Http\Controllers\AppearanceController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\PublicPageController;
 
 
 Route::get('/', function () {
@@ -93,3 +94,6 @@ Route::get('/homeadminS/payout-settings', function () {
 Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
 
 Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProducts'])->name('digital.products');
+
+Route::get('/linkan.id/{username}', [PublicPageController::class, 'show']);
+
