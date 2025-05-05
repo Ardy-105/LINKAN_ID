@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appearance - Linkan</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -250,6 +251,18 @@
                 min-width: 100%;
             }
         }
+        .preview-name,
+        .preview-bio,
+        .preview-screen button {
+            transition: all 0.3s ease;
+        }
+
+        .preview-social-links a {
+            margin: 0 8px;
+            font-size: 20px;
+            color: inherit;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -270,11 +283,12 @@
                 @csrf
                 <div class="content-section">
                     <div class="left-panel">
+                        <!-- Banner -->
                         <div class="card">
                             <h2 class="card-title">Banner</h2>
                             <div class="banner-section">
                                 @if($appearance && $appearance->banner)
-                                    <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="max-width: 100%; margin-bottom: 15px;">
+                                    <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="max-width: 100%; margin-bottom: 15px;" id="previewBanner">
                                 @else
                                     <i class="fas fa-image"></i>
                                     <p class="banner-text">Optimize banner size 1056 x 638 px</p>
@@ -284,24 +298,34 @@
                             </div>
                         </div>
 
+                        <!-- Profile -->
                         <div class="card">
                             <h2 class="card-title">Profile</h2>
                             <div class="profile-section">
                                 <div class="profile-image" onclick="document.getElementById('profileImageInput').click()">
                                     @if($appearance && $appearance->profile_image)
-                                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile">
+                                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile" id="previewProfileImage">
                                     @else
-                                        <i class="fas fa-user"></i>
+                                        <i class="fas fa-user" id="defaultProfileIcon"></i>
                                     @endif
                                 </div>
                                 <input type="file" name="profile_image" id="profileImageInput" style="display: none;" accept="image/*">
-                                <input type="text" name="name" class="profile-name" placeholder="Your Name" value="{{ $appearance ? $appearance->name : Auth::user()->name }}">
+                                <input type="text" name="name" class="profile-name" placeholder="Your Name" value="{{ $appearance ? $appearance->name : Auth::user()->name }}" id="inputName">
                                 <div class="bio-section">
-                                    <textarea name="bio" placeholder="Write your bio here...">{{ $appearance ? $appearance->bio : '' }}</textarea>
+                                    <textarea name="bio" placeholder="Write your bio here..." id="inputBio">{{ $appearance ? $appearance->bio : '' }}</textarea>
                                 </div>
                             </div>
                         </div>
-
+<!-- Social Media Links -->
+<div class="card">
+    <h2 class="card-title">Social Links</h2>
+    <div class="social-link-inputs">
+        <input type="url" name="instagram" id="inputInstagram" placeholder="Instagram URL" value="{{ $appearance->instagram ?? '' }}">
+        <input type="url" name="tiktok" id="inputTiktok" placeholder="TikTok URL" value="{{ $appearance->tiktok ?? '' }}">
+        <input type="url" name="whatsapp" id="inputWhatsapp" placeholder="WhatsApp URL" value="{{ $appearance->whatsapp ?? '' }}">
+    </div>
+</div>
+                        <!-- Theme -->
                         <div class="card">
                             <h2 class="card-title">Theme</h2>
                             <div class="theme-options">
@@ -326,21 +350,23 @@
                         </div>
                     </div>
 
+                    <!-- Preview -->
                     <div class="right-panel">
                         <div class="card">
                             <h2 class="card-title">Preview</h2>
                             <div class="preview-phone">
-                                <div class="preview-screen">
+                                <div class="preview-screen" id="previewScreen">
                                     @if($appearance && $appearance->banner)
-                                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="width: 100%; border-radius: 10px; margin-bottom: 20px;">
+                                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="width: 100%; border-radius: 10px; margin-bottom: 20px;" id="previewPhoneBanner">
                                     @endif
-                                    <div class="preview-profile">
+                                    <div class="preview-profile" id="previewPhoneProfile">
                                         @if($appearance && $appearance->profile_image)
                                             <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile">
                                         @endif
                                     </div>
-                                    <div class="preview-name">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
-                                    <div class="preview-bio">{{ $appearance ? $appearance->bio : '' }}</div>
+                                    <div class="preview-name" id="livePreviewName">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
+                                    <div class="preview-bio" id="livePreviewBio">{{ $appearance ? $appearance->bio : '' }}</div>
+                                    <div class="preview-social-links" id="livePreviewSocialLinks">
                                 </div>
                             </div>
                             <button type="submit" class="save-button">Save Changes</button>
@@ -352,54 +378,108 @@
     </div>
 
     <script>
-        // Preview image before upload
+        // Live preview banner
         document.getElementById('bannerInput').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const bannerSection = document.querySelector('.banner-section');
-                    bannerSection.innerHTML = `<img src="${e.target.result}" alt="Banner" style="max-width: 100%; margin-bottom: 15px;">
-                    <input type="file" name="banner" id="bannerInput" style="display: none;" accept="image/*">
-                    <button type="button" class="upload-button" onclick="document.getElementById('bannerInput').click()">Change Image</button>`;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imgPreview = document.getElementById('previewPhoneBanner');
+                if (imgPreview) {
+                    imgPreview.src = event.target.result;
+                } else {
+                    const screen = document.getElementById('previewScreen');
+                    const img = document.createElement('img');
+                    img.id = "previewPhoneBanner";
+                    img.src = event.target.result;
+                    img.style = "width: 100%; border-radius: 10px; margin-bottom: 20px;";
+                    screen.insertBefore(img, screen.firstChild);
                 }
-                reader.readAsDataURL(e.target.files[0]);
-            }
+            };
+            reader.readAsDataURL(e.target.files[0]);
         });
 
+        // Live preview profile
         document.getElementById('profileImageInput').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const profileImage = document.querySelector('.profile-image');
-                    profileImage.innerHTML = `<img src="${e.target.result}" alt="Profile">`;
-                }
-                reader.readAsDataURL(e.target.files[0]);
-            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.alt = "Profile";
+                img.style = "width: 100%; height: 100%; object-fit: cover;";
+                const previewProfile = document.getElementById('previewPhoneProfile');
+                previewProfile.innerHTML = "";
+                previewProfile.appendChild(img);
+                document.querySelector('.profile-image').innerHTML = `<img src="${event.target.result}" alt="Profile">`;
+            };
+            reader.readAsDataURL(e.target.files[0]);
         });
 
-        // Theme selection
+        // Live preview name
+        document.getElementById('inputName').addEventListener('input', function() {
+            document.getElementById('livePreviewName').textContent = this.value;
+        });
+
+        // Live preview bio
+        document.getElementById('inputBio').addEventListener('input', function() {
+            document.getElementById('livePreviewBio').textContent = this.value;
+        });
+
+        // Theme color selection
         const themeOptions = document.querySelectorAll('.theme-option');
         const themeColorInput = document.getElementById('themeColor');
 
         themeOptions.forEach(option => {
+            const selectedColor = themeColorInput.value;
+            if (option.dataset.color === selectedColor) {
+                option.classList.add('active');
+                applyThemeColor(selectedColor);
+            }
+
             option.addEventListener('click', function() {
                 themeOptions.forEach(opt => opt.classList.remove('active'));
                 this.classList.add('active');
-                themeColorInput.value = this.dataset.color;
+                const color = this.dataset.color;
+                themeColorInput.value = color;
+                applyThemeColor(color);
             });
-
-            if (this.dataset.color === themeColorInput.value) {
-                this.classList.add('active');
-            }
         });
 
-        // Share button functionality
-        document.querySelector('.share-button').addEventListener('click', function() {
+        function applyThemeColor(color) {
+            document.getElementById('livePreviewName').style.color = color;
+            document.getElementById('livePreviewBio').style.color = color;
+            document.querySelector('.save-button').style.backgroundColor = color;
+        }
+
+        // Copy to clipboard
+        document.querySelector('.share-button').addEventListener('click', function () {
             const url = document.querySelector('.url-input').value;
             navigator.clipboard.writeText(url).then(() => {
                 alert('URL copied to clipboard!');
             });
         });
+        function updateSocialPreview() {
+            const instagram = document.getElementById('inputInstagram').value;
+            const tiktok = document.getElementById('inputTiktok').value;
+            const whatsapp = document.getElementById('inputWhatsapp').value;
+
+            const container = document.getElementById('livePreviewSocialLinks');
+            container.innerHTML = '';
+
+            if (instagram) {
+                container.innerHTML += `<a href="${instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`;
+            }
+            if (tiktok) {
+                container.innerHTML += `<a href="${tiktok}" target="_blank"><i class="fab fa-tiktok"></i></a>`;
+            }
+            if (whatsapp) {
+                container.innerHTML += `<a href="${whatsapp}" target="_blank"><i class="fab fa-whatsapp"></i></a>`;
+            }
+        }
+
+        ['inputInstagram', 'inputTiktok', 'inputWhatsapp'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateSocialPreview);
+        });
+
+        updateSocialPreview();
     </script>
 </body>
 </html>
