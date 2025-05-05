@@ -33,6 +33,12 @@
             width: 20px;
         }
 
+        .sidebar hr {
+            border: none;
+            border-top: 3px solid #000;
+            margin: 15px 0;
+        }
+
 </style>
 <div class="sidebar">
     <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" class="logo">
@@ -43,7 +49,10 @@
     <a href="#"><i class="fas fa-chart-bar"></i>Statistic</a>
     <a href="#"><i class="fas fa-shopping-cart"></i>Orders</a>
     <a href="#"><i class="fas fa-box"></i>My Purchase</a>
-    <a href="#"><i class="fas fa-cog"></i>Settings</a>
+    <a href="{{ route('settings') }}"><i class="fas fa-cog"></i>Settings</a>
+
+    <!-- Garis di atas Logout -->
+    <hr>
 
     <div class="marketing-tools">
         <a href="{{ route('welcome') }}">

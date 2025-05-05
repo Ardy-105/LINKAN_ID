@@ -10,6 +10,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShortlinkController;
 use App\Http\Controllers\AppearanceController;
+use App\Http\Controllers\SettingController;
 
 
 Route::get('/', function () {
@@ -73,3 +74,18 @@ Route::get('/get-chart-data', [DashboardController::class, 'getChartData'])
     ->name('dashboard.chart-data')
     ->middleware('auth');
 
+    Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
+
+    Route::get('/homeadminS/settings', function () {
+        return view('homeadminS.setting');
+    })->name('settings');
+
+    // Rute untuk My Account
+Route::get('/homeadminS/account-settings', function () {
+    return 'My Account Page (Coming Soon)';
+})->name('account.settings');
+
+// Rute untuk Payout Settings
+Route::get('/homeadminS/payout-settings', function () {
+    return 'Payout Settings Page (Coming Soon)';
+})->name('payout.settings');

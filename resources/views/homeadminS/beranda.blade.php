@@ -237,8 +237,8 @@
         /* Summary Cards */
         .summary-section {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
         }
 
         .summary-card {
