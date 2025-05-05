@@ -18,7 +18,10 @@ class Appearance extends Model
         'theme_color',
         'font_family',
         'background_color',
-        'is_active'
+        'is_active',
+        'instagram',
+        'tiktok',
+        'whatsapp'
     ];
 
     public function user()

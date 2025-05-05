@@ -89,3 +89,7 @@ Route::get('/homeadminS/account-settings', function () {
 Route::get('/homeadminS/payout-settings', function () {
     return 'Payout Settings Page (Coming Soon)';
 })->name('payout.settings');
+
+Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
+
+Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProducts'])->name('digital.products');

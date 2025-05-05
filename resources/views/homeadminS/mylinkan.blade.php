@@ -20,11 +20,11 @@
 
         
         .container {
-            display: flex;
-            min-height: 100vh;
+    display: flex;
+    min-height: 100vh;
             gap: 0;
             padding: 0;
-        }
+}
 
         .main-content {
             flex: 1;
@@ -607,26 +607,6 @@
                     <div class="block-info">
                         <h3>Digital Product</h3>
                         <p>Sell Digital Products</p>
-                    </div>
-                </div>
-
-                <div class="block-option" onclick="selectBlockType('donation')">
-                    <div class="block-icon">
-                        <img src="{{ asset('images/donasi.png') }}" alt="Donation">
-                    </div>
-                    <div class="block-info">
-                        <h3>Donation</h3>
-                        <p>Accept Donation from your followers</p>
-                    </div>
-                </div>
-
-                <div class="block-option" onclick="selectBlockType('course')">
-                    <div class="block-icon">
-                        <img src="{{ asset('images/e-course.png') }}" alt="E-Course">
-                    </div>
-                    <div class="block-info">
-                        <h3>E-Course</h3>
-                        <p>Share your skills and knowledge</p>
                     </div>
                 </div>
 

@@ -204,21 +204,33 @@
             font-weight: 500;
         }
 
-        .date-selector {
+        .date-range-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-input {
             padding: 7px 12px;
             border: 1px solid #eee;
             border-radius: 6px;
             background: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
             font-size: 13px;
             color: #666;
         }
 
-        .date-selector i {
+        .apply-date {
+            padding: 7px 12px;
+            background: #FF9040;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
             font-size: 13px;
+        }
+
+        .apply-date:hover {
+            opacity: 0.9;
         }
 
         .stats-numbers {
@@ -340,10 +352,12 @@
             <div class="stats-section">
                 <div class="stats-header">
                     <h3>Total Click & Views</h3>
-                    <button class="date-selector">
-                        <i class="fas fa-calendar"></i>
-                        Select Date..
-                    </button>
+                    <div class="date-range-selector">
+                        <input type="date" id="startDate" class="date-input">
+                        <span>to</span>
+                        <input type="date" id="endDate" class="date-input">
+                        <button class="apply-date" onclick="applyDateFilter()">Apply</button>
+                    </div>
                 </div>
                 <div class="stats-numbers">
                     <span>Views: {{ $totalViews }}</span>
@@ -378,14 +392,26 @@
     <script>
         const ctx = document.getElementById('statsChart').getContext('2d');
         let myChart;
+        let startDate = null;
+        let endDate = null;
 
-        function updateChart(date = null) {
-            fetch(`/get-chart-data${date ? '?date=' + date : ''}`)
+        function updateChart() {
+            const params = new URLSearchParams();
+            if (startDate) params.append('start_date', startDate);
+            if (endDate) params.append('end_date', endDate);
+
+            fetch(`/get-chart-data?${params.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (myChart) {
                         myChart.destroy();
                     }
+
+                    // Update date inputs
+                    document.getElementById('startDate').value = data.start_date;
+                    document.getElementById('endDate').value = data.end_date;
+                    startDate = data.start_date;
+                    endDate = data.end_date;
 
                     myChart = new Chart(ctx, {
                         type: 'bar',
@@ -437,6 +463,27 @@
                 });
         }
 
+        function applyDateFilter() {
+            startDate = document.getElementById('startDate').value;
+            endDate = document.getElementById('endDate').value;
+            updateChart();
+        }
+
+        // Set default dates (7 days ago to today)
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 6);
+
+            document.getElementById('startDate').value = sevenDaysAgo.toISOString().split('T')[0];
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+
+            startDate = document.getElementById('startDate').value;
+            endDate = document.getElementById('endDate').value;
+
+            updateChart();
+        });
+
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('Link copied to clipboard!');
@@ -445,22 +492,26 @@
             });
         }
 
-        document.querySelector('.date-selector').addEventListener('click', function() {
-            const input = document.createElement('input');
-            input.type = 'date';
-            input.style.display = 'none';
-            document.body.appendChild(input);
-            
-            input.addEventListener('change', function() {
-                updateChart(this.value);
-                document.body.removeChild(input);
-            });
-            
-            input.click();
-        });
+        // Fungsi untuk mengambil data produk digital
+        function fetchDigitalProducts() {
+            fetch('/get-digital-products')
+                .then(response => response.json())
+                .then(data => {
+                    // Update total produk
+                    document.querySelector('.summary-card:last-child .number').textContent = data.total;
+                    
+                    // Update daftar produk jika diperlukan
+                    // ...
+                })
+                .catch(error => console.error('Error:', error));
+        }
 
+        // Ambil data setiap 30 detik
+        setInterval(fetchDigitalProducts, 30000);
+
+        // Ambil data saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
-            updateChart();
+            fetchDigitalProducts();
         });
     </script>
 </body>

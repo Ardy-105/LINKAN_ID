@@ -19,50 +19,56 @@ class AppearanceController extends Controller
 
     public function update(Request $request)
     {
+        $user = Auth::user();
+        
+        // Validasi input
         $request->validate([
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'name' => 'required|string|max:255',
-            'bio' => 'nullable|string|max:1000',
-            'theme_color' => 'required|string',
-            'font_family' => 'required|string',
-            'background_color' => 'required|string'
+            'bio' => 'nullable|string|max:500',
+            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'theme_color' => 'required|string|max:7',
+            'instagram' => 'nullable|url|max:255',
+            'tiktok' => 'nullable|url|max:255',
+            'whatsapp' => 'nullable|url|max:255',
         ]);
 
-        $user = Auth::user();
+        // Cari atau buat record appearance
         $appearance = Appearance::where('user_id', $user->id)->first();
-
         if (!$appearance) {
             $appearance = new Appearance();
             $appearance->user_id = $user->id;
         }
 
+        // Update data
+        $appearance->name = $request->name;
+        $appearance->bio = $request->bio;
+        $appearance->theme_color = $request->theme_color;
+        $appearance->instagram = $request->instagram;
+        $appearance->tiktok = $request->tiktok;
+        $appearance->whatsapp = $request->whatsapp;
+        $appearance->is_active = true;
+
         // Handle banner upload
         if ($request->hasFile('banner')) {
             if ($appearance->banner) {
-                Storage::disk('public')->delete($appearance->banner);
+                Storage::delete('public/' . $appearance->banner);
             }
-            $bannerPath = $request->file('banner')->store('banners', 'public');
+            $bannerPath = $request->file('banner')->store('appearances/banners', 'public');
             $appearance->banner = $bannerPath;
         }
 
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
             if ($appearance->profile_image) {
-                Storage::disk('public')->delete($appearance->profile_image);
+                Storage::delete('public/' . $appearance->profile_image);
             }
-            $profilePath = $request->file('profile_image')->store('profiles', 'public');
+            $profilePath = $request->file('profile_image')->store('appearances/profiles', 'public');
             $appearance->profile_image = $profilePath;
         }
 
-        // Update appearance details
-        $appearance->name = $request->name;
-        $appearance->bio = $request->bio;
-        $appearance->theme_color = $request->theme_color;
-        $appearance->font_family = $request->font_family;
-        $appearance->background_color = $request->background_color;
         $appearance->save();
 
-        return redirect()->back()->with('success', 'Appearance updated successfully');
+        return redirect()->back()->with('success', 'Appearance updated successfully!');
     }
 }

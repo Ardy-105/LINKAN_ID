@@ -6,83 +6,102 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Models\DigitalProduct;
 
 class DashboardController extends Controller
 {
     public function beranda()
     {
-        // Mengambil data dari database
-        $totalClicks = DB::table('link_clicks')
-            ->where('user_id', Auth::id())
-            ->count();
-            
-        $totalViews = DB::table('link_views')
-            ->where('user_id', Auth::id())
-            ->count();
+        $user = Auth::user();
         
-        // Mengambil data transaksi
-        $lifetimeOrders = DB::table('orders')
-            ->where('seller_id', Auth::id())
-            ->count();
-            
-        $lifetimeSales = DB::table('orders')
-            ->where('seller_id', Auth::id())
-            ->where('status', 'completed')
-            ->sum('total_amount');
+        // Ambil data produk digital
+        $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
+        $totalProducts = $digitalProducts->count();
         
-        // Mengambil total produk
-        $totalProducts = DB::table('products')
-            ->where('seller_id', Auth::id())
-            ->count();
-        
-        // Mengambil data affiliate
-        $affiliateProducts = DB::table('affiliate_products')
-            ->where('user_id', Auth::id())
-            ->count();
+        // Data dummy untuk sementara (bisa diganti dengan data real)
+        $totalViews = 0;
+        $totalClicks = 0;
+        $lifetimeOrders = 0;
+        $lifetimeSales = 0;
 
         return view('homeadminS.beranda', compact(
-            'totalClicks',
             'totalViews',
+            'totalClicks',
             'lifetimeOrders',
             'lifetimeSales',
-            'totalProducts',
-            'affiliateProducts'
+            'totalProducts'
         ));
     }
 
     public function getChartData(Request $request)
     {
-        $date = $request->input('date') ? Carbon::parse($request->input('date')) : Carbon::now();
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
         
-        // Mengambil data untuk 5 hari (hari yang dipilih dan 4 hari sebelumnya)
+        // Jika tidak ada tanggal yang dipilih, gunakan 7 hari terakhir
+        if (!$startDate || !$endDate) {
+            $endDate = Carbon::now();
+            $startDate = Carbon::now()->subDays(6);
+        } else {
+            $startDate = Carbon::parse($startDate);
+            $endDate = Carbon::parse($endDate);
+        }
+
+        // Hitung selisih hari
+        $daysDiff = $startDate->diffInDays($endDate);
+        
+        // Batasi maksimal 30 hari
+        if ($daysDiff > 30) {
+            $endDate = $startDate->copy()->addDays(30);
+        }
+
         $dates = [];
         $views = [];
         $clicks = [];
-        
-        for ($i = 4; $i >= 0; $i--) {
-            $currentDate = $date->copy()->subDays($i);
+
+        // Generate data untuk setiap hari dalam rentang
+        $currentDate = $startDate->copy();
+        while ($currentDate <= $endDate) {
             $dates[] = $currentDate->format('d M');
             
-            // Mengambil data views
+            // Ambil data views untuk tanggal tersebut
             $viewCount = DB::table('link_views')
                 ->where('user_id', Auth::id())
                 ->whereDate('created_at', $currentDate)
                 ->count();
             
-            // Mengambil data clicks
+            // Ambil data clicks untuk tanggal tersebut
             $clickCount = DB::table('link_clicks')
                 ->where('user_id', Auth::id())
                 ->whereDate('created_at', $currentDate)
                 ->count();
-                
+            
             $views[] = $viewCount;
             $clicks[] = $clickCount;
+            
+            $currentDate->addDay();
         }
-        
+
         return response()->json([
             'labels' => $dates,
             'views' => $views,
-            'clicks' => $clicks
+            'clicks' => $clicks,
+            'start_date' => $startDate->format('Y-m-d'),
+            'end_date' => $endDate->format('Y-m-d')
+        ]);
+    }
+
+    public function getDigitalProducts()
+    {
+        $user = Auth::user();
+        $digitalProducts = DigitalProduct::where('user_id', $user->id)
+            ->select('id', 'title', 'price', 'created_at')
+            ->latest()
+            ->get();
+        
+        return response()->json([
+            'total' => $digitalProducts->count(),
+            'products' => $digitalProducts
         ]);
     }
 } 
