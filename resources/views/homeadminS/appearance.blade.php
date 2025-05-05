@@ -163,10 +163,21 @@
             margin-top: 10px;
         }
 
+        .preview-section {
+            background: #eee;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
         .preview-phone {
             background: white;
             border-radius: 40px;
             padding: 20px;
+            width: 100%;
             aspect-ratio: 9/19;
             position: relative;
             overflow: hidden;
@@ -181,6 +192,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-y: auto;
+        }
+
+        .preview-banner {
+            width: 100%;
+            height: 120px;
+            background: #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .preview-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .preview-profile {
@@ -188,7 +215,10 @@
             height: 80px;
             border-radius: 50%;
             background: #ddd;
-            margin: 20px 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
 
@@ -200,15 +230,106 @@
 
         .preview-name {
             font-size: 18px;
-            color: #333;
+            font-weight: 600;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         .preview-bio {
             font-size: 14px;
             color: #666;
             text-align: center;
+            margin-bottom: 15px;
+            padding: 0 20px;
+            line-height: 1.4;
+        }
+
+        .preview-social-links {
+            display: flex;
+            gap: 15px;
             margin-bottom: 20px;
+        }
+
+        .preview-social-links a {
+            color: #FF9040;
+            font-size: 20px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .preview-social-links a:hover {
+            opacity: 0.8;
+        }
+
+        .preview-products {
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-product-item {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .preview-product-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .preview-product-image {
+            width: 40px;
+            height: 40px;
+            background: #FFE5D3;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .preview-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-product-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-product-button {
+            background: #FF9040;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .preview-product-button:hover {
+            opacity: 0.9;
         }
 
         .save-button {
@@ -221,6 +342,11 @@
             font-size: 16px;
             width: 100%;
             margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-button:hover {
+            opacity: 0.9;
         }
 
         .theme-options {
@@ -357,19 +483,52 @@
                             <div class="preview-phone">
                                 <div class="preview-screen" id="previewScreen">
                                     @if($appearance && $appearance->banner)
-                                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="width: 100%; border-radius: 10px; margin-bottom: 20px;" id="previewPhoneBanner">
+                                        <div class="preview-banner">
+                                            <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" id="previewPhoneBanner">
+                                        </div>
                                     @endif
                                     <div class="preview-profile" id="previewPhoneProfile">
                                         @if($appearance && $appearance->profile_image)
                                             <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile">
+                                        @else
+                                            <i class="fas fa-user"></i>
                                         @endif
                                     </div>
-                                    <div class="preview-name" id="livePreviewName">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
-                                    <div class="preview-bio" id="livePreviewBio">{{ $appearance ? $appearance->bio : '' }}</div>
+                                    <div class="preview-name" id="livePreviewName" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
+                                    <div class="preview-bio" id="livePreviewBio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->bio : '' }}</div>
                                     <div class="preview-social-links" id="livePreviewSocialLinks">
+                                        @if($appearance && $appearance->instagram)
+                                            <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                                        @endif
+                                        @if($appearance && $appearance->tiktok)
+                                            <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+                                        @endif
+                                        @if($appearance && $appearance->whatsapp)
+                                            <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                                        @endif
+                                    </div>
+                                    @if($digitalProducts && $digitalProducts->count() > 0)
+                                        <div class="preview-products">
+                                            @foreach($digitalProducts as $product)
+                                                <div class="preview-product-item">
+                                                    <div class="preview-product-image">
+                                                        @if($product->image)
+                                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
+                                                        @else
+                                                            <i class="fas fa-file-alt"></i>
+                                                        @endif
+                                                    </div>
+                                                    <div class="preview-product-info">
+                                                        <div class="preview-product-title">{{ $product->title }}</div>
+                                                    </div>
+                                                    <button class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $product->button_text ?? 'Beli' }}</button>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                            <button type="submit" class="save-button">Save Changes</button>
+                            <button type="submit" class="save-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">Save Changes</button>
                         </div>
                     </div>
                 </div>

@@ -14,9 +14,10 @@ class AdminController extends Controller
 
     public function myLinkan()
     {
+        $user = auth()->user();
+        $digitalProducts = DigitalProduct::where('user_id', $user->id)->latest()->get();
+        $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
 
-        $digitalProducts = DigitalProduct::where('user_id', auth()->id())->latest()->get();
-
-        return view('homeadminS.mylinkan', compact('digitalProducts'));
+        return view('homeadminS.mylinkan', compact('digitalProducts', 'appearance'));
     }
 }

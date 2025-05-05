@@ -18,16 +18,21 @@
             background-color: #f5f6fa;
         }
 
+        
         .container {
-    display: flex;
-    min-height: 100vh;
-    gap: 20px; /* Tambahan opsional untuk jarak antar elemen */
-}
-
+            display: flex;
+            min-height: 100vh;
+            gap: 0;
+            padding: 0;
+        }
 
         .main-content {
             flex: 1;
             padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 0; /* Untuk mencegah overflow */
         }
 
         .header {
@@ -123,7 +128,7 @@
         }
 
         .block-item {
-            background: white;
+            background: #f5f5f5;
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 10px;
@@ -161,42 +166,66 @@
             background: #eee;
             padding: 20px;
             border-radius: 10px;
-            width: 300px;
+            width: 400px; /* Lebar yang lebih besar */
             height: fit-content;
+            position: sticky;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .preview-header {
             margin-bottom: 15px;
-            color: #666;
+            color: #333;
+            font-size: 18px;
+            width: 100%;
+            text-align: center;
         }
 
         .phone-preview {
-            background: white;
+            width: 375px; /* iPhone 11/12/13 width */
+            height: 812px; /* iPhone 11/12/13 height */
             border-radius: 40px;
             padding: 20px;
-            width: 100%;
-            aspect-ratio: 9/19;
+            background: white;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .phone-content {
             width: 100%;
             height: 100%;
-            background: #f0f0f0;
+            background: #f8f9fa;
             border-radius: 30px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 50px;
+            overflow-y: auto;
+        }
+
+        .banner-preview {
+            width: 100%;
+            height: 120px;
+            background: #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .banner-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .profile-circle {
             width: 80px;
             height: 80px;
-            background: #ddd;
             border-radius: 50%;
+            background: #ddd;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -212,8 +241,35 @@
 
         .preview-name {
             font-size: 18px;
-            color: #333;
+            font-weight: 600;
             margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .preview-bio {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 0 20px;
+            line-height: 1.4;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            color: #FF9040;
+            font-size: 20px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            opacity: 0.8;
         }
 
         .preview-products {
@@ -232,6 +288,11 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .preview-product-item:hover {
+            transform: translateY(-2px);
         }
 
         .preview-product-image {
@@ -242,15 +303,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .preview-product-image i {
-            color: #FF9040;
-            font-size: 20px;
+        .preview-product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .preview-product-info {
             flex: 1;
+            min-width: 0;
         }
 
         .preview-product-title {
@@ -269,6 +334,13 @@
             border-radius: 4px;
             font-size: 12px;
             border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .preview-product-button:hover {
+            opacity: 0.9;
         }
 
         /* Modal Styles */
@@ -390,6 +462,27 @@
         .block-option.coming-soon .block-icon {
             background: #f5f5f5;
         }
+
+        @media (max-width: 1200px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .preview-section {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+
+            .phone-preview {
+                margin: 0 auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -444,29 +537,44 @@
     <!-- Preview Section -->
     <div class="preview-section">
         <div class="preview-header">
-            <h3>Page Preview</h3>
+            <h2>Preview</h2>
         </div>
         <div class="phone-preview">
             <div class="phone-content">
+                @if($appearance && $appearance->banner)
+                    <div class="banner-preview">
+                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner">
+                    </div>
+                @endif
                 <div class="profile-circle">
-                    @if(Auth::user()->avatar)
-                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="Profile">
+                    @if($appearance && $appearance->profile_image)
+                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile">
                     @else
                         <i class="fas fa-user"></i>
                     @endif
                 </div>
-                <div class="preview-name">{{ Auth::user()->name }}</div>
-                @if(Auth::user()->bio)
-                    <p style="color: #666; font-size: 14px; text-align: center;">{{ Auth::user()->bio }}</p>
+                <div class="preview-name" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
+                @if($appearance && $appearance->bio)
+                    <div class="preview-bio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->bio }}</div>
                 @endif
-
+                <div class="social-links">
+                    @if($appearance && $appearance->instagram)
+                        <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                    @endif
+                    @if($appearance && $appearance->tiktok)
+                        <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    @endif
+                    @if($appearance && $appearance->whatsapp)
+                        <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    @endif
+                </div>
                 @if($digitalProducts->count() > 0)
                     <div class="preview-products">
                         @foreach($digitalProducts as $product)
                             <div class="preview-product-item">
                                 <div class="preview-product-image">
                                     @if($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
                                     @else
                                         <i class="fas fa-file-alt"></i>
                                     @endif
@@ -474,7 +582,7 @@
                                 <div class="preview-product-info">
                                     <div class="preview-product-title">{{ $product->title }}</div>
                                 </div>
-                                <button class="preview-product-button">{{ $product->button_text ?? 'Beli' }}</button>
+                                <button class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $product->button_text ?? 'Beli' }}</button>
                             </div>
                         @endforeach
                     </div>
