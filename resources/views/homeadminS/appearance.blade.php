@@ -533,7 +533,7 @@
     const colorPicker = document.getElementById('colorPicker');
     const themeColorInput = document.getElementById('themeColor');
     const themeOptions = document.querySelectorAll('.theme-option');
-
+    const previewSocialLinks = document.getElementById('livePreviewSocialLinks'); // Tambahan
     const previewName = document.getElementById('livePreviewName');
     const previewBio = document.getElementById('livePreviewBio');
     const previewButtons = document.querySelectorAll('.preview-product-button');
@@ -548,7 +548,12 @@
         previewButtons.forEach(btn => {
             btn.style.backgroundColor = color;
         });
-
+     // Update warna ikon sosial media
+     if (previewSocialLinks) {
+            previewSocialLinks.querySelectorAll('a i').forEach(icon => {
+                icon.style.color = color;
+            });
+        }
         // Sinkronkan hidden input dan color picker
         themeColorInput.value = color;
         colorPicker.value = color;
