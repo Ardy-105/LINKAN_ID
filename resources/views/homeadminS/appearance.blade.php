@@ -440,6 +440,12 @@
                                 <div class="bio-section">
                                     <textarea name="bio" placeholder="Write your bio here..." id="inputBio">{{ $appearance ? $appearance->bio : '' }}</textarea>
                                 </div>
+                                <!-- 🎨 Color Picker -->
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+    <label for="colorPicker">Customize Color:</label>
+    <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#3498db' }}">
+</div>
+
                             </div>
                         </div>
 <!-- Social Media Links -->
@@ -455,24 +461,10 @@
                         <div class="card">
                             <h2 class="card-title">Theme</h2>
                             <div class="theme-options">
-                                <div class="theme-option" data-color="#FF9040">
-                                    <div style="width: 30px; height: 30px; background: #FF9040; margin: 0 auto;"></div>
-                                    <span>Orange</span>
-                                </div>
-                                <div class="theme-option" data-color="#4CAF50">
-                                    <div style="width: 30px; height: 30px; background: #4CAF50; margin: 0 auto;"></div>
-                                    <span>Green</span>
-                                </div>
-                                <div class="theme-option" data-color="#2196F3">
-                                    <div style="width: 30px; height: 30px; background: #2196F3; margin: 0 auto;"></div>
-                                    <span>Blue</span>
-                                </div>
-                                <div class="theme-option" data-color="#9C27B0">
-                                    <div style="width: 30px; height: 30px; background: #9C27B0; margin: 0 auto;"></div>
-                                    <span>Purple</span>
-                                </div>
                             </div>
                             <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
+                            
+                            
                         </div>
                     </div>
 
@@ -537,6 +529,42 @@
     </div>
 
     <script>
+   document.addEventListener('DOMContentLoaded', function () {
+    const colorPicker = document.getElementById('colorPicker');
+    const themeColorInput = document.getElementById('themeColor');
+    const themeOptions = document.querySelectorAll('.theme-option');
+
+    const previewName = document.getElementById('livePreviewName');
+    const previewBio = document.getElementById('livePreviewBio');
+    const previewButtons = document.querySelectorAll('.preview-product-button');
+    const saveButton = document.querySelector('.save-button');
+
+    // Fungsi update tampilan
+    function updatePreviewColor(color) {
+        previewName.style.color = color;
+        previewBio.style.color = color;
+        saveButton.style.backgroundColor = color;
+
+        previewButtons.forEach(btn => {
+            btn.style.backgroundColor = color;
+        });
+
+        // Sinkronkan hidden input dan color picker
+        themeColorInput.value = color;
+        colorPicker.value = color;
+    }
+
+    // Warna saat user geser color picker
+    colorPicker.addEventListener('input', function () {
+        const pickedColor = this.value;
+        updatePreviewColor(pickedColor);
+    });
+
+
+    // Jalankan saat pertama kali halaman dimuat
+    updatePreviewColor(themeColorInput.value);
+});
+
         // Live preview banner
         document.getElementById('bannerInput').addEventListener('change', function(e) {
             const reader = new FileReader();
