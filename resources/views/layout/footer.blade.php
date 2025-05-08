@@ -3,9 +3,8 @@
         <div class="footer-container">
             <img src="{{ asset('images/logotext.png') }}" alt="Linkan Logo" class="footer-logo">
             <nav class="footer-nav">
-                <a href="#">About Us</a>
-                <a href="#">Contact Us</a>
-                <a href="#">Privacy</a>
+                <a href="https://indobuzz.id/">About Us</a>
+                <a href="{{ route('contact.form') }}">Contact Us</a>
             </nav>
         </div>
     </footer>

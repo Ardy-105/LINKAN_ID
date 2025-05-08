@@ -12,7 +12,7 @@ use App\Http\Controllers\ShortlinkController;
 use App\Http\Controllers\AppearanceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PublicPageController;
-
+use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -65,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index'); // form input
 Route::post('/shorten', [ShortlinkController::class, 'store']); // simpan link
-Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
+
 
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
@@ -97,3 +97,9 @@ Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProd
 
 Route::get('/linkan.id/{username}', [PublicPageController::class, 'show']);
 
+
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
