@@ -86,6 +86,23 @@
             font-size: 12px;
             color: #999;
         }
+        .btn-save {
+    background-color: #FF9040; /* Warna oranye */
+    color: white; /* Warna font putih */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block; /* Pastikan tombol berada di baris baru */
+    margin-left: auto; /* Geser tombol ke kanan */
+    margin-top: 20px; /* Tambahkan jarak dari elemen sebelumnya */
+}
+
+.btn-save:hover {
+    background-color: #e67e22; /* Warna oranye lebih gelap saat hover */
+}
     </style>
 </head>
 <body>
@@ -111,7 +128,14 @@
                 <div class="form-group">
                     <label for="name">Name :</label>
                     <input type="text" id="name" value="Budi" readonly>
-                </div>              
+                </div>    
+                <div class="form-group">
+                    <label for="Password">Password :</label>
+                    <input type="text" id="Password" value="Budi123" readonly>
+                </div> 
+                <div class="form-group">
+                     <button class="btn-save">Save</button>
+                </div>         
             </div>
 
             <div class="delete-account">
