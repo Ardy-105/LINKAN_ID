@@ -17,11 +17,11 @@
         body {
             background-color: #f5f6fa;
         }
-
         .container {
-            display: flex;
-            min-height: 100vh;
-        }
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
 
         .main-content {
             flex: 1;
@@ -61,13 +61,40 @@
         }
 
         .content-section {
-            display: flex;
-            gap: 20px;
-        }
+    display: flex;
+    gap: 20px;
+    height: 100vh;
+}
 
-        .left-panel {
-            flex: 2;
-        }
+.left-panel {
+    flex: 2;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.left-panel form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    gap: 20px;
+    padding-bottom: 100px; /* Tambahkan ini agar tombol tidak mentok */
+}
+
+
+.save-button {
+    align-self: center; /* Tombol di tengah */
+    background: #FF9040; /* Warna fallback */
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
 
         .right-panel {
             flex: 1;
@@ -332,19 +359,7 @@
             opacity: 0.9;
         }
 
-        .save-button {
-            background: #FF9040;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
-
+   
         .save-button:hover {
             opacity: 0.9;
         }
@@ -405,7 +420,9 @@
                 </div>
             </div>
 
-            <form action="{{ route('appearance.update') }}" method="POST" enctype="multipart/form-data">
+           <form action="{{ route('appearance.update') }}" method="POST" enctype="multipart/form-data">
+              
+
                 @csrf
                 <div class="content-section">
                     <div class="left-panel">
@@ -444,6 +461,8 @@
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
     <label for="colorPicker">Customize Color:</label>
     <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#3498db' }}">
+    
+   <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
 </div>
 
                             </div>
@@ -458,14 +477,29 @@
     </div>
 </div>
                         <!-- Theme -->
-                        <div class="card">
-                            <h2 class="card-title">Theme</h2>
-                            <div class="theme-options">
-                            </div>
-                            <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
-                            
-                            
-                        </div>
+                    <div class="theme-options" id="themeOptions" style="display: flex; flex-wrap: wrap; gap: 10px;">
+    @php
+        $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png'];
+    @endphp
+    @foreach ($themes as $theme)
+        <img src="{{ asset('images/previewt/' . $theme) }}" 
+             data-bg="{{ asset('images/background/' . $theme) }}" 
+             data-name="{{ $theme }}"
+             class="theme-preview"
+             style="width: 80px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 6px;">
+    @endforeach
+</div>
+<input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
+
+
+<div style="display: flex; justify-content: center; margin-top: 20px;">
+    <button type="submit" class="save-button"
+        style="background-color: #FF9040">
+        Save Changes
+    </button>
+</div>
+
+
                     </div>
 
                     <!-- Preview -->
@@ -520,158 +554,146 @@
                                     @endif
                                 </div>
                             </div>
-                            <button type="submit" class="save-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">Save Changes</button>
+                          
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
-    <script>
-   document.addEventListener('DOMContentLoaded', function () {
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
     const colorPicker = document.getElementById('colorPicker');
     const themeColorInput = document.getElementById('themeColor');
-    const themeOptions = document.querySelectorAll('.theme-option');
-    const previewSocialLinks = document.getElementById('livePreviewSocialLinks'); // Tambahan
+    const backgroundColorInput = document.getElementById('backgroundColor');
     const previewName = document.getElementById('livePreviewName');
     const previewBio = document.getElementById('livePreviewBio');
     const previewButtons = document.querySelectorAll('.preview-product-button');
+    const previewSocialLinks = document.getElementById('livePreviewSocialLinks');
     const saveButton = document.querySelector('.save-button');
+    // Terapkan background dari database saat halaman dimuat ulang
+const currentBackground = "{{ $appearance ? $appearance->background_color : '' }}";
+if (currentBackground) {
+    const matchedTheme = document.querySelector(`.theme-preview[data-name="${currentBackground}"]`);
+    if (matchedTheme) {
+        const bgUrl = matchedTheme.getAttribute('data-bg');
+        const previewScreen = document.getElementById('previewScreen');
+        previewScreen.style.backgroundImage = `url('${bgUrl}')`;
+        previewScreen.style.backgroundSize = 'cover';
+        previewScreen.style.backgroundPosition = 'center';
 
-    // Fungsi update tampilan
+        // Tambahkan border aktif
+        matchedTheme.style.border = "2px solid #FF9040";
+    }
+}
+
+
     function updatePreviewColor(color) {
         previewName.style.color = color;
         previewBio.style.color = color;
-        saveButton.style.backgroundColor = color;
+        previewButtons.forEach(btn => btn.style.backgroundColor = color);
+        themeColorInput.value = color;
+        colorPicker.value = color;
 
-        previewButtons.forEach(btn => {
-            btn.style.backgroundColor = color;
-        });
-     // Update warna ikon sosial media
-     if (previewSocialLinks) {
+        if (previewSocialLinks) {
             previewSocialLinks.querySelectorAll('a i').forEach(icon => {
                 icon.style.color = color;
             });
         }
-        // Sinkronkan hidden input dan color picker
-        themeColorInput.value = color;
-        colorPicker.value = color;
     }
 
-    // Warna saat user geser color picker
     colorPicker.addEventListener('input', function () {
-        const pickedColor = this.value;
-        updatePreviewColor(pickedColor);
+        updatePreviewColor(this.value);
     });
 
-
-    // Jalankan saat pertama kali halaman dimuat
     updatePreviewColor(themeColorInput.value);
-});
 
-        // Live preview banner
-        document.getElementById('bannerInput').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const imgPreview = document.getElementById('previewPhoneBanner');
-                if (imgPreview) {
-                    imgPreview.src = event.target.result;
-                } else {
-                    const screen = document.getElementById('previewScreen');
-                    const img = document.createElement('img');
-                    img.id = "previewPhoneBanner";
-                    img.src = event.target.result;
-                    img.style = "width: 100%; border-radius: 10px; margin-bottom: 20px;";
-                    screen.insertBefore(img, screen.firstChild);
-                }
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        });
-
-        // Live preview profile
-        document.getElementById('profileImageInput').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
+    // Preview banner
+    document.getElementById('bannerInput').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.getElementById('previewPhoneBanner');
+            if (img) {
                 img.src = event.target.result;
-                img.alt = "Profile";
-                img.style = "width: 100%; height: 100%; object-fit: cover;";
-                const previewProfile = document.getElementById('previewPhoneProfile');
-                previewProfile.innerHTML = "";
-                previewProfile.appendChild(img);
-                document.querySelector('.profile-image').innerHTML = `<img src="${event.target.result}" alt="Profile">`;
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        });
-
-        // Live preview name
-        document.getElementById('inputName').addEventListener('input', function() {
-            document.getElementById('livePreviewName').textContent = this.value;
-        });
-
-        // Live preview bio
-        document.getElementById('inputBio').addEventListener('input', function() {
-            document.getElementById('livePreviewBio').textContent = this.value;
-        });
-
-        // Theme color selection
-        const themeOptions = document.querySelectorAll('.theme-option');
-        const themeColorInput = document.getElementById('themeColor');
-
-        themeOptions.forEach(option => {
-            const selectedColor = themeColorInput.value;
-            if (option.dataset.color === selectedColor) {
-                option.classList.add('active');
-                applyThemeColor(selectedColor);
+            } else {
+                const screen = document.getElementById('previewScreen');
+                const newImg = document.createElement('img');
+                newImg.src = event.target.result;
+                newImg.id = "previewPhoneBanner";
+                newImg.style = "width: 100%; border-radius: 10px; margin-bottom: 20px;";
+                screen.insertBefore(newImg, screen.firstChild);
             }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
 
-            option.addEventListener('click', function() {
-                themeOptions.forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                const color = this.dataset.color;
-                themeColorInput.value = color;
-                applyThemeColor(color);
-            });
-        });
+    // Preview profile image
+    document.getElementById('profileImageInput').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const previewProfile = document.getElementById('previewPhoneProfile');
+            previewProfile.innerHTML = `<img src="${event.target.result}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">`;
+            document.querySelector('.profile-image').innerHTML = `<img src="${event.target.result}" alt="Profile">`;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
 
-        function applyThemeColor(color) {
-            document.getElementById('livePreviewName').style.color = color;
-            document.getElementById('livePreviewBio').style.color = color;
-            document.querySelector('.save-button').style.backgroundColor = color;
+    // Live preview name and bio
+    document.getElementById('inputName').addEventListener('input', function() {
+        previewName.textContent = this.value;
+    });
+    document.getElementById('inputBio').addEventListener('input', function() {
+        previewBio.textContent = this.value;
+    });
+
+    // Live preview social links
+    function updateSocialPreview() {
+        const instagram = document.getElementById('inputInstagram').value;
+        const tiktok = document.getElementById('inputTiktok').value;
+        const whatsapp = document.getElementById('inputWhatsapp').value;
+
+        const container = document.getElementById('livePreviewSocialLinks');
+        container.innerHTML = '';
+
+        if (instagram) {
+            container.innerHTML += `<a href="${instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`;
         }
-
-        // Copy to clipboard
-        document.querySelector('.share-button').addEventListener('click', function () {
-            const url = document.querySelector('.url-input').value;
-            navigator.clipboard.writeText(url).then(() => {
-                alert('URL copied to clipboard!');
-            });
-        });
-        function updateSocialPreview() {
-            const instagram = document.getElementById('inputInstagram').value;
-            const tiktok = document.getElementById('inputTiktok').value;
-            const whatsapp = document.getElementById('inputWhatsapp').value;
-
-            const container = document.getElementById('livePreviewSocialLinks');
-            container.innerHTML = '';
-
-            if (instagram) {
-                container.innerHTML += `<a href="${instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`;
-            }
-            if (tiktok) {
-                container.innerHTML += `<a href="${tiktok}" target="_blank"><i class="fab fa-tiktok"></i></a>`;
-            }
-            if (whatsapp) {
-                container.innerHTML += `<a href="${whatsapp}" target="_blank"><i class="fab fa-whatsapp"></i></a>`;
-            }
+        if (tiktok) {
+            container.innerHTML += `<a href="${tiktok}" target="_blank"><i class="fab fa-tiktok"></i></a>`;
         }
+        if (whatsapp) {
+            container.innerHTML += `<a href="${whatsapp}" target="_blank"><i class="fab fa-whatsapp"></i></a>`;
+        }
+    }
 
-        ['inputInstagram', 'inputTiktok', 'inputWhatsapp'].forEach(id => {
-            document.getElementById(id).addEventListener('input', updateSocialPreview);
+    ['inputInstagram', 'inputTiktok', 'inputWhatsapp'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateSocialPreview);
+    });
+
+    // Pilihan background tema (gambar)
+    document.querySelectorAll('.theme-preview').forEach(img => {
+        img.addEventListener('click', function () {
+            const bgUrl = this.getAttribute('data-bg');
+            const bgName = this.getAttribute('data-name');
+
+            // Simpan nilai ke input hidden
+            backgroundColorInput.value = bgName;
+
+            // Terapkan background ke preview
+            const previewScreen = document.getElementById('previewScreen');
+            previewScreen.style.backgroundImage = `url('${bgUrl}')`;
+            previewScreen.style.backgroundSize = 'cover';
+            previewScreen.style.backgroundPosition = 'center';
+
+            // Tambahkan border active
+            document.querySelectorAll('.theme-preview').forEach(tp => {
+                tp.style.border = "2px solid transparent";
+            });
+            this.style.border = "2px solid #FF9040";
         });
+    });
+});
+</script>
 
-        updateSocialPreview();
-    </script>
 </body>
 </html>

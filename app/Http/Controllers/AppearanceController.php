@@ -28,6 +28,7 @@ class AppearanceController extends Controller
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'theme_color' => 'required|string|max:7',
+            'background_color' => 'nullable|string',
             'instagram' => 'nullable|url|max:255',
             'tiktok' => 'nullable|url|max:255',
             'whatsapp' => 'nullable|url|max:255',
@@ -43,7 +44,8 @@ class AppearanceController extends Controller
         // Update data
         $appearance->name = $request->name;
         $appearance->bio = $request->bio;
-        $appearance->theme_color = $request->theme_color;
+       $appearance->theme_color = $request->theme_color;
+        $appearance->background_color = $request->background_color;
         $appearance->instagram = $request->instagram;
         $appearance->tiktok = $request->tiktok;
         $appearance->whatsapp = $request->whatsapp;
