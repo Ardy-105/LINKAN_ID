@@ -13,279 +13,236 @@
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
         }
-
         body {
-            background-color: #ffffff;
-            background-image: url('{{ asset('images/background.png') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
+            background: #f6faff;
             min-height: 100vh;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('{{ asset('images/background.png') }}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.1;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .container {
             display: flex;
-            width: 100%;
-            max-width: 1440px;
-            margin: auto;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 80px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .left-side {
-            flex: 0 0 50%;
-            display: flex;
             justify-content: center;
-            align-items: center;
         }
-
-        .floating-animation {
-            width: 100%;
-            max-width: 500px;
+        .register-main-container {
+            display: flex;
+            width: 100vw;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-illustration {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+        }
+        .register-illustration img {
+            max-width: 420px;
+            width: 90%;
             animation: floating 3s ease-in-out infinite;
         }
-
-        .register-container {
-            flex: 0 0 50%;
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .register-form-section {
+            flex: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 40px 0;
+            justify-content: center;
+            padding-top: 48px;
+            padding-bottom: 48px;
         }
-
-        .register-box {
+        .register-card {
             width: 100%;
-            max-width: 400px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 420px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            padding: 0;
+            overflow: hidden;
         }
-
-        .register-box h2 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 30px;
+        .register-card-header {
+            background: #e6f0fa;
+            padding: 24px 0 12px 0;
             text-align: center;
+            border-bottom: 1px solid #e0e0e0;
         }
-
+        .register-card-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #222;
+            margin-bottom: 6px;
+        }
+        .register-card-header span {
+            color: #FF9040;
+        }
+        .register-card-header p {
+            color: #333;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        .register-card-body {
+            padding: 32px 32px 24px 32px;
+        }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
-
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
+            margin-bottom: 6px;
+            color: #222;
             font-weight: 500;
         }
-
         .form-group input {
             width: 100%;
-            padding: 14px 18px;
-            border: 1px solid #e1e1e1;
-            border-radius: 14px;
+            padding: 12px 14px;
+            border: 1px solid #bfc9d1;
+            border-radius: 7px;
             font-size: 15px;
-            background-color: #fff;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
+            background: #f8f9fa;
+            transition: border 0.2s;
         }
-
         .form-group input:focus {
             outline: none;
-            border-color: #FF7F50;
-            box-shadow: 0 0 0 4px rgba(255, 127, 80, 0.1);
+            border-color: #FF9040;
         }
-
-        .form-group input::placeholder {
-            color: #999;
+        .form-group small {
+            color: #888;
+            font-size: 12px;
         }
-
         .btn-register {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #FF7F50, #ff6b3b);
-            color: white;
+            padding: 14px;
+            background: linear-gradient(90deg, #FF9040 60%, #ffb07c 100%);
+            color: #fff;
             border: none;
-            border-radius: 14px;
-            font-size: 16px;
+            border-radius: 7px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 28px;
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(255,144,64,0.08);
         }
-
         .btn-register:hover {
-            background: linear-gradient(135deg, #ff6b3b, #FF7F50);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 127, 80, 0.3);
+            background: linear-gradient(90deg, #ffb07c 0%, #FF9040 100%);
         }
-
         .login-link {
             text-align: center;
             font-size: 14px;
-            color: #666;
+            color: #333;
+            margin-bottom: 10px;
         }
-
         .login-link a {
-            color: #FF7F50;
+            color: #FF9040;
             text-decoration: none;
             font-weight: 500;
         }
-
         .login-link a:hover {
             text-decoration: underline;
         }
-
         .error-message {
             color: #dc3545;
             font-size: 14px;
             margin-top: 6px;
         }
-
-        @media (max-width: 1200px) {
-            .container {
-                padding: 0 40px;
-            }
-            
-            .left-side {
-                flex: 0 0 40%;
+        @media (max-width: 900px) {
+            .register-main-container { flex-direction: column; }
+            .register-illustration { display: none; }
+            .register-form-section {
+                padding-top: 24px;
+                padding-bottom: 24px;
             }
         }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                padding: 20px;
-            }
-
-            .left-side {
-                display: none;
-            }
-
-            .register-container {
-                flex: 0 0 100%;
-            }
-
-            .register-box {
-                padding: 30px 20px;
-            }
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0;
+            height: 48px;
         }
-
-        @keyframes floating {
-            0% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-20px);
-            }
-            100% {
-                transform: translateY(0px);
-            }
+        .logo img {
+            height: 40px;
+            width: auto;
+            max-width: 180px;
+            transition: transform 0.2s;
+            display: block;
+        }
+        .logo img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" id="logo">
+<div class="register-main-container">
+    <div class="register-illustration">
+        <img src="{{ asset('images/Singing Contract.png') }}" alt="Register Illustration" />
+    </div>
+    <div class="register-form-section">
+        <div class="register-card">
+            <div class="register-card-header">
+                <div class="logo">
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" id="logo">
+            </a>
         </div>
-    </nav>
-    <div class="container">
-        <div class="left-side">
-            <img src="{{ asset('images/logohp.png') }}" alt="Register Illustration" class="floating-animation">
-        </div>
-        
-        <div class="register-container">
-            <div class="register-box">
-                <h2>Create your account</h2>
-                
+                <p>Please fill in all the mandatory fileds below</p>
+            </div>
+            <div class="register-card-body">
                 @if(session('error'))
                     <div class="error-message" style="margin-bottom: 20px;">
                         {{ session('error') }}
                     </div>
                 @endif
-                
                 <form method="POST" action="{{ route('register.submit') }}">
                     @csrf
                     @if(isset($googleData))
                         <input type="hidden" name="google_id" value="{{ $googleData['google_id'] }}">
                     @endif
-
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" placeholder="Enter your full name" value="{{ $googleData['name'] ?? old('name') }}" required>
                     </div>
-
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" id="username" name="username" placeholder="Choose your username" value="{{ old('username') }}" required>
                         <small style="color: #666; font-size: 12px;">This will be your link: linkan.id/username</small>
                     </div>
-
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="Example@gmail.com" value="{{ $googleData['email'] ?? old('email') }}" required>
                     </div>
-
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" id="password" name="password" placeholder="••••••••" required>
                     </div>
-
                     <div class="form-group">
                         <label for="password_confirmation">Confirm Password</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required>
                     </div>
-
                     @error('name')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
-
                     @error('username')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
-
                     @error('email')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
-
                     @error('password')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
-
                     <button type="submit" class="btn-register">Create Account</button>
                 </form>
-
                 <div class="login-link">
                     Already have an account? <a href="{{ route('login') }}">Sign in</a>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
-</html> 
+</html>
