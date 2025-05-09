@@ -86,9 +86,20 @@ Route::get('/homeadminS/account-settings', function () {
     return 'My Account Page (Coming Soon)';
 })->name('account.settings');
 
+// Rute untuk My Account
+Route::get('/homeadminS/account-settings', function () {
+    return view('homeadminS.myaccount');
+})->name('account.settings');
+
 // Rute untuk Payout Settings
 Route::get('/homeadminS/payout-settings', function () {
     return 'Payout Settings Page (Coming Soon)';
+})->name('payout.settings');
+
+
+// Rute untuk Payout Settings
+Route::get('/homeadminS/payout-settings', function () {
+    return view('homeadminS.payout');
 })->name('payout.settings');
 
 Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
