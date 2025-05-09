@@ -20,7 +20,7 @@ class AppearanceController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
-        
+
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
@@ -44,7 +44,7 @@ class AppearanceController extends Controller
         // Update data
         $appearance->name = $request->name;
         $appearance->bio = $request->bio;
-       $appearance->theme_color = $request->theme_color;
+        $appearance->theme_color = $request->theme_color;
         $appearance->background_color = $request->background_color;
         $appearance->instagram = $request->instagram;
         $appearance->tiktok = $request->tiktok;

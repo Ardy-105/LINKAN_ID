@@ -18,7 +18,7 @@
             background-color: #f5f6fa;
         }
 
-        
+
         .container {
     display: flex;
     min-height: 100vh;
@@ -84,16 +84,16 @@
             padding: 5px;
         }
 
-    
+
 
         .settings-icon {
             color: #666;
             cursor: pointer;
         }
 
-  
 
- 
+
+
 
         .home-button {
             background: #FF9040;
@@ -502,7 +502,7 @@
                     <a href="{{ url('/linkan.id/' . Auth::user()->username) }}" style="color: #FF9040;">
                         {{ url('/linkan.id/' . Auth::user()->username) }}
                     </a>
-                    
+
                 </div>
                 <button class="share-button">
                     <i class="fas fa-share-alt"></i>
@@ -541,7 +541,7 @@
             <h2>Preview</h2>
         </div>
         <div class="phone-preview">
-            <div class="phone-content">
+            <div class="phone-content" style="background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
                 @if($appearance && $appearance->banner)
                     <div class="banner-preview">
                         <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner">
@@ -569,6 +569,13 @@
                         <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
                     @endif
                 </div>
+                <div class="preview-header" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">Produk Digital</div>
+                @if($appearance && $appearance->description)
+                    <div class="preview-bio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->description }}</div>
+                @endif
+                @if($appearance && $appearance->link)
+                    <a href="{{ $appearance->link }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->button_text ?? 'Beli' }}</a>
+                @endif
                 @if($digitalProducts->count() > 0)
                     <div class="preview-products">
                         @foreach($digitalProducts as $product)
@@ -702,7 +709,7 @@
 
             // Set action tombol Delete untuk modal
             document.getElementById('deleteForm').action = `/digital-product/${productId}`;
-            
+
             // Set URL tombol Edit
             document.getElementById('editButton').href = `/digital-product/${productId}/edit`;
 

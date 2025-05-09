@@ -12,11 +12,20 @@
             display: flex;
             justify-content: center;
             padding: 30px;
+            min-height: 100vh;
+            margin: 0;
         }
 
         .content-wrapper {
             width: 100%;
             max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}');
+            background-size: cover;
+            background-position: center;
         }
 
         .preview-banner {

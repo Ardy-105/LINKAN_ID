@@ -359,7 +359,7 @@
             opacity: 0.9;
         }
 
-   
+
         .save-button:hover {
             opacity: 0.9;
         }
@@ -421,7 +421,7 @@
             </div>
 
            <form action="{{ route('appearance.update') }}" method="POST" enctype="multipart/form-data">
-              
+
 
                 @csrf
                 <div class="content-section">
@@ -461,7 +461,7 @@
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
     <label for="colorPicker">Customize Color:</label>
     <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#3498db' }}">
-    
+
    <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
 </div>
 
@@ -482,8 +482,8 @@
         $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png'];
     @endphp
     @foreach ($themes as $theme)
-        <img src="{{ asset('images/previewt/' . $theme) }}" 
-             data-bg="{{ asset('images/background/' . $theme) }}" 
+        <img src="{{ asset('images/previewt/' . $theme) }}"
+             data-bg="{{ asset('images/background/' . $theme) }}"
              data-name="{{ $theme }}"
              class="theme-preview"
              style="width: 80px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 6px;">
@@ -554,7 +554,7 @@
                                     @endif
                                 </div>
                             </div>
-                          
+
                         </div>
                     </div>
                 </div>
