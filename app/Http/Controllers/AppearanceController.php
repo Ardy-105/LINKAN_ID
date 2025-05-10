@@ -17,6 +17,7 @@ class AppearanceController extends Controller
         return view('homeadminS.appearance', compact('appearance', 'digitalProducts'));
     }
 
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -40,6 +41,12 @@ class AppearanceController extends Controller
             $appearance = new Appearance();
             $appearance->user_id = $user->id;
         }
+          // Cek jika ada request untuk menghapus banner
+ if ($request->input('delete_banner') == "1" && $appearance->banner) {
+    Storage::delete('public/' . $appearance->banner);
+    $appearance->banner = null;
+}
+
 
         // Update data
         $appearance->name = $request->name;

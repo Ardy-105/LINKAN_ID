@@ -114,6 +114,13 @@
             color: #333;
             margin-bottom: 15px;
         }
+        
+        .card-priview {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
         .banner-section {
             border: 2px dashed #ddd;
@@ -121,6 +128,10 @@
             padding: 30px;
             text-align: center;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* posisi horizontal tengah */
+            justify-content: center; /* opsional: posisi vertikal tengah */
         }
 
         .banner-section i {
@@ -194,26 +205,30 @@
             background: #eee;
             padding: 20px;
             border-radius: 10px;
-            width: 300px;
+            width: 400px; /* Lebar yang lebih besar */
             height: fit-content;
             position: sticky;
             top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .preview-phone {
-            background: white;
+            width: 375px; /* iPhone 11/12/13 width */
+            height: 812px; /* iPhone 11/12/13 height */
             border-radius: 40px;
             padding: 20px;
-            width: 100%;
-            aspect-ratio: 9/19;
+            background: white;
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .preview-screen {
-            background: #f8f9fa;
+            width: 100%;
             height: 100%;
+            background: #f8f9fa;
             border-radius: 30px;
             padding: 20px;
             display: flex;
@@ -423,8 +438,13 @@
                         <div class="card">
                             <h2 class="card-title">Banner</h2>
                             <div class="banner-section">
-                                @if($appearance && $appearance->banner)
-                                    <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="max-width: 100%; margin-bottom: 15px;" id="previewBanner">
+                            @if($appearance && $appearance->banner)
+    <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner"
+         style="width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;" id="previewBanner">
+    <input type="hidden" name="delete_banner" id="deleteBanner" value="0">
+    <button type="button" onclick="confirmDeleteBanner()" class="upload-button" style="background-color: red; color: white;">
+        Hapus Banner
+    </button>
                                 @else
                                     <i class="fas fa-image"></i>
                                     <p class="banner-text">Optimize banner size 1056 x 638 px</p>
@@ -495,7 +515,7 @@
     </div>
     <input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
 </div>
-
+  </form>
 
 <div style="display: flex; justify-content: center; margin-top: 20px;">
     <button type="submit" class="save-button"
@@ -508,14 +528,19 @@
                     </div>
 
                     <!-- Preview -->
-                    <div class="right-panel">
-                        <div class="card">
-                            <h2 class="card-title">Preview</h2>
+
+                  
+                        <div class="preview-section">
+                              <div class="right-panel">
+                         <div class="preview-header">
+                           <h2 class="card-priview">Preview</h2>
+                        </div>
                             <div class="preview-phone">
                                 <div class="preview-screen" id="previewScreen">
                                     @if($appearance && $appearance->banner)
                                         <div class="preview-banner">
-                                            <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" id="previewPhoneBanner">
+                                          <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" id="previewPhoneBanner" style="width: 100%; aspect-ratio: 1056 / 638; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
+
                                         </div>
                                     @endif
                                     <div class="preview-profile" id="previewPhoneProfile">
@@ -563,10 +588,15 @@
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
     </div>
 <script>
+    function confirmDeleteBanner() {
+    if (confirm('Yakin ingin menghapus banner?')) {
+        document.getElementById('deleteBanner').value = 1;
+        document.querySelector('form').submit();
+    }
+}
 function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('Link copied to clipboard!');
@@ -632,7 +662,8 @@ if (currentBackground) {
                 const newImg = document.createElement('img');
                 newImg.src = event.target.result;
                 newImg.id = "previewPhoneBanner";
-                newImg.style = "width: 100%; border-radius: 10px; margin-bottom: 20px;";
+           newImg.style = "width: 100%; aspect-ratio: 589 / 233; object-fit: cover; border-radius: 10px; margin-bottom: 20px;";
+
                 screen.insertBefore(newImg, screen.firstChild);
             }
         };

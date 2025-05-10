@@ -15,6 +15,9 @@ use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
 
+
+
+
 Route::get('/', function () {
     return view('welcome');
 });
