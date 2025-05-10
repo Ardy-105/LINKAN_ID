@@ -29,7 +29,6 @@
         .main-content {
             flex: 1;
             padding: 20px;
-            background: white;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             min-width: 0; /* Untuk mencegah overflow */
@@ -48,14 +47,19 @@
         }
 
         .notification-icon {
-            width: 40px;
-            height: 40px;
-            background: #fff;
+            background-color: #fff;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+          .notification-icon i {
+            color: #333;
+            font-size: 16px;
         }
 
         .my-linkan-header {
@@ -262,7 +266,6 @@
         }
 
         .social-links a {
-            color: #FF9040;
             font-size: 20px;
             text-decoration: none;
             transition: color 0.3s ease;
@@ -504,8 +507,8 @@
                     </a>
 
                 </div>
-                <button class="share-button">
-                    <i class="fas fa-share-alt"></i>
+                <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/{{ Auth::user()->username }}')">
+                        <i class="fas fa-share-alt"></i>
                 </button>
             </div>
 
@@ -560,16 +563,15 @@
                 @endif
                 <div class="social-links">
                     @if($appearance && $appearance->instagram)
-                        <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
                     @endif
                     @if($appearance && $appearance->tiktok)
-                        <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+                        <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
                     @endif
                     @if($appearance && $appearance->whatsapp)
-                        <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
                     @endif
                 </div>
-                <div class="preview-header" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">Produk Digital</div>
                 @if($appearance && $appearance->description)
                     <div class="preview-bio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->description }}</div>
                 @endif
@@ -671,6 +673,13 @@
 </div>
 
     <script>
+          function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
         function showAddBlockModal() {
             document.getElementById('addBlockModal').style.display = 'block';
             document.body.classList.add('modal-open');

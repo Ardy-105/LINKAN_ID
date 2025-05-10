@@ -103,7 +103,10 @@
             flex-direction: column;
             gap: 10px;
         }
-
+.product-info {
+    flex: 1;
+    overflow: hidden; /* jika teks panjang */
+}
         .preview-product-item {
             background: white;
             border-radius: 8px;
@@ -112,6 +115,7 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            justify-content: space-between; /* ini membantu spasi otomatis */
         }
 
         .preview-product-image {
@@ -151,6 +155,8 @@
             cursor: pointer;
             flex-shrink: 0;
             text-decoration: none;
+            transition: background 0.3s ease;
+            margin-left: auto; /* penting agar tombol terdorong ke kanan */
         }
     </style>
 </head>
@@ -196,7 +202,9 @@
                                 <i class="fas fa-file-alt"></i>
                             @endif
                         </div>
+                        <div class="product-info">
                         <div class="preview-product-title">{{ $product->title }}</div>
+                        </div>
                         <a href="{{ $product->platform_url ?? '#' }}" class="preview-product-button" target="_blank">
                             {{ $product->button_text ?? 'Beli' }}
                         </a>
