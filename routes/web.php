@@ -13,6 +13,7 @@ use App\Http\Controllers\AppearanceController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AccountController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -96,11 +97,22 @@ Route::get('/homeadminS/payout-settings', function () {
     return 'Payout Settings Page (Coming Soon)';
 })->name('payout.settings');
 
-
 // Rute untuk Payout Settings
 Route::get('/homeadminS/payout-settings', function () {
     return view('homeadminS.payout');
 })->name('payout.settings');
+
+Route::get('/homeadminS/account-settings', function () {
+    return view('homeadminS.myaccount', ['user' => Auth::user()]);
+})->name('account.settings')->middleware('auth');
+//menyesuaikan nama yang diedit
+Route::get('/homeadminS/account-settings', [AccountController::class, 'edit'])->name('account.settings')->middleware('auth');
+
+Route::post('/homeadminS/account-settings/update', [AccountController::class, 'update'])->name('account.update');
+
+Route::post('/homeadminS/account-settings/update', [App\Http\Controllers\AccountController::class, 'update'])->name('account.update');
+
+Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
 
 Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
 

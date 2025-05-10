@@ -38,9 +38,9 @@
 
         .account-detail, .delete-account {
             background: white;
-            padding: 20px;
+            padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
 
@@ -86,23 +86,77 @@
             font-size: 12px;
             color: #999;
         }
-        .btn-save {
-    background-color: #FF9040; /* Warna oranye */
-    color: white; /* Warna font putih */
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    display: block; /* Pastikan tombol berada di baris baru */
-    margin-left: auto; /* Geser tombol ke kanan */
-    margin-top: 20px; /* Tambahkan jarak dari elemen sebelumnya */
-}
 
-.btn-save:hover {
-    background-color: #e67e22; /* Warna oranye lebih gelap saat hover */
-}
+        .btn-save {
+            background-color: #FF9040; /* Warna oranye */
+            color: white; /* Warna font putih */
+            border: none;
+            padding: 10px 60px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block; /* Pastikan tombol berada di baris baru */
+            margin-left: auto; /* Geser tombol ke kanan */
+            margin-top: 20px; /* Tambahkan jarak dari elemen sebelumnya */
+        }
+
+        .btn-save:hover {
+            background-color: #e67e22; /* Warna oranye lebih gelap saat hover */
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            position: fixed; /* agar posisinya tetap saat scroll */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* untuk benar-benar menempatkan di tengah */
+            
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 10px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* pastikan tampil di atas elemen lain */
+        }
+
+
+        .popup-buttons button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #bbb;
+        }
+
+        .btn-confirm {
+            background-color: #FF9040;
+            color: white;
+        }
+
+        .btn-confirm:hover {
+            background-color: #e67e22;
+        }
     </style>
 </head>
 <body>
@@ -115,35 +169,99 @@
                 <h1>Account Settings</h1>
             </div>
 
+            @if(session('success'))
+                <div style="color: green; margin-bottom: 15px;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+<!-- Form Account Detail -->
             <div class="account-detail">
                 <h2>Account Detail</h2>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" value="Budi" readonly>
+                <form id="accountForm" action="{{ route('account.update') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" readonly style="color: gray;">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name :</label>
+                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}">
+                    </div>    
+                    <div class="form-group">
+                        <label for="password">Password :</label>
+                        <input type="password" id="password" name="password" placeholder="Enter new password">
+                    </div> 
+                    <div class="form-group">
+                        <button type="button" class="btn-save" onclick="showPopup()">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Popup Confirmation -->
+            <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+                <div class="popup-content">
+                    <h3>Apakah Anda Yakin untuk Mengubah?</h3>
+                    <div class="popup-buttons">
+                        <button class="btn-cancel" onclick="closePopup()">Cancel</button>
+                        <button class="btn-confirm" onclick="submitForm()">Confirm</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" value="Budi@gmail.com" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="name">Name :</label>
-                    <input type="text" id="name" value="Budi" readonly>
-                </div>    
-                <div class="form-group">
-                    <label for="Password">Password :</label>
-                    <input type="text" id="Password" value="Budi123" readonly>
-                </div> 
-                <div class="form-group">
-                     <button class="btn-save">Save</button>
-                </div>         
             </div>
 
             <div class="delete-account">
                 <h2>Delete Account</h2>
-                <p>Click the button below if you want to delete your account</p>
-                <button>Delete Account</button>
+                <p>Click the button below if you want to delete your account</p><br> 
+                <button onclick="showDeletePopup()">Delete Account</button>
+            </div> 
+
+            <!-- Delete Account Popup -->
+            <div id="deleteConfirmationPopup" class="popup-overlay" style="display: none;">
+                <div class="popup-content">
+                    <h3>Apakah Anda Yakin Ingin Menghapus Akun?</h3>
+                    <p style="color: red; margin: 10px 0;">Tindakan ini tidak dapat dibatalkan!</p>
+                    <div class="popup-buttons">
+                        <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
+                        <form action="{{ route('account.delete') }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-confirm">Ya, Hapus Akun</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Show the popup
+        function showPopup() {
+            document.getElementById('confirmationPopup').style.display = 'block';
+        }
+
+        // Close the popup
+        function closePopup() {
+            document.getElementById('confirmationPopup').style.display = 'none';
+        }
+
+        // Submit the form
+        function submitForm() {
+            document.getElementById('accountForm').submit();
+        }
+
+        // Show delete confirmation popup
+        function showDeletePopup() {
+            document.getElementById('deleteConfirmationPopup').style.display = 'block';
+        }
+
+        // Close delete confirmation popup
+        function closeDeletePopup() {
+            document.getElementById('deleteConfirmationPopup').style.display = 'none';
+        }
+    </script>
 </body>
-</html> 
+</html>
