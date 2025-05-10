@@ -278,7 +278,6 @@
         }
 
         .preview-social-links a {
-            color: #FF9040;
             font-size: 20px;
             text-decoration: none;
             transition: color 0.3s ease;
@@ -398,12 +397,6 @@
             transition: all 0.3s ease;
         }
 
-        .preview-social-links a {
-            margin: 0 8px;
-            font-size: 20px;
-            color: inherit;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
@@ -413,8 +406,8 @@
         <div class="main-content">
             <div class="url-section">
                 <div class="url-input-group">
-                    <input type="text" class="url-input" value="My Linkan: http://localhost:8000/linkan.id/{{ Auth::user()->username }}" readonly>
-                    <button class="share-button">
+                    <input type="text" class="url-input"value="My Linkan: {{ url('linkan.id/' . Auth::user()->username) }}"readonly>
+                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/{{ Auth::user()->username }}')">
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>
@@ -476,20 +469,32 @@
         <input type="url" name="whatsapp" id="inputWhatsapp" placeholder="WhatsApp URL" value="{{ $appearance->whatsapp ?? '' }}">
     </div>
 </div>
-                        <!-- Theme -->
-                    <div class="theme-options" id="themeOptions" style="display: flex; flex-wrap: wrap; gap: 10px;">
-    @php
-        $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png'];
-    @endphp
-    @foreach ($themes as $theme)
-        <img src="{{ asset('images/previewt/' . $theme) }}"
-             data-bg="{{ asset('images/background/' . $theme) }}"
-             data-name="{{ $theme }}"
-             class="theme-preview"
-             style="width: 80px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 6px;">
-    @endforeach
+    <!-- Theme -->
+   <div class="card">
+    <h2 class="card-title">Theme</h2>
+    <div class="theme-options" id="themeOptions"
+         style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
+
+        @php
+            $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png','sunset.png', 'mountain.png','library.png','news paper.png'];
+        @endphp
+
+        @foreach ($themes as $theme)
+            <div style="text-align: center;">
+                <img src="{{ asset('images/previewt/' . $theme) }}"
+                     data-bg="{{ asset('images/background/' . $theme) }}"
+                     data-name="{{ $theme }}"
+                     class="theme-preview"
+                     style="width: 100px; height: 70px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 8px; transition: transform 0.2s;">
+                <div style="font-size: 13px; margin-top: 6px; color: #333;">
+                    {{ ucwords(str_replace(['-', '_'], ' ', pathinfo($theme, PATHINFO_FILENAME))) }}
+                </div>
+            </div>
+        @endforeach
+
+    </div>
+    <input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
 </div>
-<input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
 
 
 <div style="display: flex; justify-content: center; margin-top: 20px;">
@@ -561,7 +566,14 @@
             </form>
         </div>
     </div>
-  <script>
+<script>
+function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
 document.addEventListener('DOMContentLoaded', function () {
     const colorPicker = document.getElementById('colorPicker');
     const themeColorInput = document.getElementById('themeColor');

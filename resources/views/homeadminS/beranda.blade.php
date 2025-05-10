@@ -111,7 +111,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #666;
+            color: #FF9040;
             font-size: 15px;
             cursor: pointer;
             padding: 8px;
