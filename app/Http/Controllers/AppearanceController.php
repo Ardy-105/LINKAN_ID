@@ -22,18 +22,26 @@ class AppearanceController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'bio' => 'nullable|string|max:500',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'theme_color' => 'required|string|max:7',
-            'background_color' => 'nullable|string',
-            'instagram' => 'nullable|url|max:255',
-            'tiktok' => 'nullable|url|max:255',
-            'whatsapp' => 'nullable|url|max:255',
-        ]);
+      $request->validate([
+    'name' => 'required|string|max:255',
+    'bio' => 'nullable|string|max:500',
+    'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    'theme_color' => 'required|string|max:7',
+    'background_color' => 'nullable|string',
+    'instagram' => 'nullable|url|max:255',
+    'tiktok' => 'nullable|url|max:255',
+    'whatsapp' => 'nullable|url|max:255',
+    'linkedin' => 'nullable|url|max:255',
+    'facebook' => 'nullable|url|max:255',
+    'website' => 'nullable|url|max:255',
+    'twitter' => 'nullable|url|max:255',
+    'youtube' => 'nullable|url|max:255',
+    'telegram' => 'nullable|url|max:255',
+    'email' => 'nullable|email|max:255',
+    'discord' => 'nullable|url|max:255',
+]);
+
 
         // Cari atau buat record appearance
         $appearance = Appearance::where('user_id', $user->id)->first();
@@ -67,6 +75,15 @@ if ($request->has('delete_profile_image') && $request->delete_profile_image == 1
         $appearance->instagram = $request->instagram;
         $appearance->tiktok = $request->tiktok;
         $appearance->whatsapp = $request->whatsapp;
+        $appearance->linkedin = $request->linkedin;
+$appearance->facebook = $request->facebook;
+$appearance->website = $request->website;
+$appearance->twitter = $request->twitter;
+$appearance->youtube = $request->youtube;
+$appearance->telegram = $request->telegram;
+$appearance->email = $request->email;
+$appearance->discord = $request->discord;
+
         $appearance->is_active = true;
 
         // Handle banner upload

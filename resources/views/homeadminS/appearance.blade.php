@@ -442,6 +442,49 @@
     cursor: pointer;
 }
 
+.social-btn {
+    margin: 5px;
+    padding: 8px 14px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.social-btn i {
+    margin-right: 6px;
+}
+.social-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.social-input i {
+    font-size: 18px;
+}
+.social-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.remove-social {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 27px;
+    cursor: pointer;
+    margin-left: 8px;
+    line-height: 1;
+    padding: 4px;
+}
+.remove-social:hover {
+    color: red;
+}
+
+
     </style>
 </head>
 <body>
@@ -503,22 +546,75 @@
                                 <!-- 🎨 Color Picker -->
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
     <label for="colorPicker">Customize Color:</label>
-    <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#3498db' }}">
+    <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
 
    <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
 </div>
 
                             </div>
                         </div>
-<!-- Social Media Links -->
+ <!-- Social Media Links -->
 <div class="card">
     <h2 class="card-title">Social Links</h2>
-    <div class="social-link-inputs">
-        <input type="url" name="instagram" id="inputInstagram" placeholder="Instagram URL" value="{{ $appearance->instagram ?? '' }}">
-        <input type="url" name="tiktok" id="inputTiktok" placeholder="TikTok URL" value="{{ $appearance->tiktok ?? '' }}">
-        <input type="url" name="whatsapp" id="inputWhatsapp" placeholder="WhatsApp URL" value="{{ $appearance->whatsapp ?? '' }}">
+
+    <!-- Tombol Pilih Platform -->
+    <div id="social-buttons" style="margin-bottom: 10px;">
+        @foreach(['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord'] as $platform)
+            <button type="button" class="social-btn" data-platform="{{ $platform }}">
+                <i class="{{
+                    [
+                        'instagram'=>'fab fa-instagram',
+                        'tiktok'=>'fab fa-tiktok',
+                        'whatsapp'=>'fab fa-whatsapp',
+                        'linkedin'=>'fab fa-linkedin',
+                        'facebook'=>'fab fa-facebook',
+                        'website'=>'fas fa-globe',
+                        'twitter'=>'fab fa-twitter',
+                        'youtube'=>'fab fa-youtube',
+                        'telegram'=>'fab fa-telegram',
+                        'email'=>'fas fa-envelope',
+                        'discord'=>'fab fa-discord'
+                    ][$platform]
+                }}"></i>
+                {{ ucfirst($platform) }}
+            </button>
+        @endforeach
+    </div>
+
+    <!-- Input yang akan muncul -->
+    <div id="social-link-inputs">
+        @foreach(['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord'] as $platform)
+            <div class="social-input" data-platform="{{ $platform }}"
+                 style="{{ ($appearance && $appearance->$platform) ? '' : 'display:none;' }}">
+                <i class="{{
+                    [
+                        'instagram'=>'fab fa-instagram',
+                        'tiktok'=>'fab fa-tiktok',
+                        'whatsapp'=>'fab fa-whatsapp',
+                        'linkedin'=>'fab fa-linkedin',
+                        'facebook'=>'fab fa-facebook',
+                        'website'=>'fas fa-globe',
+                        'twitter'=>'fab fa-twitter',
+                        'youtube'=>'fab fa-youtube',
+                        'telegram'=>'fab fa-telegram',
+                        'email'=>'fas fa-envelope',
+                        'discord'=>'fab fa-discord'
+                    ][$platform]
+                }}"></i>
+                <input
+                    type="{{ $platform=='email' ? 'email' : 'url' }}"
+                    id="input{{ ucfirst($platform) }}"
+                    name="{{ $platform }}"
+                    placeholder="{{ ucfirst($platform) }} {{ $platform=='email' ? 'Address' : 'URL' }}"
+                    value="{{ $appearance->$platform ?? '' }}"
+                >
+                <button type="button" class="remove-social" title="Hapus">&times;</button>
+            </div>
+        @endforeach
     </div>
 </div>
+
+
     <!-- Theme -->
    <div class="card">
     <h2 class="card-title">Theme</h2>
@@ -599,15 +695,40 @@
                                     <div class="preview-name" id="livePreviewName" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
                                     <div class="preview-bio" id="livePreviewBio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->bio : '' }}</div>
                                     <div class="preview-social-links" id="livePreviewSocialLinks">
-                                        @if($appearance && $appearance->instagram)
-                                            <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
-                                        @endif
-                                        @if($appearance && $appearance->tiktok)
-                                            <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
-                                        @endif
-                                        @if($appearance && $appearance->whatsapp)
-                                            <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                                        @endif
+                                     @if($appearance && $appearance->instagram)
+    <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+@endif
+@if($appearance && $appearance->tiktok)
+    <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+@endif
+@if($appearance && $appearance->whatsapp)
+    <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+@endif
+@if($appearance && $appearance->linkedin)
+    <a href="{{ $appearance->linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+@endif
+@if($appearance && $appearance->facebook)
+    <a href="{{ $appearance->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+@endif
+@if($appearance && $appearance->website)
+    <a href="{{ $appearance->website }}" target="_blank"><i class="fas fa-globe"></i></a>
+@endif
+@if($appearance && $appearance->twitter)
+    <a href="{{ $appearance->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+@endif
+@if($appearance && $appearance->youtube)
+    <a href="{{ $appearance->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+@endif
+@if($appearance && $appearance->telegram)
+    <a href="{{ $appearance->telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
+@endif
+@if($appearance && $appearance->email)
+    <a href="mailto:{{ $appearance->email }}"><i class="fas fa-envelope"></i></a>
+@endif
+@if($appearance && $appearance->discord)
+    <a href="{{ $appearance->discord }}" target="_blank"><i class="fab fa-discord"></i></a>
+@endif
+
                                     </div>
                                     @if($digitalProducts && $digitalProducts->count() > 0)
                                         <div class="preview-products">
@@ -674,6 +795,94 @@ document.addEventListener('DOMContentLoaded', function () {
     const previewButtons = document.querySelectorAll('.preview-product-button');
     const previewSocialLinks = document.getElementById('livePreviewSocialLinks');
     const saveButton = document.querySelector('.save-button');
+ // Placeholder sesuai platform
+const placeholderMap = {
+    instagram: 'https://instagram.com/',
+    tiktok: 'https://tiktok.com/',
+    whatsapp: 'https://wa.me/08xxxxxxxxxx',
+    linkedin: 'https://linkedin.com/in/username',
+    facebook: 'https://facebook.com/username',
+    website: 'https://yourwebsite.com',
+    twitter: 'https://twitter.com/username',
+    youtube: 'https://youtube.com/@channel',
+    telegram: 'https://t.me/username',
+    email: 'Your email',
+    discord: 'https://discord.gg/invitecode'
+};
+
+// Toggle tampil input saat klik tombol platform
+document.querySelectorAll('.social-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const p = btn.dataset.platform;
+        const inputDiv = document.querySelector(`.social-input[data-platform="${p}"]`);
+        
+        if (inputDiv) {
+            // Toggle tampilkan/hidden input
+            inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
+
+            // Ambil elemen input dan set placeholder sesuai map
+            const input = inputDiv.querySelector('input');
+            if (input && placeholderMap[p]) {
+                input.placeholder = placeholderMap[p];
+            }
+            updateSocialPreview();
+    updatePreviewColor(document.getElementById('themeColor').value);
+        }
+    });
+});
+
+
+    // Hapus satu social-input
+    document.querySelectorAll('.remove-social').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const div = btn.closest('.social-input');
+            if (div) {
+                // kosongkan nilai dan sembunyikan
+                const inp = div.querySelector('input');
+                inp.value = '';
+                div.style.display = 'none';
+            }
+        });
+    });
+
+    // Live preview (sama cara Anda pakai untuk Instagram)
+    function updateSocialPreview() {
+        const container = document.getElementById('livePreviewSocialLinks');
+        container.innerHTML = '';
+
+        ['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord']
+        .forEach(p => {
+            const val = document.getElementById(`input${p.charAt(0).toUpperCase()+p.slice(1)}`).value;
+            if (val) {
+                const icon = document.createElement('i');
+                icon.className = {
+                    instagram: 'fab fa-instagram',
+                    tiktok:    'fab fa-tiktok',
+                    whatsapp:  'fab fa-whatsapp',
+                    linkedin:  'fab fa-linkedin',
+                    facebook:  'fab fa-facebook',
+                    website:   'fas fa-globe',
+                    twitter:   'fab fa-twitter',
+                    youtube:   'fab fa-youtube',
+                    telegram:  'fab fa-telegram',
+                    email:     'fas fa-envelope',
+                    discord:   'fab fa-discord'
+                }[p];
+                const a = document.createElement('a');
+                a.href = val;
+                a.target = '_blank';
+                a.appendChild(icon);
+                container.appendChild(a);
+            }
+        });
+    }
+
+    // Bind event untuk semua input
+    ['Instagram','Tiktok','Whatsapp','Linkedin','Facebook','Website','Twitter','Youtube','Telegram','Email','Discord']
+    .forEach(name => {
+        const el = document.getElementById(`input${name}`);
+        if (el) el.addEventListener('input', updateSocialPreview);
+    });
     // Terapkan background dari database saat halaman dimuat ulang
 const currentBackground = "{{ $appearance ? $appearance->background_color : '' }}";
 if (currentBackground) {
@@ -750,29 +959,46 @@ if (currentBackground) {
         previewBio.textContent = this.value;
     });
 
-    // Live preview social links
-    function updateSocialPreview() {
-        const instagram = document.getElementById('inputInstagram').value;
-        const tiktok = document.getElementById('inputTiktok').value;
-        const whatsapp = document.getElementById('inputWhatsapp').value;
+   // Live preview social links
+function updateSocialPreview() {
+    const platforms = [
+        { id: 'inputInstagram', icon: 'fab fa-instagram' },
+        { id: 'inputTiktok', icon: 'fab fa-tiktok' },
+        { id: 'inputWhatsapp', icon: 'fab fa-whatsapp' },
+        { id: 'inputLinkedin', icon: 'fab fa-linkedin' },
+        { id: 'inputFacebook', icon: 'fab fa-facebook' },
+        { id: 'inputWebsite', icon: 'fas fa-globe' },
+        { id: 'inputTwitter', icon: 'fab fa-twitter' },
+        { id: 'inputYoutube', icon: 'fab fa-youtube' },
+        { id: 'inputTelegram', icon: 'fab fa-telegram' },
+        { id: 'inputEmail', icon: 'fas fa-envelope', isEmail: true },
+        { id: 'inputDiscord', icon: 'fab fa-discord' },
+    ];
 
-        const container = document.getElementById('livePreviewSocialLinks');
-        container.innerHTML = '';
+    const container = document.getElementById('livePreviewSocialLinks');
+    container.innerHTML = '';
 
-        if (instagram) {
-            container.innerHTML += `<a href="${instagram}" target="_blank"><i class="fab fa-instagram"></i></a>`;
+    platforms.forEach(platform => {
+        const input = document.getElementById(platform.id);
+        if (input && input.value) {
+            const href = platform.isEmail ? `mailto:${input.value}` : input.value;
+            container.innerHTML += `<a href="${href}" target="_blank"><i class="${platform.icon}"></i></a>`;
         }
-        if (tiktok) {
-            container.innerHTML += `<a href="${tiktok}" target="_blank"><i class="fab fa-tiktok"></i></a>`;
-        }
-        if (whatsapp) {
-            container.innerHTML += `<a href="${whatsapp}" target="_blank"><i class="fab fa-whatsapp"></i></a>`;
-        }
-    }
-
-    ['inputInstagram', 'inputTiktok', 'inputWhatsapp'].forEach(id => {
-        document.getElementById(id).addEventListener('input', updateSocialPreview);
     });
+}
+
+// Tambahkan event listener untuk semua input
+[
+    'inputInstagram', 'inputTiktok', 'inputWhatsapp', 'inputLinkedin',
+    'inputFacebook', 'inputWebsite', 'inputTwitter', 'inputYoutube',
+    'inputTelegram', 'inputEmail', 'inputDiscord'
+].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+        input.addEventListener('input', updateSocialPreview);
+    }
+});
+
 
     // Pilihan background tema (gambar)
     document.querySelectorAll('.theme-preview').forEach(img => {
