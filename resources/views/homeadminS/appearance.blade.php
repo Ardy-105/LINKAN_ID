@@ -412,6 +412,36 @@
             transition: all 0.3s ease;
         }
 
+        .popup-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    min-width: 300px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -458,7 +488,7 @@
                         <div class="card">
                             <h2 class="card-title">Profile</h2>
                             <div class="profile-section">
-                                <div class="profile-image" onclick="document.getElementById('profileImageInput').click()">
+                               <div class="profile-image" onclick="openProfilePopup()">
                                     @if($appearance && $appearance->profile_image)
                                         <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile" id="previewProfileImage">
                                     @else
@@ -515,7 +545,7 @@
     </div>
     <input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
 </div>
-  </form>
+
 
 <div style="display: flex; justify-content: center; margin-top: 20px;">
     <button type="submit" class="save-button"
@@ -523,7 +553,23 @@
         Save Changes
     </button>
 </div>
-
+  </form>
+  <!-- Modal Profile Popup -->
+<div id="profilePopup" class="popup-modal" style="display: none;">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closeProfilePopup()">&times;</span>
+        
+        @if($appearance && $appearance->profile_image)
+            <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Upload Image</button>
+           <input type="hidden" name="delete_profile_image" id="deleteProfileImage" value="0">
+    <button type="button" onclick="confirmDeleteProfileImage()" class="upload-button" style="background-color: red; color: white; margin-top: 10px;">
+        Hapus Foto Profil
+    </button>
+        @else
+            <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Upload Image</button>
+        @endif
+    </div>
+</div>
 
                     </div>
 
@@ -591,6 +637,21 @@
         </div>
     </div>
 <script>
+    function openProfilePopup() {
+    document.getElementById('profilePopup').style.display = 'flex';
+}
+
+function closeProfilePopup() {
+    document.getElementById('profilePopup').style.display = 'none';
+}
+
+    function confirmDeleteProfileImage() {
+    if (confirm('Yakin ingin menghapus foto profil?')) {
+        document.getElementById('deleteProfileImage').value = 1;
+        document.querySelector('form').submit();
+    }
+}
+
     function confirmDeleteBanner() {
     if (confirm('Yakin ingin menghapus banner?')) {
         document.getElementById('deleteBanner').value = 1;

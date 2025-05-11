@@ -47,6 +47,17 @@ class AppearanceController extends Controller
     $appearance->banner = null;
 }
 
+if ($request->has('delete_profile_image') && $request->delete_profile_image == 1) {
+    // Hapus file lama
+    if ($appearance->profile_image && Storage::exists('public/' . $appearance->profile_image)) {
+        Storage::delete('public/' . $appearance->profile_image);
+    }
+
+    // Setel jadi null (atau default jika pakai path khusus)
+    $appearance->profile_image = null;
+}
+
+
 
         // Update data
         $appearance->name = $request->name;
