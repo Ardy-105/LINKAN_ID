@@ -367,9 +367,9 @@
                         <div class="error-message" style="margin-top: -20px; margin-bottom: 20px;">{{ $message }}</div>
                     @enderror
 
-                    <div class="forgot-password">
-                        <a href="#">Forgot Password?</a>
-                    </div>
+<div class="forgot-password">
+    <a href="{{ route('password.request') }}">Forgot Password?</a>
+</div>
 
                     <button type="submit" class="btn-login">Sign In</button>
                 </form>

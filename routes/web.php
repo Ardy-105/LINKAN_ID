@@ -14,9 +14,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
-
-
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,7 +68,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index'); // form input
 Route::post('/shorten', [ShortlinkController::class, 'store']); // simpan link
 
-
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
@@ -79,13 +76,13 @@ Route::get('/get-chart-data', [DashboardController::class, 'getChartData'])
     ->name('dashboard.chart-data')
     ->middleware('auth');
 
-    Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
+Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
 
-    Route::get('/homeadminS/settings', function () {
-        return view('homeadminS.setting');
-    })->name('settings');
+Route::get('/homeadminS/settings', function () {
+    return view('homeadminS.setting');
+})->name('settings');
 
-    // Rute untuk My Account
+// Rute untuk My Account
 Route::get('/homeadminS/account-settings', function () {
     return 'My Account Page (Coming Soon)';
 })->name('account.settings');
@@ -123,9 +120,12 @@ Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProd
 
 Route::get('/linkan.id/{username}', [PublicPageController::class, 'show']);
 
-
-
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
