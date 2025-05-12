@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Storage;
 
 class DigitalProductController extends Controller
 {
+
+
+public function show($id)
+{
+    $product = DigitalProduct::findOrFail($id);
+    $user = $product->user; // relasi user() di model DigitalProduct
+    $appearance = $user->appearance;
+
+    return view('public.product-detail', compact('product', 'user', 'appearance'));
+}
+
+
     public function create()
     {
         return view('homeadminS.digital-product');

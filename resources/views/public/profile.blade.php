@@ -16,17 +16,20 @@
             margin: 0;
         }
 
-        .content-wrapper {
-            width: 100%;
-            max-width: 400px;
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}');
-            background-size: cover;
-            background-position: center;
-        }
+      .content-wrapper {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column; /* Membuat semua elemen tampil vertikal */
+    align-items: center; /* Memastikan elemen di tengah */
+}
 
         .preview-banner {
             width: 100%;
@@ -96,27 +99,30 @@
             opacity: 0.8;
         }
 
-        .preview-products {
-            width: 100%;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+       .preview-products {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; /* Memastikan produk berada di tengah */
+}
 .product-info {
     flex: 1;
     overflow: hidden; /* jika teks panjang */
 }
-        .preview-product-item {
-            background: white;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            justify-content: space-between; /* ini membantu spasi otomatis */
-        }
+      .preview-product-item {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    justify-content: space-between;
+    width: 100%; /* Pastikan item mengambil ruang penuh */
+}
+
 
         .preview-product-image {
             width: 40px;
@@ -179,18 +185,42 @@
         <div class="preview-name">{{ $appearance->name ?? $user->name }}</div>
         <div class="preview-bio">{{ $appearance->bio }}</div>
 
-        <div class="preview-social-links">
-            @if($appearance->instagram)
-                <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
-            @endif
-            @if($appearance->tiktok)
-                <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
-            @endif
-            @if($appearance->whatsapp)
-                <a href="https://wa.me/{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            @endif
-        </div>
+             <div class="preview-social-links" id="livePreviewSocialLinks">
+                                     @if($appearance && $appearance->instagram)
+    <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+@endif
+@if($appearance && $appearance->tiktok)
+    <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+@endif
+@if($appearance && $appearance->whatsapp)
+    <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+@endif
+@if($appearance && $appearance->linkedin)
+    <a href="{{ $appearance->linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+@endif
+@if($appearance && $appearance->facebook)
+    <a href="{{ $appearance->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+@endif
+@if($appearance && $appearance->website)
+    <a href="{{ $appearance->website }}" target="_blank"><i class="fas fa-globe"></i></a>
+@endif
+@if($appearance && $appearance->twitter)
+    <a href="{{ $appearance->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+@endif
+@if($appearance && $appearance->youtube)
+    <a href="{{ $appearance->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+@endif
+@if($appearance && $appearance->telegram)
+    <a href="{{ $appearance->telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
+@endif
+@if($appearance && $appearance->email)
+    <a href="mailto:{{ $appearance->email }}"><i class="fas fa-envelope"></i></a>
+@endif
+@if($appearance && $appearance->discord)
+    <a href="{{ $appearance->discord }}" target="_blank"><i class="fab fa-discord"></i></a>
+@endif
 
+                                    </div>
         @if($products && $products->count() > 0)
             <div class="preview-products">
                 @foreach($products as $product)
@@ -205,9 +235,9 @@
                         <div class="product-info">
                         <div class="preview-product-title">{{ $product->title }}</div>
                         </div>
-                        <a href="{{ $product->platform_url ?? '#' }}" class="preview-product-button" target="_blank">
-                            {{ $product->button_text ?? 'Beli' }}
-                        </a>
+                      <a href="{{ route('product.show', $product->id) }}" class="preview-product-button">
+    {{ $product->button_text ?? 'Beli' }}
+</a>
                     </div>
                 @endforeach
             </div>

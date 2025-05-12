@@ -22,4 +22,9 @@ class DigitalProduct extends Model
         'quantity',
         'button_text',
     ];
+     // ✅ Tambahkan ini
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

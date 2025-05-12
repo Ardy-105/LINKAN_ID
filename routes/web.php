@@ -117,8 +117,8 @@ Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 
 Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
 
 Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProducts'])->name('digital.products');
+Route::get('/linkan.id/{username}', [PublicPageController::class, 'show'])->name('public.profile');
 
-Route::get('/linkan.id/{username}', [PublicPageController::class, 'show']);
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
@@ -127,5 +127,8 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPass
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+
+Route::get('/product/{id}', [DigitalProductController::class, 'show'])->name('product.show');
+
 
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
