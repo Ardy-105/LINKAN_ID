@@ -120,6 +120,43 @@
         <div class="username">{{ $user->username }}</div>
     </div>
 
+    <!-- Modal Popup -->
+<div id="cartModal" style="display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
+   <div style="background: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; position: relative;">
+
+        <!-- Tombol X (Close) -->
+        <button onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 22px; cursor: pointer;">&times;</button>
+        <h3>Cart (1)</h3>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <img id="modalImage" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 50px; height: 50px; object-fit: cover;">
+            <div style="flex: 1;">
+                <div id="modalTitle">{{ $product->title }}</div>
+                <div>Qty: <span id="modalQty">1</span></div>
+                <div>Rp <span id="modalPrice">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+                <button id="editButton" style="background: none; color: blue; border: none; cursor: pointer;">Edit</button>
+            </div>
+        </div>
+
+        <div id="editSection" style="display: none; margin-top: 10px;">
+            <label for="qtyInput">Quantity:</label>
+            <input type="number" id="qtyInput" value="1" min="1" style="width: 100%; padding: 5px; margin: 5px 0;">
+            <div style="display: flex; justify-content: space-between;">
+                <button id="cancelEdit" style="padding: 5px 10px; background: #ccc; border: none;">Cancel</button>
+                <button id="updateQty" style="padding: 5px 10px; background: orange; border: none; color: white;">Update</button>
+            </div>
+        </div>
+
+        <hr style="margin: 15px 0;">
+        <div style="font-size: 14px;">
+            Total (Items): Rp <span id="totalItem">{{ number_format($product->price, 0, ',', '.') }}</span><br>
+            Grand Total: <strong>Rp <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></strong>
+        </div>
+
+        <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px;">Checkout</button>
+    </div>
+</div>
+
+
     <div class="product-image">
         @if($product->image)
             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
@@ -140,6 +177,52 @@
         {{ $product->button_text ?? 'Beli' }}
     </a>
 </div>
+<script>
+     const buyButton = document.querySelector('.buy-button');
+    const cartModal = document.getElementById('cartModal');
+    const editButton = document.getElementById('editButton');
+    const editSection = document.getElementById('editSection');
+    const cancelEdit = document.getElementById('cancelEdit');
+    const updateQty = document.getElementById('updateQty');
+    const qtyInput = document.getElementById('qtyInput');
+    const modalQty = document.getElementById('modalQty');
+    const totalItem = document.getElementById('totalItem');
+    const grandTotal = document.getElementById('grandTotal');
+
+    const price = {{ $product->price }};
+
+    buyButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        cartModal.style.display = 'block';
+    });
+
+    editButton.addEventListener('click', function() {
+        editSection.style.display = 'block';
+    });
+
+    cancelEdit.addEventListener('click', function() {
+        editSection.style.display = 'none';
+    });
+
+    updateQty.addEventListener('click', function() {
+        const qty = parseInt(qtyInput.value);
+        if (qty > 0) {
+            modalQty.textContent = qty;
+            const total = price * qty;
+            totalItem.textContent = formatRupiah(total);
+            grandTotal.textContent = formatRupiah(total);
+        }
+        editSection.style.display = 'none';
+    });
+
+    function closeModal() {
+        cartModal.style.display = 'none';
+    }
+
+    function formatRupiah(angka) {
+        return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    </script>
 
 <!-- Font Awesome -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
