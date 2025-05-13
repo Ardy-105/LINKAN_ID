@@ -16,6 +16,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\OrdersController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -138,4 +139,6 @@ Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect ber
 Route::middleware(['auth'])->group(function () {
     Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
     Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
+    Route::get('/homeadminS/orders', [OrdersController::class, 'index'])->name('orders')->middleware('auth');
+    Route::get('/homeadminS/orders/{id}', [OrdersController::class, 'show'])->name('orders.show')->middleware('auth');
 });
