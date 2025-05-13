@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $product->title }} - Detail</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* Global Styles */
@@ -19,7 +20,7 @@
 
         /* Product Wrapper */
         .product-wrapper {
-            background: #fff;
+            background:#F5F5F5 ;
             border-radius: 10px;
             padding: 20px;
             width: 100%;
@@ -109,6 +110,228 @@
             margin-top: 20px;
             box-sizing: border-box;
         }
+
+        /* Modal Cart Custom Style */
+        #cartModal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        #cartModal .cart-container {
+            background: #fff;
+            margin: 6% auto;
+            padding: 0;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 420px;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            overflow: hidden;
+            font-family: inherit;
+        }
+        #cartModal .cart-header {
+            padding: 20px 24px 10px 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #cartModal .cart-header h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+        #cartModal .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 26px;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        #cartModal .close-btn:hover {
+            color: orange;
+        }
+        #cartModal .cart-product {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 18px 24px 10px 24px;
+        }
+        #cartModal .cart-product img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        #cartModal .cart-product-info {
+            flex: 1;
+        }
+        #cartModal .cart-product-info div {
+            margin-bottom: 2px;
+        }
+        #cartModal .cart-product-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        #cartModal .cart-product-qty,
+        #cartModal .cart-product-price {
+            font-size: 13px;
+            color: #555;
+        }
+        #cartModal .cart-product-edit {
+            background: none;
+            color: blue;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0;
+            margin-top: 2px;
+        }
+        #cartModal #editSection {
+            display: none;
+            padding: 0 24px 10px 24px;
+        }
+        #cartModal #editSection label {
+            font-size: 13px;
+            color: #888;
+        }
+        #cartModal #editSection input[type=number] {
+            width: 100%;
+            padding: 6px;
+            margin: 6px 0 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        #cartModal #editSection .edit-btns {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        @media (max-width: 480px) {
+            #cartModal #editSection .edit-btns {
+                flex-direction: column;
+            }
+            #cartModal #editSection .edit-btns button {
+                width: 100%;
+            }
+        }
+        #cartModal #editSection button {
+            padding: 6px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+        }
+        #cartModal #editSection #cancelEdit {
+            background: #ccc;
+            color: #333;
+        }
+        #cartModal #editSection #updateQty {
+            background: orange;
+            color: white;
+        }
+        #cartModal .order-summary-label {
+            margin: 10px 0 0 0;
+            color: #888;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 0 24px;
+        }
+        #cartModal .order-summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 2px 24px;
+        }
+        #cartModal .order-summary-row.bold {
+            font-weight: bold;
+        }
+        #cartModal .voucher-input {
+            width: calc(100% - 48px);
+            margin: 14px 24px 0 24px;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        #cartModal .cart-btn {
+            margin: 16px 24px 0 24px;
+            width: calc(100% - 48px);
+            padding: 12px;
+            background: orange;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #cartModal .cart-btn:hover {
+            background: #ff9800;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255,152,0,0.15);
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        #cartModal .continue-btn {
+            margin: 10px 24px 20px 24px;
+            width: calc(100% - 48px);
+            padding: 10px;
+            background: white;
+            color: #1abc9c;
+            border: 1px solid #1abc9c;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        #cartModal .continue-btn:hover {
+            background: #e0f7f4;
+            color: #159c87;
+        }
+        #cartModal #editSection #cancelEdit:hover {
+            background: #b0b0b0;
+            color: #222;
+        }
+        #cartModal #editSection #updateQty:hover {
+            background: #ff9800;
+            color: #fff;
+        }
+        #cartModal button {
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+        #cartModal .cart-btn:hover,
+        #cartModal button[onclick*="closeModal"]:hover {
+            background: #ff9800;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(255,152,0,0.15);
+        }
+        #cartModal .continue-btn:hover {
+            background: #e0f7f4;
+            color: #159c87;
+            box-shadow: 0 2px 8px rgba(26,188,156,0.10);
+        }
+        #cartModal .cart-product-edit:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+        #cartModal #editSection #cancelEdit:hover {
+            background: #b0b0b0;
+            color: #222;
+        }
+        #cartModal #editSection #updateQty:hover {
+            background: #ff9800;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -122,37 +345,39 @@
 
     <!-- Modal Popup -->
 <div id="cartModal" style="display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
-   <div style="background: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; position: relative;">
-
+    <div style="background: white; margin: 10% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; position: relative;">
         <!-- Tombol X (Close) -->
         <button onclick="closeModal()" style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 22px; cursor: pointer;">&times;</button>
-        <h3>Cart (1)</h3>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <img id="modalImage" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 50px; height: 50px; object-fit: cover;">
-            <div style="flex: 1;">
-                <div id="modalTitle">{{ $product->title }}</div>
-                <div>Qty: <span id="modalQty">1</span></div>
-                <div>Rp <span id="modalPrice">{{ number_format($product->price, 0, ',', '.') }}</span></div>
-                <button id="editButton" style="background: none; color: blue; border: none; cursor: pointer;">Edit</button>
+        <h3 style="margin-bottom: 20px;">Cart (<span id="cartCount">1</span>)</h3>
+        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <img id="modalImage" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 50px; height: 50px; object-fit: cover;">
+                <div style="flex: 1;">
+                    <div id="modalTitle" style="font-size: 14px; font-weight: bold;">{{ $product->title }}</div>
+                    <div style="font-size: 13px;">Qty. <span id="modalQty">1</span></div>
+                    <div style="font-size: 13px;">IDR <span id="modalPrice">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+                    <button id="editButton" style="background: none; color: blue; border: none; cursor: pointer; font-size: 13px;">Edit</button>
+                </div>
             </div>
         </div>
-
         <div id="editSection" style="display: none; margin-top: 10px;">
             <label for="qtyInput">Quantity:</label>
             <input type="number" id="qtyInput" value="1" min="1" style="width: 100%; padding: 5px; margin: 5px 0;">
-            <div style="display: flex; justify-content: space-between;">
-                <button id="cancelEdit" style="padding: 5px 10px; background: #ccc; border: none;">Cancel</button>
-                <button id="updateQty" style="padding: 5px 10px; background: orange; border: none; color: white;">Update</button>
+            <div class="edit-btns">
+                <button id="cancelEdit">Cancel</button>
+                <button id="updateQty">Update</button>
             </div>
         </div>
-
-        <hr style="margin: 15px 0;">
-        <div style="font-size: 14px;">
-            Total (Items): Rp <span id="totalItem">{{ number_format($product->price, 0, ',', '.') }}</span><br>
-            Grand Total: <strong>Rp <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></strong>
+        <div style="margin: 15px 0 10px 0; color: #888; font-size: 12px; font-weight: bold;">ORDER SUMMARY</div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px;">
+            <div>Total (<span id="cartCount2">1</span> Items)</div>
+            <div>IDR <span id="totalItem">{{ number_format($product->price, 0, ',', '.') }}</span></div>
         </div>
-
-        <button onclick="closeModal()" style="margin-top: 15px; width: 100%; padding: 10px; background: orange; color: white; border: none; border-radius: 5px;">Checkout</button>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
+            <div>Grand total</div>
+            <div>IDR <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+        </div>
+        <button class="cart-btn" onclick="closeModal()">Buy Now</button>
     </div>
 </div>
 
@@ -208,6 +433,8 @@
         const qty = parseInt(qtyInput.value);
         if (qty > 0) {
             modalQty.textContent = qty;
+            document.getElementById('cartCount').textContent = qty;
+            document.getElementById('cartCount2').textContent = qty;
             const total = price * qty;
             totalItem.textContent = formatRupiah(total);
             grandTotal.textContent = formatRupiah(total);

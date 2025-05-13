@@ -363,13 +363,6 @@
 
                     <button type="submit" class="btn-login">Send Reset Link</button>
                 </form>
-
-                <div class="divider">or</div>
-
-                <a href="{{ url('/login/google') }}" class="google-login" style="text-decoration: none;">
-                    <img src="{{ asset('images/google.png') }}" alt="Google Logo">
-                    Continue with Google
-                </a>
             </div>
         </div>
     </div>
