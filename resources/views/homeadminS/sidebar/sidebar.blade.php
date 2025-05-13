@@ -59,7 +59,7 @@
     <a href="{{ route('shortlink.index') }}" class="{{ request()->routeIs('shortlink.index') ? 'active' : '' }}">
         <i class="fas fa-link"></i>Shortlink
     </a>
-    <a href="#" class="{{ request()->routeIs('statistic') ? 'active' : '' }}">
+    <a href="{{ route('statistic') }}" class="{{ request()->routeIs('statistic') ? 'active' : '' }}">
         <i class="fas fa-chart-bar"></i>Statistic
     </a>
     <a href="#" class="{{ request()->routeIs('orders') ? 'active' : '' }}">
@@ -69,7 +69,7 @@
         <i class="fas fa-box"></i>My Purchase
     </a>
     <a href="{{ route('settings') }}" class="{{ request()->routeIs('settings') ? 'active' : '' }}">
-        <i class="fas fa-cog"></i>Settings
+        <i class="fas fa-cog"></i>Setting
     </a>
 
     <hr>

@@ -6,19 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Models\DigitalProduct;
 
-class DashboardController extends Controller
+class StatisticController extends Controller
 {
-    public function beranda()
+    public function index()
     {
         $user = Auth::user();
         
-        // Ambil data produk digital
-        $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
-        $totalProducts = $digitalProducts->count();
-        
-        // Ambil total views dan clicks berdasarkan link_id (username)
+        // Ambil total views dan clicks
         $totalViews = DB::table('link_views')
             ->where('link_id', $user->username)
             ->count();
@@ -27,22 +22,16 @@ class DashboardController extends Controller
             ->where('link_id', $user->username)
             ->count();
             
-        // Ambil data orders dan sales
-        $lifetimeOrders = DB::table('orders')
-            ->where('seller_id', $user->id)
-            ->count();
-            
-        $lifetimeSales = DB::table('orders')
+        // Ambil total sales
+        $totalSales = DB::table('orders')
             ->where('seller_id', $user->id)
             ->where('status', 'completed')
             ->sum('total_amount');
 
-        return view('homeadminS.beranda', compact(
+        return view('homeadminS.statistic', compact(
             'totalViews',
             'totalClicks',
-            'lifetimeOrders',
-            'lifetimeSales',
-            'totalProducts'
+            'totalSales'
         ));
     }
 
@@ -72,6 +61,7 @@ class DashboardController extends Controller
         $dates = [];
         $views = [];
         $clicks = [];
+        $sales = [];
 
         // Generate data untuk setiap hari dalam rentang
         $currentDate = $startDate->copy();
@@ -90,8 +80,16 @@ class DashboardController extends Controller
                 ->whereDate('created_at', $currentDate)
                 ->count();
             
+            // Ambil data sales untuk tanggal tersebut
+            $saleAmount = DB::table('orders')
+                ->where('seller_id', $user->id)
+                ->where('status', 'completed')
+                ->whereDate('created_at', $currentDate)
+                ->sum('total_amount');
+            
             $views[] = $viewCount;
             $clicks[] = $clickCount;
+            $sales[] = $saleAmount;
             
             $currentDate->addDay();
         }
@@ -100,22 +98,9 @@ class DashboardController extends Controller
             'labels' => $dates,
             'views' => $views,
             'clicks' => $clicks,
+            'sales' => $sales,
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d')
-        ]);
-    }
-
-    public function getDigitalProducts()
-    {
-        $user = Auth::user();
-        $digitalProducts = DigitalProduct::where('user_id', $user->id)
-            ->select('id', 'title', 'price', 'created_at')
-            ->latest()
-            ->get();
-        
-        return response()->json([
-            'total' => $digitalProducts->count(),
-            'products' => $digitalProducts
         ]);
     }
 } 

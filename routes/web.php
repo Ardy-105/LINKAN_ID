@@ -15,6 +15,7 @@ use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\StatisticController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -132,3 +133,9 @@ Route::get('/product/{id}', [DigitalProductController::class, 'show'])->name('pr
 
 
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
+
+// Tambahkan route statistik baru dalam middleware auth
+Route::middleware(['auth'])->group(function () {
+    Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
+    Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
+});
