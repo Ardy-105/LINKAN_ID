@@ -52,7 +52,7 @@
         /* Product Image */
         .product-image {
             width: 100%;
-            height: 220px;
+            height: 520px;
             background: #eee;
             border-radius: 10px;
             overflow: hidden;
@@ -377,7 +377,7 @@
             <div>Grand total</div>
             <div>IDR <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></div>
         </div>
-        <button class="cart-btn" onclick="closeModal()">Buy Now</button>
+        <button class="cart-btn" onclick="closeModal()">Checkout</button>
     </div>
 </div>
 

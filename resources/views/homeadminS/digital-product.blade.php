@@ -369,7 +369,7 @@
                                 <span>Add Image</span>
                             @endif
                         </div>
-                        <div class="format-info">Format: PNG, JPEG, JPG</div>
+                        <div class="format-info">Format: PNG, JPEG, JPG <strong> (Optimize size 566 x 525 px)</strong> </div>
                         <input type="file" id="productImage" name="image" accept=".png,.jpg,.jpeg" style="display: none">
                     </div>
 

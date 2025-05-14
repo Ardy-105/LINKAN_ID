@@ -33,7 +33,7 @@
 
         .preview-banner {
             width: 100%;
-            height: 120px;
+            height: 160px;
             background: #ddd;
             border-radius: 10px;
             margin-bottom: 20px;
