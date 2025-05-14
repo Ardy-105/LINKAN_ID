@@ -131,8 +131,12 @@ Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showRes
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/product/{id}', [DigitalProductController::class, 'show'])->name('product.show');
+Route::post('/cart/update-qty', [DigitalProductController::class, 'updateQty'])->name('cart.updateQty');
 
-Route::get('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
+
+Route::match(['get', 'post'], '/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout.digital');
+
 
 
 

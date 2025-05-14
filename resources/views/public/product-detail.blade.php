@@ -433,18 +433,30 @@
         editSection.style.display = 'none';
     });
 
-    updateQty.addEventListener('click', function() {
-        const qty = parseInt(qtyInput.value);
-        if (qty > 0) {
-            modalQty.textContent = qty;
-            document.getElementById('cartCount').textContent = qty;
-            document.getElementById('cartCount2').textContent = qty;
-            const total = price * qty;
-            totalItem.textContent = formatRupiah(total);
-            grandTotal.textContent = formatRupiah(total);
-        }
-        editSection.style.display = 'none';
-    });
+  updateQty.addEventListener('click', function() {
+    const qty = parseInt(qtyInput.value);
+    if (qty > 0) {
+        fetch('{{ route("cart.updateQty") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                product_id: {{ $product->id }},
+                qty: qty
+            })
+        }).then(response => response.json())
+          .then(data => console.log(data));
+    }
+
+    // Update UI seperti biasa...
+    modalQty.textContent = qty;
+    totalItem.textContent = formatRupiah(price * qty);
+    grandTotal.textContent = formatRupiah(price * qty);
+    editSection.style.display = 'none';
+});
+
 
     function closeModal() {
         cartModal.style.display = 'none';

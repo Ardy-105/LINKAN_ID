@@ -7,6 +7,8 @@ use App\Models\DigitalProduct;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Midtrans\Snap;
+use Midtrans\Transaction;
 
 class DigitalProductController extends Controller
 {
@@ -17,6 +19,8 @@ public function show($id)
     $product = DigitalProduct::findOrFail($id);
     $user = $product->user; // relasi user() di model DigitalProduct
     $appearance = $user->appearance;
+     // Reset qty jadi 1 setiap buka halaman
+    session(["cart.qty.$id" => 1]);
 
     return view('public.product-detail', compact('product', 'user', 'appearance'));
 }
@@ -143,11 +147,84 @@ public function show($id)
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus.');
     }
-    public function checkout($id)
+
+    public function updateQty(Request $request)
+{
+    $request->validate([
+        'product_id' => 'required|integer',
+        'qty' => 'required|integer|min:1'
+    ]);
+
+    session()->put("cart.qty.{$request->product_id}", $request->qty);
+
+    return response()->json(['status' => 'success']);
+}
+
+public function checkout(Request $request, $id)
 {
     $product = DigitalProduct::findOrFail($id);
-    return view('public.checkout', compact('product'));
+
+    // Ambil qty dari session jika tidak ada permintaan POST
+    $qty = $request->isMethod('post')
+        ? $request->qty
+        : session("cart.qty.$id", 1);
+
+    // Konfigurasi Midtrans
+    \Midtrans\Config::$serverKey = 'SB-Mid-server-qbA7U8pOrHFCGy-0LlFclqIG';
+    \Midtrans\Config::$isProduction = false;
+    \Midtrans\Config::$isSanitized = true;
+    \Midtrans\Config::$is3ds = true;
+
+    // Generate Snap Token (GET atau POST)
+    $orderId = 'ORDER-' . uniqid();
+
+    $params = [
+        'transaction_details' => [
+            'order_id' => $orderId,
+            'gross_amount' => $product->price * $qty,
+        ],
+        'customer_details' => [
+            'first_name' => $request->input('name', 'Guest'),
+            'email' => $request->input('email', 'guest@example.com'),
+        ],
+        'item_details' => [[
+            'id' => $product->id,
+            'price' => $product->price,
+            'quantity' => $qty,
+            'name' => $product->title,
+        ]],
+    ];
+
+    try {
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal membuat pembayaran: ' . $e->getMessage());
+    }
+
+    // Jika POST, validasi dulu
+    if ($request->isMethod('post')) {
+        $request->validate([
+            'email' => 'required|email',
+            'name' => 'required|string',
+            'qty' => 'required|integer|min:1',
+        ]);
+
+        return view('public.checkout', [
+            'product' => $product,
+            'snapToken' => $snapToken,
+            'savedQty' => $qty,
+        ]);
+    }
+
+    // GET default
+    return view('public.checkout', [
+        'product' => $product,
+        'snapToken' => $snapToken,
+        'savedQty' => $qty,
+    ]);
 }
+
+
 
 }
 
