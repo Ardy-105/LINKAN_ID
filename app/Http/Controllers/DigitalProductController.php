@@ -143,4 +143,11 @@ public function show($id)
 
         return redirect()->back()->with('success', 'Produk berhasil dihapus.');
     }
+    public function checkout($id)
+{
+    $product = DigitalProduct::findOrFail($id);
+    return view('public.checkout', compact('product'));
 }
+
+}
+

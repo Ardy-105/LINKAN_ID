@@ -132,6 +132,10 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'
 
 Route::get('/product/{id}', [DigitalProductController::class, 'show'])->name('product.show');
 
+Route::get('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
+
+
+
 
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
 

@@ -377,7 +377,11 @@
             <div>Grand total</div>
             <div>IDR <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></div>
         </div>
-        <button class="cart-btn" onclick="closeModal()">Checkout</button>
+        <button class="cart-btn" onclick="closeModal()">
+            <a href="{{ route('checkout', ['id' => $product->id]) }}" class="cart-btn">Checkout</a>
+
+        </button>
+         
     </div>
 </div>
 
