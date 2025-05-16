@@ -17,6 +17,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\PlatformAdminController;
+use App\Http\Controllers\PlatformAdmin\VerifikasiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -137,10 +139,6 @@ Route::post('/cart/update-qty', [DigitalProductController::class, 'updateQty'])-
 Route::match(['get', 'post'], '/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout.digital');
 
-
-
-
-
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
 
 // Tambahkan route statistik baru dalam middleware auth
@@ -149,4 +147,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
     Route::get('/homeadminS/orders', [OrdersController::class, 'index'])->name('orders')->middleware('auth');
     Route::get('/homeadminS/orders/{id}', [OrdersController::class, 'show'])->name('orders.show')->middleware('auth');
+});
+
+Route::get('/admin-platform/beranda', [PlatformAdminController::class, 'beranda'])
+    ->name('beranda.platformadmin') // ubah nama route
+    ->middleware('auth');
+
+
+Route::prefix('platformadmin')->group(function () {
+    Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
 });
