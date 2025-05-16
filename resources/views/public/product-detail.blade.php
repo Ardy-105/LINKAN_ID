@@ -40,12 +40,12 @@
         }
         .header a {
             text-decoration: none;
-            color: orange;
+            color: #ff7a00;
             font-size: 24px;
         }
         .username {
             font-weight: bold;
-            color: orange;
+            color: #ff7a00;
             font-size: 18px;
         }
 
@@ -79,7 +79,7 @@
         .product-price {
             font-size: 16px;
             font-weight: bold;
-            color: orange;
+            color: #ff7a00;
         }
 
         /* Description */
@@ -100,7 +100,7 @@
             display: block;
             width: 100%;
             padding: 12px;
-            background-color: orange;
+            background-color: #ff7a00;
             color: white;
             text-align: center;
             border: none;
@@ -155,7 +155,7 @@
             transition: color 0.2s;
         }
         #cartModal .close-btn:hover {
-            color: orange;
+            color: #ff7a00;
         }
         #cartModal .cart-product {
             display: flex;
@@ -235,7 +235,7 @@
             color: #333;
         }
         #cartModal #editSection #updateQty {
-            background: orange;
+            background: #ff7a00;
             color: white;
         }
         #cartModal .order-summary-label {
@@ -266,7 +266,7 @@
             margin: 16px 24px 0 24px;
             width: calc(100% - 48px);
             padding: 12px;
-            background: orange;
+            background: #ff7a00;
             color: white;
             border: none;
             border-radius: 8px;
