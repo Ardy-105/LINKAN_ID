@@ -1,70 +1,261 @@
 <!DOCTYPE html>
-
 @php
+    use Illuminate\Support\Facades\Route;
     $savedQty = session("cart.qty.{$product->id}", 1); // default 1 jika tidak ada di session
 @endphp
-
-<html>
+<html lang="id">
 <head>
-    <title>Checkout</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkout - {{ $product->title }}</title>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
     <style>
-        body { font-family: sans-serif; background: #f9f9f9; padding: 20px; }
-        .checkout-wrapper { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        .section { margin-bottom: 20px; }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .product { display: flex; gap: 15px; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
-        .product img { width: 60px; height: 60px; object-fit: cover; }
-        .form-group { margin-bottom: 10px; }
-        input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        .payment { border-top: 1px solid #eee; padding-top: 10px; }
-        .btn-buy { background: #00c194; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; }
-        .select-method { padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f0f0f0; cursor: pointer; margin-top: 10px; text-align: center; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            margin: 0; padding: 20px;
+            color: #34495e;
+        }
+        .checkout-wrapper {
+            max-width: 720px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
+            padding: 30px 40px;
+            position: relative;
+        }
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: #ff7a00;
+            font-size: 26px;
+        }
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 15px 20px;
+            background: #f9fafa;
+            box-shadow: inset 0 0 10px #ffe6cc;
+            position: relative;
+        }
+        .product img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(255, 122, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .product img:hover {
+            transform: scale(1.05);
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-info h2 {
+            margin: 0 0 8px 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: #222;
+        }
+        .product-info .qty,
+        .product-info .price {
+            font-size: 16px;
+            margin-bottom: 6px;
+            color: #555;
+        }
+        .btn-detail {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: #ff7a00;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 122, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-detail:hover {
+            background-color: #e06600;
+        }
+        form {
+            margin-top: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #34495e;
+        }
+        input[type="email"],
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            border: 1.8px solid #cfd8dc;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+            outline-offset: 2px;
+        }
+        input[type="email"]:focus,
+        input[type="text"]:focus {
+            border-color: #ff7a00;
+            outline: none;
+            box-shadow: 0 0 8px #ff7a00aa;
+        }
+        .payment {
+            border-top: 2px solid #e1e8ed;
+            padding-top: 25px;
+            margin-top: 30px;
+        }
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+        .payment-row.total {
+            font-size: 20px;
+            color: #ff7a00;
+        }
+        #select-method {
+            margin-top: 20px;
+            padding: 14px 0;
+            background: #fff1e0;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #cc6600;
+            cursor: pointer;
+            box-shadow: inset 0 2px 5px rgba(255, 122, 0, 0.2);
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        #select-method:hover {
+            background-color: #ffe3c2;
+        }
+        .btn-buy {
+            margin-top: 20px;
+            width: 100%;
+            padding: 16px 0;
+            background: #ff7a00;
+            border: none;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(255, 122, 0, 0.6);
+            transition: background-color 0.3s ease;
+        }
+        .btn-buy:hover {
+            background-color: #e06600;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .checkout-wrapper {
+                padding: 20px;
+            }
+            .product {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .btn-detail {
+                position: static;
+                transform: none;
+                margin-top: 10px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('SB-Mid-client-LDeBzOGR_X-yS9q1') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('SB-Mid-client-LDeBzOGR_X-yS9q1') }}"></script>
 </head>
 <body>
-    
+
 <div class="checkout-wrapper">
     <!-- Product -->
     <div class="section">
-        <div class="section-title">Product</div>
+        <div class="section-title">
+            <i class="fa-solid fa-box-open"></i> Product
+        </div>
         <div class="product">
-            <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image">
-            <div>
-                <div>{{ $product->title }}</div>
-               <div>Qty: <strong>{{ $savedQty }}</strong></div>
-                <div>Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+            <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image" />
+            <div class="product-info">
+                <h2>{{ $product->title }}</h2>
+                <div class="qty"><i class="fa-solid fa-cart-shopping"></i> Qty: <strong>{{ $savedQty }}</strong></div>
+                <div class="price"><i class="fa-solid fa-tag"></i> Rp {{ number_format($product->price, 0, ',', '.') }}</div>
             </div>
+            <a href="{{ route('product.show', ['id' => $product->id]) }}" class="btn-detail" title="Lihat Detail Produk">
+                Detail <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
     </div>
 
     <!-- Buyer Info + Payment Section -->
     <form id="checkout-form">
         <div class="section">
-            <div class="section-title">Buyer Info</div>
-            <div class="form-group">
-                <label>Email *</label>
-                <input type="email" name="email" required placeholder="Your Email" value="{{ old('email') }}">
+            <div class="section-title">
+                <i class="fa-solid fa-user"></i> Buyer Info
             </div>
             <div class="form-group">
-                <label>Name *</label>
-                <input type="text" name="name" required placeholder="Your Name" value="{{ old('name') }}">
+                <label for="email">Email *</label>
+                <input id="email" type="email" name="email" required placeholder="Your Email" value="{{ old('email') }}" />
             </div>
-            <input type="hidden" name="qty" value="1"><input type="hidden" name="qty" value="{{ $savedQty }}">
-
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input id="name" type="text" name="name" required placeholder="Your Name" value="{{ old('name') }}" />
+            </div>
+            <input type="hidden" name="qty" value="{{ $savedQty }}">
         </div>
 
         <div class="section payment">
-            <div class="section-title">Payment Detail</div>
-            <div style="display: flex; justify-content: space-between;">
-                <span>Subtotal</span><span>Rp {{ number_format($product->price *  $savedQty, 0, ',', '.') }}</span>
+            <div class="section-title">
+                <i class="fa-solid fa-credit-card"></i> Payment Detail
             </div>
-            <div style="display: flex; justify-content: space-between;">
-                <span>Total</span><span><strong>Rp {{ number_format($product->price *  $savedQty, 0, ',', '.') }}</strong></span>
+            <div class="payment-row">
+                <span>Subtotal</span>
+                <span>Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}</span>
             </div>
-            <div class="select-method" id="select-method">Select payment method</div>
-            <button id="pay-button" class="btn-buy" style="margin-top: 10px;" type="button">BUY NOW - Rp {{ number_format($product->price *  $savedQty, 0, ',', '.') }}</button>
+            <div class="payment-row total">
+                <span>Total</span>
+                <span>Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}</span>
+            </div>
+
+            <div id="select-method"><i class="fa-solid fa-money-bill-wave"></i> Select payment method</div>
+            <button id="pay-button" class="btn-buy" type="button">
+                <i class="fa-solid fa-credit-card"></i> BUY NOW - Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}
+            </button>
         </div>
     </form>
 </div>
@@ -126,5 +317,6 @@
         console.log(transactionResult);
     });
 </script>
+
 </body>
 </html>
