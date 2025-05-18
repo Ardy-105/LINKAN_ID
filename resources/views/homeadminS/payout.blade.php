@@ -138,6 +138,11 @@
             width: 40px;
             height: 40px;
         }
+        .header a {
+            color: black !important;
+            text-decoration: none; /* kalau mau hilangkan garis bawah juga */
+        }
+
     </style>
 </head>
 <body>
@@ -146,7 +151,7 @@
 
         <div class="main-content">
             <div class="header">
-                <h1>Payout Settings</h1>
+                <h1><a href="{{ route('settings') }}">Settings</a> &gt; <span>Payout Settings</h1>
             </div>
 
             <div class="payout-section">

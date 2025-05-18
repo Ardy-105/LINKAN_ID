@@ -19,14 +19,14 @@ use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PlatformAdminController;
 use App\Http\Controllers\PlatformAdmin\VerifikasiController;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Halaman Utama
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+// Auth Routes
 Route::get('/login', function () {
     return view('login');
 })->name('login');
@@ -36,124 +36,91 @@ Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
-
-// Pricing Route
-Route::get('/pricing', function () {
-    return view('pricing');
-})->name('pricing');
-
-Route::get('/service', function () {
-    return view('service');
-})->name('service');
-
-Route::get('/faq', function () {
-    return view('FAQ');
-})->name('FAQ');
-
-// Admin Routes
-Route::get('/homeadminS/beranda', [DashboardController::class, 'beranda'])
-    ->name('beranda.admins')
-    ->middleware('auth');
-Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
-Route::get('/homeadminS/appearance', [AppearanceController::class, 'index'])->name('appearance');
-Route::post('/homeadminS/appearance', [AppearanceController::class, 'update'])->name('appearance.update');
-
-// Digital Product Routes - semua route digital product dalam middleware auth
-Route::middleware(['auth'])->group(function () {
-    Route::resource('digital-product', DigitalProductController::class);
-});
-
-Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index'); // form input
-Route::post('/shorten', [ShortlinkController::class, 'store']); // simpan link
 
 // Google OAuth Routes
 Route::get('login/google', [GoogleLoginController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('login/google/callback', [GoogleLoginController::class, 'handleGoogleCallback']);
 
-Route::get('/get-chart-data', [DashboardController::class, 'getChartData'])
-    ->name('dashboard.chart-data')
-    ->middleware('auth');
+// Halaman Statis
+Route::view('/pricing', 'pricing')->name('pricing');
+Route::view('/service', 'service')->name('service');
+Route::view('/faq', 'FAQ')->name('FAQ');
 
-Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
+// Dashboard (middleware auth jika diperlukan)
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
 
-Route::get('/homeadminS/settings', function () {
-    return view('homeadminS.setting');
-})->name('settings');
+// Admin Routes (middleware auth)
+Route::middleware(['auth'])->group(function () {
 
-// Rute untuk My Account
-Route::get('/homeadminS/account-settings', function () {
-    return 'My Account Page (Coming Soon)';
-})->name('account.settings');
+    Route::get('/homeadminS/beranda', [DashboardController::class, 'beranda'])->name('beranda.admins');
 
-// Rute untuk My Account
-Route::get('/homeadminS/account-settings', function () {
-    return view('homeadminS.myaccount');
-})->name('account.settings');
+    Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
 
-// Rute untuk Payout Settings
-Route::get('/homeadminS/payout-settings', function () {
-    return 'Payout Settings Page (Coming Soon)';
-})->name('payout.settings');
+    // Appearance
+    Route::get('/homeadminS/appearance', [AppearanceController::class, 'index'])->name('appearance');
+    Route::post('/homeadminS/appearance', [AppearanceController::class, 'update'])->name('appearance.update');
 
-// Rute untuk Payout Settings
-Route::get('/homeadminS/payout-settings', function () {
-    return view('homeadminS.payout');
-})->name('payout.settings');
+    // Settings
+    Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
 
-Route::get('/homeadminS/account-settings', function () {
-    return view('homeadminS.myaccount', ['user' => Auth::user()]);
-})->name('account.settings')->middleware('auth');
-//menyesuaikan nama yang diedit
-Route::get('/homeadminS/account-settings', [AccountController::class, 'edit'])->name('account.settings')->middleware('auth');
+    // Account Settings
+    Route::get('/homeadminS/account-settings', [AccountController::class, 'edit'])->name('account.settings');
+    Route::post('/homeadminS/account-settings/update', [AccountController::class, 'update'])->name('account.update');
+    Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
 
-Route::post('/homeadminS/account-settings/update', [AccountController::class, 'update'])->name('account.update');
+    // Payout Settings (via controller atau view)
+    Route::get('/homeadminS/payout-settings', function () {
+        return view('homeadminS.payout');
+    })->name('payout.settings');
 
-Route::post('/homeadminS/account-settings/update', [App\Http\Controllers\AccountController::class, 'update'])->name('account.update');
+    // Statistik
+    Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
+    Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
 
-Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
+    // Orders
+    Route::get('/homeadminS/orders', [OrdersController::class, 'index'])->name('orders');
+    Route::get('/homeadminS/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
 
-Route::post('/appearance/update', [App\Http\Controllers\AppearanceController::class, 'update'])->name('appearance.update');
+    // Digital Products Resource
+    Route::resource('digital-product', DigitalProductController::class);
 
-Route::get('/get-digital-products', [DashboardController::class, 'getDigitalProducts'])->name('digital.products');
+});
+
+// Route lain yang tidak perlu auth
+Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index');
+Route::post('/shorten', [ShortlinkController::class, 'store']);
+
+// Public Profile
 Route::get('/linkan.id/{username}', [PublicPageController::class, 'show'])->name('public.profile');
 
-
+// Contact Form
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
+// Forgot Password
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
+// Product
 Route::get('/product/{id}', [DigitalProductController::class, 'show'])->name('product.show');
 Route::post('/cart/update-qty', [DigitalProductController::class, 'updateQty'])->name('cart.updateQty');
 
-
+// Checkout
 Route::match(['get', 'post'], '/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
-Route::post('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout.digital');
 
-Route::get('/{slug}', [ShortlinkController::class, 'redirect']); // redirect berdasarkan slug
+// Redirect berdasarkan slug (HARUS PALING BAWAH supaya tidak override route lain)
+Route::get('/{slug}', [ShortlinkController::class, 'redirect']);
 
-// Tambahkan route statistik baru dalam middleware auth
+// Platform Admin (middleware auth)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
-    Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
-    Route::get('/homeadminS/orders', [OrdersController::class, 'index'])->name('orders')->middleware('auth');
-    Route::get('/homeadminS/orders/{id}', [OrdersController::class, 'show'])->name('orders.show')->middleware('auth');
-});
+    Route::get('/admin-platform/beranda', [PlatformAdminController::class, 'beranda'])->name('beranda.platformadmin');
 
-Route::get('/admin-platform/beranda', [PlatformAdminController::class, 'beranda'])
-    ->name('beranda.platformadmin') // ubah nama route
-    ->middleware('auth');
-
-
-Route::prefix('platformadmin')->group(function () {
-    Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
+    Route::prefix('platformadmin')->group(function () {
+        Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
+    });
 });
