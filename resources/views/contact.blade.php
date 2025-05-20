@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Us - Linkan</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Font & Tailwind -->
@@ -60,7 +61,7 @@
 
             <div>
                 <label for="name" class="block mb-2 font-medium text-gray-700">Your Name</label>
-                <input type="text" name="name" id="name" placeholder="John Doe"
+                <input type="text" name="name" id="name" placeholder="Nama Anda"
                     class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
                     required>
             </div>

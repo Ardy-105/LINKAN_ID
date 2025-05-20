@@ -142,6 +142,7 @@
             color: #333;
             transition: all 0.2s ease;
             flex: 1;
+            text-decoration: none;
         }
 
         .action-button i {
@@ -328,18 +329,18 @@
                 </div>
                 <div class="start-creating">START CREATING NOW...!</div>
                 <div class="action-buttons">
-                    <button class="action-button">
+                    <a href="{{ route('mylinkan') }}" class="action-button">
                         <i class="fas fa-qrcode"></i>
                         add Linkan
-                    </button>
-                    <button class="action-button">
+                    </a>
+                    <a href="{{ route('digital-product.create') }}" class="action-button">
                         <i class="fas fa-box"></i>
                         Digital Product
-                    </button>
-                    <button class="action-button">
+                    </a>
+                    <a href="https://indobuzz.id/about-us" class="action-button">
                         <i class="fas fa-headset"></i>
-                        Support
-                    </button>
+                        About Us
+                    </a>
                 </div>
             </div>
 
