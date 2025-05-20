@@ -32,7 +32,8 @@ class RegisterController extends Controller
             'username' => strtolower($request->username),
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_link_active' => true
+            'is_link_active' => true,
+            'role' => 'admin_seller'
         ];
 
         // Jika ada data dari Google, tambahkan google_id
