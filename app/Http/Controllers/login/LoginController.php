@@ -13,7 +13,12 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect()->route('beranda.admins');
+            $user = Auth::user();
+            if ($user->role === 'admin_seller') {
+                return redirect()->route('beranda.admins');
+            } else if ($user->role === 'admin_platform') {
+                return redirect()->route('beranda.platformadmin');
+            }
         }
         return view('login');
     }
@@ -27,7 +32,13 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('beranda.admins');
+            
+            $user = Auth::user();
+            if ($user->role === 'admin_seller') {
+                return redirect()->route('beranda.admins');
+            } else if ($user->role === 'admin_platform') {
+                return redirect()->route('beranda.platformadmin');
+            }
         }
 
         return back()->withErrors([
