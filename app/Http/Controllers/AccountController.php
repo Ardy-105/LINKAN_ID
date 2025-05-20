@@ -14,7 +14,10 @@ class AccountController extends Controller
         $request->validate([
             'username' => 'required|string|max:255',
             'name' => 'required|string|max:255',
-            'password' => 'nullable|string|min:8',
+            'password' => 'nullable|string|min:8|confirmed',
+        ], [
+            'password.min' => 'Password minimal harus 8 karakter',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai'
         ]);
 
         // Ambil user yang sedang login

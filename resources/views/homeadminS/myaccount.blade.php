@@ -200,8 +200,16 @@
                     </div>    
                     <div class="form-group">
                         <label for="password">Password :</label>
-                        <input type="password" id="password" name="password" placeholder="Enter new password">
+                        <input type="password" id="password" name="password" placeholder="Enter new password" minlength="8" required>
+                        <span style="color: #666; font-size: 12px;">Password minimal 8 karakter</span>
+                        @error('password')
+                            <span style="color: red; font-size: 12px;">{{ $message }}</span>
+                        @enderror
                     </div> 
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi Password :</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password baru" minlength="8" required>
+                    </div>
                     <div class="form-group">
                         <button type="button" class="btn-save" onclick="showPopup()">Save</button>
                     </div>
