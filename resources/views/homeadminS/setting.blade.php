@@ -110,6 +110,16 @@
                     <p>Withdraw earnings, Bank account, etc</p>
                 </div>
             </div>
+
+            <div class="settings-card" onclick="window.location.href='{{ route('payout.settings') }}'">
+                <div class="settings-card-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="settings-card-content">
+                    <h3>Payment Methode</h3>
+                    <p>Withdraw earnings, Bank account, etc</p>
+                </div>
+            </div>
         </div>
     </div>
 </body>
