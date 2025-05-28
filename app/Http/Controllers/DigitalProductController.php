@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Midtrans\Snap;
-use Midtrans\Transaction;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendDigitalProductMail;
 
 class DigitalProductController extends Controller
 {
@@ -175,7 +177,7 @@ public function checkout(Request $request, $id)
     \Midtrans\Config::$isSanitized = true;
     \Midtrans\Config::$is3ds = true;
 
-    // Generate Snap Token (GET atau POST)
+    // Generate Snap Token
     $orderId = 'ORDER-' . uniqid();
 
     $params = [
@@ -201,12 +203,22 @@ public function checkout(Request $request, $id)
         return back()->with('error', 'Gagal membuat pembayaran: ' . $e->getMessage());
     }
 
-    // Jika POST, validasi dulu
     if ($request->isMethod('post')) {
         $request->validate([
             'email' => 'required|email',
             'name' => 'required|string',
             'qty' => 'required|integer|min:1',
+        ]);
+
+        // Simpan transaksi ke database setelah validasi
+        Transaction::create([
+            'order_id' => $orderId,
+            'product_id' => $product->id,
+            'buyer_name' => $request->name,
+            'buyer_email' => $request->email,
+            'qty' => $qty,
+            'total_price' => $product->price * $qty,
+            'status' => 'pending'
         ]);
 
         return view('public.checkout', [
@@ -216,13 +228,76 @@ public function checkout(Request $request, $id)
         ]);
     }
 
-    // GET default
     return view('public.checkout', [
         'product' => $product,
         'snapToken' => $snapToken,
         'savedQty' => $qty,
     ]);
 }
+public function midtransCallback(Request $request)
+{
+    \Midtrans\Config::$serverKey = 'SB-Mid-server-qbA7U8pOrHFCGy-0LlFclqIG';
+    \Midtrans\Config::$isProduction = false;
+
+    $notif = new \Midtrans\Notification();
+
+    $transaction = $notif->transaction_status;
+    $orderId = $notif->order_id;
+
+    $trx = Transaction::where('order_id', $orderId)->first();
+
+    if (!$trx) {
+        return response()->json(['error' => 'Transaction not found'], 404);
+    }
+
+    if ($transaction == 'capture' || $transaction == 'settlement') {
+        $trx->status = 'paid';
+        $trx->save();
+
+        // Kirim email produk digital
+        $product = $trx->product;
+        $link = $product->platform_type === 'upload'
+            ? asset('storage/' . $product->platform_file)
+            : $product->platform_url;
+
+        Mail::raw("Terima kasih telah membeli produk digital. Berikut link download Anda:\n\n$link", function ($message) use ($trx) {
+            $message->to($trx->buyer_email)
+                    ->subject('Produk Digital Anda');
+        });
+    }
+
+    return response()->json(['message' => 'Callback processed']);
+}
+public function storeTransaction(Request $request)
+{
+    $data = $request->validate([
+        'order_id' => 'required|string|unique:transactions',
+        'transaction_status' => 'required|string',
+        'product_id' => 'required|integer|exists:digital_products,id',
+        'buyer_email' => 'required|email',
+        'buyer_name' => 'required|string',
+        'qty' => 'required|integer|min:1',
+        'total_price' => 'required|numeric'
+    ]);
+
+    $transaction = Transaction::create([
+        'order_id' => $data['order_id'],
+        'status' => $data['transaction_status'],
+        'product_id' => $data['product_id'],
+        'buyer_email' => $data['buyer_email'],
+        'buyer_name' => $data['buyer_name'],
+        'qty' => $data['qty'],
+        'total_price' => $data['total_price'],
+    ]);
+
+    $product = \App\Models\DigitalProduct::find($data['product_id']);
+Mail::to($transaction->buyer_email)->send(
+    new SendDigitalProductMail($product, $transaction->buyer_name, $transaction)
+);
+
+    return response()->json(['success' => true, 'message' => 'Transaction stored & email sent']);
+}
+
 
 
 

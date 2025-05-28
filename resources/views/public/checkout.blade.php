@@ -270,11 +270,37 @@
 
     document.getElementById('select-method').addEventListener('click', function () {
         snap.pay('{{ $snapToken }}', {
-            onSuccess: function(result) {
-                Swal.fire('Sukses', 'Pembayaran berhasil!', 'success');
-                paymentSelected = true;
-                transactionResult = result;
-            },
+        onSuccess: function(result) {
+    Swal.fire('Sukses', 'Pembayaran berhasil! Silahkan cek Email Anda', 'success');
+    paymentSelected = true;
+    transactionResult = result;
+
+    // Kirim ke server
+    fetch("{{ route('transaction.store') }}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            order_id: result.order_id,
+            transaction_status: result.transaction_status,
+            product_id: {{ $product->id }},
+            buyer_email: emailInput.value,
+            buyer_name: nameInput.value,
+            qty: {{ $savedQty }},
+            total_price: {{ $savedQty * $product->price }}
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        // Tambahkan alert atau redirect jika perlu
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+},
             onPending: function(result) {
                 Swal.fire('Menunggu', 'Pembayaran sedang diproses...', 'info');
                 paymentSelected = true;

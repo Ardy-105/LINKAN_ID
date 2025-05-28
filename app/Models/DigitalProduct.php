@@ -9,6 +9,7 @@ class DigitalProduct extends Model
     protected $table = 'digital_products';
 
     protected $fillable = [
+        'id',
         'user_id',
         'image',
         'title',
@@ -21,6 +22,7 @@ class DigitalProduct extends Model
         'has_quantity_limit',
         'quantity',
         'button_text',
+        
     ];
      // ✅ Tambahkan ini
     public function user()

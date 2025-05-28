@@ -20,11 +20,21 @@ use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\PlatformAdminController;
 use App\Http\Controllers\PlatformAdmin\VerifikasiController;
 use Illuminate\Support\Facades\Auth;
+use App\Models\DigitalProduct;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendDigitalProductMail;
 
 // Halaman Utama
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
+
+
+
+Route::get('/test-email', function () {
+    return view('emails.send-digital-product');
+});
+
 
 // Auth Routes
 Route::get('/login', function () {
@@ -124,3 +134,5 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
     });
 });
+Route::post('/midtrans/callback', [DigitalProductController::class, 'midtransCallback']);
+Route::post('/transaction/store', [DigitalProductController::class, 'storeTransaction'])->name('transaction.store');
