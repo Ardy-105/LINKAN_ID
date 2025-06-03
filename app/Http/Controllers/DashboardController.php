@@ -13,36 +13,46 @@ class DashboardController extends Controller
     public function beranda()
     {
         $user = Auth::user();
-        
-        // Ambil data produk digital
+
+        // Ambil data produk digital milik user
         $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
         $totalProducts = $digitalProducts->count();
-        
-        // Ambil total views dan clicks berdasarkan link_id (username)
+
+        // Ambil data views dan clicks berdasarkan link_id (username)
         $totalViews = DB::table('link_views')
             ->where('link_id', $user->username)
             ->count();
-            
+
         $totalClicks = DB::table('link_clicks')
             ->where('link_id', $user->username)
             ->count();
-            
+
         // Ambil data orders dan sales
-        $lifetimeOrders = DB::table('orders')
-            ->where('seller_id', $user->id)
-            ->count();
-            
+       $lifetimeOrders = DB::table('transactions')
+    ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+    ->where('digital_products.user_id', $user->id)
+    ->sum('transactions.qty');
+
+
         $lifetimeSales = DB::table('orders')
             ->where('seller_id', $user->id)
             ->where('status', 'completed')
             ->sum('total_amount');
 
+        // ✅ Tambahkan total earnings dari tabel transactions
+        $totalEarnings = DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->sum('transactions.total_price');
+
+        // Kirim semua data ke view
         return view('homeadminS.beranda', compact(
             'totalViews',
             'totalClicks',
             'lifetimeOrders',
             'lifetimeSales',
-            'totalProducts'
+            'totalProducts',
+            'totalEarnings'
         ));
     }
 
@@ -51,8 +61,7 @@ class DashboardController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $user = Auth::user();
-        
-        // Jika tidak ada tanggal yang dipilih, gunakan 7 hari terakhir
+
         if (!$startDate || !$endDate) {
             $endDate = Carbon::now();
             $startDate = Carbon::now()->subDays(6);
@@ -61,10 +70,8 @@ class DashboardController extends Controller
             $endDate = Carbon::parse($endDate);
         }
 
-        // Hitung selisih hari
         $daysDiff = $startDate->diffInDays($endDate);
-        
-        // Batasi maksimal 30 hari
+
         if ($daysDiff > 30) {
             $endDate = $startDate->copy()->addDays(30);
         }
@@ -73,26 +80,23 @@ class DashboardController extends Controller
         $views = [];
         $clicks = [];
 
-        // Generate data untuk setiap hari dalam rentang
         $currentDate = $startDate->copy();
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate->format('d M');
-            
-            // Ambil data views untuk tanggal tersebut
+
             $viewCount = DB::table('link_views')
                 ->where('link_id', $user->username)
                 ->whereDate('created_at', $currentDate)
                 ->count();
-            
-            // Ambil data clicks untuk tanggal tersebut
+
             $clickCount = DB::table('link_clicks')
                 ->where('link_id', $user->username)
                 ->whereDate('created_at', $currentDate)
                 ->count();
-            
+
             $views[] = $viewCount;
             $clicks[] = $clickCount;
-            
+
             $currentDate->addDay();
         }
 
@@ -112,10 +116,10 @@ class DashboardController extends Controller
             ->select('id', 'title', 'price', 'created_at')
             ->latest()
             ->get();
-        
+
         return response()->json([
             'total' => $digitalProducts->count(),
             'products' => $digitalProducts
         ]);
     }
-} 
+}

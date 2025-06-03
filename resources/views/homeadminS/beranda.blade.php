@@ -349,7 +349,9 @@
                     <span>Earnings</span>
                     <i class="fas fa-cog"></i>
                 </div>
-                <div class="earnings-amount">IDR --- --- ---</div>
+         <div class="earnings-amount">IDR {{ number_format($totalEarnings, 0, ',', '.') }}</div>
+
+
             </div>
 
             <div class="stats-section">
@@ -380,7 +382,7 @@
                 <div class="summary-card">
                     <i class="fas fa-chart-line"></i>
                     <div class="label">Lifetime sales (IDR)</div>
-                    <div class="number">{{ number_format($lifetimeSales, 0, ',', '.') }}</div>
+                    <div class="number">{{ number_format($totalEarnings, 0, ',', '.') }}</div>
                 </div>
                 <div class="summary-card">
                     <i class="fas fa-box"></i>
