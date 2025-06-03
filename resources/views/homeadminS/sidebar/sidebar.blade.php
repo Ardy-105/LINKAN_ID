@@ -75,7 +75,7 @@
     <a href="{{ route('orders') }}" class="{{ request()->routeIs('orders') ? 'active' : '' }}">
         <i class="fas fa-shopping-cart"></i>Orders
     </a>
-    <a href="#" class="{{ request()->routeIs('mypurchase') ? 'active' : '' }}">
+    <a href="{{ route('mypurchase') }}" class="{{ request()->routeIs('mypurchase') ? 'active' : '' }}">
         <i class="fas fa-box"></i>My Purchase
     </a>
 

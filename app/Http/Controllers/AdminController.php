@@ -20,4 +20,20 @@ class AdminController extends Controller
 
         return view('homeadminS.mylinkan', compact('digitalProducts', 'appearance'));
     }
+
+    public function myPurchase()
+    {
+        $user = auth()->user();
+        // Ambil semua transaksi user
+        $purchases = \App\Models\Transaction::where('buyer_email', $user->email)
+            ->with('product')
+            ->latest()
+            ->get();
+        // Ambil produk digital unik yang sudah dibeli user
+        $purchasedProducts = $purchases->pluck('product')->unique('id')->values();
+        return view('homeadminS.mypurchase', [
+            'purchases' => $purchases,
+            'purchasedProducts' => $purchasedProducts
+        ]);
+    }
 }

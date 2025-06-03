@@ -101,6 +101,8 @@ Route::middleware(['auth'])->group(function () {
     // Digital Products Resource
     Route::resource('digital-product', DigitalProductController::class);
 
+    Route::get('/homeadminS/mypurchase', [AdminController::class, 'myPurchase'])->name('mypurchase');
+
 });
 
 // Route lain yang tidak perlu auth
