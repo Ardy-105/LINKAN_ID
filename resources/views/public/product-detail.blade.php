@@ -402,7 +402,7 @@
     <div class="description-label">DESCRIPTION :</div>
     <div class="product-description">{{ $product->description }}</div>
 
-    <a href="{{ $product->platform_url ?? '#' }}" class="buy-button" target="_blank">
+    <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => $product->platform_url ?? '#']) }}" class="buy-button" target="_blank">
         {{ $product->button_text ?? 'Beli' }}
     </a>
 </div>

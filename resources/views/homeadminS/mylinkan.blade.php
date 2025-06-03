@@ -592,7 +592,7 @@
                                 <div class="preview-product-info">
                                     <div class="preview-product-title">{{ $product->title }}</div>
                                 </div>
-                                <button class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $product->button_text ?? 'Beli' }}</button>
+                                <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ $product->button_text ?? 'Beli' }}</a>
                             </div>
                         @endforeach
                     </div>

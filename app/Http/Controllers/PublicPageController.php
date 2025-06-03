@@ -12,18 +12,23 @@ class PublicPageController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        // Cek apakah hari ini sudah pernah view dari IP yang sama
+        // Dapatkan IP dan User Agent
+        $ipAddress = request()->ip();
+        $userAgent = request()->header('User-Agent');
+
+        // Cek apakah hari ini sudah pernah view dari kombinasi IP dan User Agent yang sama
         $existing = DB::table('link_views')
             ->where('link_id', $user->username)
-            ->where('ip_address', request()->ip())
+            ->where('ip_address', $ipAddress)
+            ->where('user_agent', $userAgent)
             ->whereDate('created_at', now()->toDateString())
             ->first();
 
         if (!$existing) {
             DB::table('link_views')->insert([
-                'user_id' => $user->id,
                 'link_id' => $user->username,
-                'ip_address' => request()->ip(),
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('link_id');
             $table->string('ip_address')->nullable();
+            $table->text('user_agent')->nullable();
             $table->timestamps();
         });
 

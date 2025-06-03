@@ -414,77 +414,77 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    // Update total views & clicks angka di bawah judul
-                    document.getElementById('totalViews').textContent = data.totalViews ?? 0;
-                    document.getElementById('totalClicks').textContent = data.totalClicks ?? 0;
+            .then((response) => response.json())
+            .then((data) => {
+                // Update total views & clicks angka di bawah judul
+                document.getElementById('totalViews').textContent = data.views.reduce((a, b) => a + b, 0);
+                document.getElementById('totalClicks').textContent = data.clicks.reduce((a, b) => a + b, 0);
 
-                    // Update date input fields dengan data dari server (misal: tanggal start dan end yang sebenarnya)
-                    document.getElementById('startDate').value = data.start_date;
-                    document.getElementById('endDate').value = data.end_date;
+                // Update date input fields dengan data dari server
+                document.getElementById('startDate').value = data.start_date;
+                document.getElementById('endDate').value = data.end_date;
 
-                    startDate = data.start_date;
-                    endDate = data.end_date;
+                startDate = data.start_date;
+                endDate = data.end_date;
 
-                    if (myChart) {
-                        myChart.destroy();
-                    }
+                if (myChart) {
+                    myChart.destroy();
+                }
 
-                    myChart = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: data.labels,
-                            datasets: [
-                                {
-                                    label: 'Views',
-                                    data: data.views,
-                                    backgroundColor: '#ff4500',
-                                    borderRadius: 4,
-                                    maxBarThickness: 12,
-                                },
-                                {
-                                    label: 'Clicks',
-                                    data: data.clicks,
-                                    backgroundColor: '#4a90e2',
-                                    borderRadius: 4,
-                                    maxBarThickness: 12,
-                                },
-                            ],
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    grid: {
-                                        color: '#f0f0f0',
-                                    },
-                                },
-                                x: {
-                                    grid: {
-                                        display: false,
-                                    },
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [
+                            {
+                                label: 'Views',
+                                data: data.views,
+                                backgroundColor: '#ff4500',
+                                borderRadius: 4,
+                                maxBarThickness: 12,
+                            },
+                            {
+                                label: 'Clicks',
+                                data: data.clicks,
+                                backgroundColor: '#4a90e2',
+                                borderRadius: 4,
+                                maxBarThickness: 12,
+                            },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f0f0',
                                 },
                             },
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                    align: 'start',
-                                    labels: {
-                                        boxWidth: 12,
-                                        usePointStyle: true,
-                                        pointStyle: 'circle',
-                                    },
+                            x: {
+                                grid: {
+                                    display: false,
                                 },
                             },
                         },
-                    });
-                })
-                .catch((err) => {
-                    console.error('Error fetching chart data:', err);
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                align: 'start',
+                                labels: {
+                                    boxWidth: 12,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                },
+                            },
+                        },
+                    },
                 });
+            })
+            .catch((err) => {
+                console.error('Error fetching chart data:', err);
+            });
         }
 
         function applyDateFilter() {

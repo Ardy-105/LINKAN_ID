@@ -19,6 +19,11 @@ class DashboardController extends Controller
         $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
         $totalProducts = $digitalProducts->count();
 
+        // Debug untuk melihat semua data di tabel
+        $allViews = DB::table('link_views')->get();
+        \Log::info('Semua data di link_views:');
+        \Log::info($allViews);
+
         // Ambil total views dan clicks berdasarkan link_id (username)
         $totalViews = DB::table('link_views')
             ->where('link_id', $user->username)
@@ -27,6 +32,10 @@ class DashboardController extends Controller
         $totalClicks = DB::table('link_clicks')
             ->where('link_id', $user->username)
             ->count();
+
+        // Debug untuk memastikan data
+        \Log::info('Total Views: ' . $totalViews);
+        \Log::info('Username: ' . $user->username);
 
         // Ambil data lifetime orders dan sales
         $lifetimeOrders = DB::table('transactions')
@@ -142,11 +151,18 @@ class DashboardController extends Controller
             abort(404, 'User not found');
         }
 
+        // Debug untuk memastikan data
+        \Log::info('Tracking Click:');
+        \Log::info('Link ID: ' . $linkId);
+        \Log::info('Target URL: ' . $target);
+        \Log::info('IP Address: ' . $request->ip());
+        \Log::info('User Agent: ' . $request->header('User-Agent'));
+
         // Catat click ke database
         DB::table('link_clicks')->insert([
-            'user_id' => $user->id,
             'link_id' => $linkId,
             'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
             'created_at' => now(),
             'updated_at' => now()
         ]);
