@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Models\DigitalProduct;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -14,11 +15,11 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil data produk digital milik user
+        // Ambil produk digital milik user
         $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
         $totalProducts = $digitalProducts->count();
 
-        // Ambil data views dan clicks berdasarkan link_id (username)
+        // Ambil total views dan clicks berdasarkan link_id (username)
         $totalViews = DB::table('link_views')
             ->where('link_id', $user->username)
             ->count();
@@ -27,25 +28,22 @@ class DashboardController extends Controller
             ->where('link_id', $user->username)
             ->count();
 
-        // Ambil data orders dan sales
-       $lifetimeOrders = DB::table('transactions')
-    ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
-    ->where('digital_products.user_id', $user->id)
-    ->sum('transactions.qty');
-
+        // Ambil data lifetime orders dan sales
+        $lifetimeOrders = DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->sum('transactions.qty');
 
         $lifetimeSales = DB::table('orders')
             ->where('seller_id', $user->id)
             ->where('status', 'completed')
             ->sum('total_amount');
 
-        // ✅ Tambahkan total earnings dari tabel transactions
         $totalEarnings = DB::table('transactions')
             ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
             ->where('digital_products.user_id', $user->id)
             ->sum('transactions.total_price');
 
-        // Kirim semua data ke view
         return view('homeadminS.beranda', compact(
             'totalViews',
             'totalClicks',
@@ -58,21 +56,23 @@ class DashboardController extends Controller
 
     public function getChartData(Request $request)
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
         $user = Auth::user();
 
-        if (!$startDate || !$endDate) {
-            $endDate = Carbon::now();
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Jika tanggal tidak diberikan, ambil 7 hari terakhir
+        try {
+            $startDate = $startDate ? Carbon::parse($startDate) : Carbon::now()->subDays(6);
+            $endDate = $endDate ? Carbon::parse($endDate) : Carbon::now();
+        } catch (\Exception $e) {
+            // Jika parsing gagal, set default
             $startDate = Carbon::now()->subDays(6);
-        } else {
-            $startDate = Carbon::parse($startDate);
-            $endDate = Carbon::parse($endDate);
+            $endDate = Carbon::now();
         }
 
-        $daysDiff = $startDate->diffInDays($endDate);
-
-        if ($daysDiff > 30) {
+        // Batasi range maksimal 30 hari
+        if ($startDate->diffInDays($endDate) > 30) {
             $endDate = $startDate->copy()->addDays(30);
         }
 
@@ -81,6 +81,7 @@ class DashboardController extends Controller
         $clicks = [];
 
         $currentDate = $startDate->copy();
+
         while ($currentDate <= $endDate) {
             $dates[] = $currentDate->format('d M');
 
@@ -112,6 +113,7 @@ class DashboardController extends Controller
     public function getDigitalProducts()
     {
         $user = Auth::user();
+
         $digitalProducts = DigitalProduct::where('user_id', $user->id)
             ->select('id', 'title', 'price', 'created_at')
             ->latest()
@@ -121,5 +123,34 @@ class DashboardController extends Controller
             'total' => $digitalProducts->count(),
             'products' => $digitalProducts
         ]);
+    }
+
+    // Fungsi untuk mencatat CLICK
+    public function trackClick(Request $request)
+    {
+        $linkId = $request->query('link_id');
+        $target = $request->query('target');
+
+        // Validasi URL target
+        if (!filter_var($target, FILTER_VALIDATE_URL)) {
+            abort(400, 'Invalid target URL');
+        }
+
+        // Dapatkan user berdasarkan username
+        $user = User::where('username', $linkId)->first();
+        if (!$user) {
+            abort(404, 'User not found');
+        }
+
+        // Catat click ke database
+        DB::table('link_clicks')->insert([
+            'user_id' => $user->id,
+            'link_id' => $linkId,
+            'ip_address' => $request->ip(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->to($target);
     }
 }

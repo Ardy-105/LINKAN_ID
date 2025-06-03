@@ -3,22 +3,40 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class PublicPageController extends Controller
 {
     public function show($username)
-{
-    $user = \App\Models\User::where('username', $username)->firstOrFail();
+    {
+        $user = User::where('username', $username)->firstOrFail();
 
-    // Ambil data tampilan (appearance)
-    $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
+        // Cek apakah hari ini sudah pernah view dari IP yang sama
+        $existing = DB::table('link_views')
+            ->where('link_id', $user->username)
+            ->where('ip_address', request()->ip())
+            ->whereDate('created_at', now()->toDateString())
+            ->first();
 
-    // Ambil data produk digital user yang aktif
-    $products = \App\Models\DigitalProduct::where('user_id', $user->id)
-        ->where('is_active', 1)
-        ->get();
+        if (!$existing) {
+            DB::table('link_views')->insert([
+                'user_id' => $user->id,
+                'link_id' => $user->username,
+                'ip_address' => request()->ip(),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
 
-    return view('public.profile', compact('user', 'appearance', 'products'));
-}
+        // Ambil data tampilan (appearance)
+        $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
 
+        // Ambil data produk digital user yang aktif
+        $products = \App\Models\DigitalProduct::where('user_id', $user->id)
+            ->where('is_active', 1)
+            ->get();
+
+        return view('public.profile', compact('user', 'appearance', 'products'));
+    }
 }

@@ -235,7 +235,7 @@
                         <div class="product-info">
                         <div class="preview-product-title">{{ $product->title }}</div>
                         </div>
-                      <a href="{{ route('product.show', $product->id) }}" class="preview-product-button">
+                      <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)]) }}" class="preview-product-button">
     {{ $product->button_text ?? 'Beli' }}
 </a>
                     </div>

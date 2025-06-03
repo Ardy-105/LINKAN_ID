@@ -29,12 +29,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+// Route untuk tracking link (harus di atas route lain yang menggunakan parameter)
+Route::get('/linkan.id/{username}', [PublicPageController::class, 'show'])->name('track.view');
+Route::get('/track-click', [DashboardController::class, 'trackClick'])->name('track.click');
 
+// Public Profile
+Route::get('/profile/{username}', [PublicPageController::class, 'show'])->name('public.profile');
 
 Route::get('/test-email', function () {
     return view('emails.send-digital-product');
 });
-
 
 // Auth Routes
 Route::get('/login', function () {
@@ -102,9 +106,6 @@ Route::middleware(['auth'])->group(function () {
 // Route lain yang tidak perlu auth
 Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index');
 Route::post('/shorten', [ShortlinkController::class, 'store']);
-
-// Public Profile
-Route::get('/linkan.id/{username}', [PublicPageController::class, 'show'])->name('public.profile');
 
 // Contact Form
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.form');

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Linkan Dashboard</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -319,27 +320,27 @@
                     </div>
                     <div class="profile-info">
                         <h3>{{ Auth::user()->name }}</h3>
-                        <a href="{{ url('/linkan.id/' . Auth::user()->username) }}" style="color: #FF9040;">
+                        <a href="{{ route('track.view', ['username' => Auth::user()->username]) }}" style="color: #FF9040;">
                             {{ url('/linkan.id/' . Auth::user()->username) }}
                         </a>
                     </div>
-                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/{{ Auth::user()->username }}')">
+                    <button
+                      class="share-button"
+                      onclick="copyToClipboard('{{ route('track.view', ['username' => Auth::user()->username]) }}')"
+                    >
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>
                 <div class="start-creating">START CREATING NOW...!</div>
                 <div class="action-buttons">
                     <a href="{{ route('mylinkan') }}" class="action-button">
-                        <i class="fas fa-qrcode"></i>
-                        add Linkan
+                        <i class="fas fa-qrcode"></i> add Linkan
                     </a>
                     <a href="{{ route('digital-product.create') }}" class="action-button">
-                        <i class="fas fa-box"></i>
-                        Digital Product
+                        <i class="fas fa-box"></i> Digital Product
                     </a>
                     <a href="https://indobuzz.id/about-us" class="action-button">
-                        <i class="fas fa-headset"></i>
-                        About Us
+                        <i class="fas fa-headset"></i> About Us
                     </a>
                 </div>
             </div>
@@ -349,24 +350,22 @@
                     <span>Earnings</span>
                     <i class="fas fa-cog"></i>
                 </div>
-         <div class="earnings-amount">IDR {{ number_format($totalEarnings, 0, ',', '.') }}</div>
-
-
+                <div class="earnings-amount">IDR {{ number_format($totalEarnings, 0, ',', '.') }}</div>
             </div>
 
             <div class="stats-section">
                 <div class="stats-header">
                     <h3>Total Click & Views</h3>
                     <div class="date-range-selector">
-                        <input type="date" id="startDate" class="date-input">
+                        <input type="date" id="startDate" class="date-input" />
                         <span>to</span>
-                        <input type="date" id="endDate" class="date-input">
+                        <input type="date" id="endDate" class="date-input" />
                         <button class="apply-date" onclick="applyDateFilter()">Apply</button>
                     </div>
                 </div>
                 <div class="stats-numbers">
-                    <span>Views: {{ $totalViews }}</span>
-                    <span>Clicks: {{ $totalClicks }}</span>
+                    <span>Views: <span id="totalViews">{{ $totalViews }}</span></span>
+                    <span>Clicks: <span id="totalClicks">{{ $totalClicks }}</span></span>
                 </div>
                 <div class="stats-chart">
                     <canvas id="statsChart"></canvas>
@@ -400,41 +399,58 @@
         let startDate = null;
         let endDate = null;
 
+        function createTrackingLink(targetUrl, linkId) {
+            return `/track-click?link_id=${linkId}&target=${encodeURIComponent(targetUrl)}`;
+        }
+
         function updateChart() {
             const params = new URLSearchParams();
             if (startDate) params.append('start_date', startDate);
             if (endDate) params.append('end_date', endDate);
 
-            fetch(`/get-chart-data?${params.toString()}`)
-                .then(response => response.json())
-                .then(data => {
+            fetch(`/get-chart-data?${params.toString()}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update total views & clicks angka di bawah judul
+                    document.getElementById('totalViews').textContent = data.totalViews ?? 0;
+                    document.getElementById('totalClicks').textContent = data.totalClicks ?? 0;
+
+                    // Update date input fields dengan data dari server (misal: tanggal start dan end yang sebenarnya)
+                    document.getElementById('startDate').value = data.start_date;
+                    document.getElementById('endDate').value = data.end_date;
+
+                    startDate = data.start_date;
+                    endDate = data.end_date;
+
                     if (myChart) {
                         myChart.destroy();
                     }
-
-                    // Update date inputs
-                    document.getElementById('startDate').value = data.start_date;
-                    document.getElementById('endDate').value = data.end_date;
-                    startDate = data.start_date;
-                    endDate = data.end_date;
 
                     myChart = new Chart(ctx, {
                         type: 'bar',
                         data: {
                             labels: data.labels,
-                            datasets: [{
-                                label: 'Views',
-                                data: data.views,
-                                backgroundColor: '#ff4500',
-                                borderRadius: 4,
-                                maxBarThickness: 12
-                            }, {
-                                label: 'Clicks',
-                                data: data.clicks,
-                                backgroundColor: '#4a90e2',
-                                borderRadius: 4,
-                                maxBarThickness: 12
-                            }]
+                            datasets: [
+                                {
+                                    label: 'Views',
+                                    data: data.views,
+                                    backgroundColor: '#ff4500',
+                                    borderRadius: 4,
+                                    maxBarThickness: 12,
+                                },
+                                {
+                                    label: 'Clicks',
+                                    data: data.clicks,
+                                    backgroundColor: '#4a90e2',
+                                    borderRadius: 4,
+                                    maxBarThickness: 12,
+                                },
+                            ],
                         },
                         options: {
                             responsive: true,
@@ -443,14 +459,14 @@
                                 y: {
                                     beginAtZero: true,
                                     grid: {
-                                        color: '#f0f0f0'
-                                    }
+                                        color: '#f0f0f0',
+                                    },
                                 },
                                 x: {
                                     grid: {
-                                        display: false
-                                    }
-                                }
+                                        display: false,
+                                    },
+                                },
                             },
                             plugins: {
                                 legend: {
@@ -459,12 +475,15 @@
                                     labels: {
                                         boxWidth: 12,
                                         usePointStyle: true,
-                                        pointStyle: 'circle'
-                                    }
-                                }
-                            }
-                        }
+                                        pointStyle: 'circle',
+                                    },
+                                },
+                            },
+                        },
                     });
+                })
+                .catch((err) => {
+                    console.error('Error fetching chart data:', err);
                 });
         }
 
@@ -474,8 +493,8 @@
             updateChart();
         }
 
-        // Set default dates (7 days ago to today)
-        document.addEventListener('DOMContentLoaded', function() {
+        // Set default dates (7 hari terakhir) saat halaman selesai dimuat
+        document.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(today.getDate() - 6);
@@ -487,37 +506,17 @@
             endDate = document.getElementById('endDate').value;
 
             updateChart();
+
+            // Kalau perlu, fungsi copy link juga sudah siap
         });
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('Link copied to clipboard!');
-            }).catch(err => {
+            }).catch((err) => {
                 console.error('Failed to copy text: ', err);
             });
         }
-
-        // Fungsi untuk mengambil data produk digital
-        function fetchDigitalProducts() {
-            fetch('/get-digital-products')
-                .then(response => response.json())
-                .then(data => {
-                    // Update total produk
-                    document.querySelector('.summary-card:last-child .number').textContent = data.total;
-                    
-                    // Update daftar produk jika diperlukan
-                    // ...
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // Ambil data setiap 30 detik
-        setInterval(fetchDigitalProducts, 30000);
-
-        // Ambil data saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchDigitalProducts();
-        });
     </script>
 </body>
 </html>
