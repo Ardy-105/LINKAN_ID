@@ -22,11 +22,11 @@ class StatisticController extends Controller
             ->where('link_id', $user->username)
             ->count();
             
-        // Ambil total sales
-        $totalSales = DB::table('orders')
-            ->where('seller_id', $user->id)
-            ->where('status', 'completed')
-            ->sum('total_amount');
+        // Ambil total sales dari transactions
+        $totalSales = DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->sum('transactions.total_price');
 
         return view('homeadminS.statistic', compact(
             'totalViews',
@@ -80,12 +80,12 @@ class StatisticController extends Controller
                 ->whereDate('created_at', $currentDate)
                 ->count();
             
-            // Ambil data sales untuk tanggal tersebut
-            $saleAmount = DB::table('orders')
-                ->where('seller_id', $user->id)
-                ->where('status', 'completed')
-                ->whereDate('created_at', $currentDate)
-                ->sum('total_amount');
+            // Ambil data sales untuk tanggal tersebut dari transactions
+            $saleAmount = DB::table('transactions')
+                ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+                ->where('digital_products.user_id', $user->id)
+                ->whereDate('transactions.created_at', $currentDate)
+                ->sum('transactions.total_price');
             
             $views[] = $viewCount;
             $clicks[] = $clickCount;
