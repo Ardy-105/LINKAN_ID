@@ -357,7 +357,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function loadOrderDetail(id) {
-            $.get(`/homeadminS/orders/${id}`, function(data) {
+            // Ambil status filter saat ini
+            const currentStatus = $('#statusFilter').val();
+            const currentDate = $('#dateFilter').val();
+            const currentSearch = $('#searchInput').val().trim();
+
+            // Tambahkan parameter filter ke request
+            $.get(`/homeadminS/orders/${id}`, {
+                status: currentStatus,
+                date: currentDate,
+                search: currentSearch
+            }, function(data) {
                 const detail = data;
                 const statusClass = {
                     'success': 'status-success',
