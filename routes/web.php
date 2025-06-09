@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\DigitalProduct;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendDigitalProductMail;
+use App\Http\Controllers\OrderController;
 
 // Halaman Utama
 Route::get('/', function () {
@@ -95,13 +96,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
 
     // Orders
-    Route::get('/homeadminS/orders', [OrdersController::class, 'index'])->name('orders');
-    Route::get('/homeadminS/orders/{id}', [OrdersController::class, 'show'])->name('orders.show');
+    Route::get('/homeadminS/orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/homeadminS/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
 
     // Digital Products Resource
     Route::resource('digital-product', DigitalProductController::class);
 
     Route::get('/homeadminS/mypurchase', [AdminController::class, 'myPurchase'])->name('mypurchase');
+
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
 
 });
 
