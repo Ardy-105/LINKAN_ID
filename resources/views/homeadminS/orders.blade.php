@@ -192,11 +192,25 @@
             background-color: #ff9a4f;
         }
 
+        .product-orders h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
         .filter-bar {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-bar input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
         }
 
         .btn-download {
@@ -305,7 +319,6 @@
                     <h3>Product Orders</h3>
                     <div class="filter-bar">
                         <input type="date" id="dateFilter">
-                        <button class="btn-download">⬇</button>
                     </div>
                     <select id="statusFilter">
                         <option value="">All Transaction</option>
