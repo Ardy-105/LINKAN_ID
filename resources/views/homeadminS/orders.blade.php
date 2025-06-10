@@ -424,6 +424,9 @@
                 // Tampilkan loading state
                 $('.product-orders').append('<div class="loading">Loading...</div>');
 
+                // Hapus pesan "tidak ada transaksi" yang mungkin ada
+                $('.no-data, .error').remove();
+
                 // Siapkan data untuk request
                 const requestData = {};
                 if (status) requestData.status = status;
@@ -466,6 +469,9 @@
                                 $orderList.append(html);
                             });
                         } else {
+                            // Hapus semua order-item yang ada sebelum menampilkan pesan tidak ada data
+                            $('.order-item').remove();
+                            
                             let debugInfo = '';
                             if (response.debug) {
                                 debugInfo = `
