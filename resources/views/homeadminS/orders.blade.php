@@ -415,6 +415,15 @@
         // Filter functionality
         let filterTimeout;
         $('#statusFilter, #dateFilter, #searchInput').on('change keyup', function() {
+            // Reset order details ke tampilan awal
+            $('#orderDetails').html(`
+                <div class="empty-detail">
+                    <div class="icon-detail">📋</div>
+                    <p>Your transaction detail will appear here.<br>
+                    Click <strong>Detail</strong> button on the left side</p>
+                </div>
+            `);
+
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(function() {
                 const status = $('#statusFilter').val();
