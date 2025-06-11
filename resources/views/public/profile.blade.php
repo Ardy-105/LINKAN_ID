@@ -237,7 +237,7 @@
                                 <div class="preview-product-title">{{ $product->title }}</div>
                             </div>
                             <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)]) }}" class="preview-product-button">
-                                {{ $product->button_text ?? 'Beli' }}
+                                {{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}
                             </a>
                         </div>
                     @endif

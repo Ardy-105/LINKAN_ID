@@ -346,6 +346,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-decoration: none;
         }
 
         .preview-product-button:disabled {
@@ -716,7 +717,7 @@
                                     <div class="preview-product-title">{{ $product->title }}</div>
                                 </div>
                                 @if($product->verification_status == 'approved')
-                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ $product->button_text ?? 'Beli' }}</a>
+                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}</a>
                                 @else
                                     <button class="preview-product-button" disabled>
                                         @if($product->verification_status == 'pending')
