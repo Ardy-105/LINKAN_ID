@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\PlatformAdmin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\DigitalProduct;
+use Illuminate\Http\Request;
 
-class VerifikasiController extends Controller
+class VerificationController extends Controller
 {
     public function index()
     {
@@ -20,21 +19,13 @@ class VerifikasiController extends Controller
     public function verify(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:approved,rejected',
-            'rejection_reason' => 'required_if:status,rejected|nullable|string|max:500'
+            'status' => 'required|in:approved,rejected'
         ]);
 
         $product = DigitalProduct::findOrFail($id);
         $product->verification_status = $request->status;
-        
-        if ($request->status === 'rejected') {
-            $product->rejection_reason = $request->rejection_reason;
-        } else {
-            $product->rejection_reason = null;
-        }
-        
         $product->save();
 
         return redirect()->back()->with('success', 'Status verifikasi produk berhasil diperbarui');
     }
-}
+} 

@@ -340,10 +340,62 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             flex-shrink: 0;
+            min-width: 100px;
+            text-align: center;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .preview-product-button:hover {
-            opacity: 0.9;
+        .preview-product-button:disabled {
+            background-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+            opacity: 1;
+        }
+
+        .preview-product-button .status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin: 0;
+            display: inline-block;
+            background: transparent;
+        }
+
+        .preview-product-button .status.pending {
+            color: #6c757d;
+        }
+
+        .preview-product-button .status.rejected {
+            color: #6c757d;
+        }
+
+        .preview-product-button .rejection-reason {
+            margin-top: 4px;
+            padding: 4px 8px;
+            background-color: #fff3f3;
+            border: 1px solid #ffcdd2;
+            border-radius: 4px;
+            font-size: 11px;
+            max-width: 100%;
+            display: block;
+            text-align: left;
+        }
+
+        .preview-product-button .rejection-reason strong {
+            color: #d32f2f;
+            display: inline;
+            margin-right: 4px;
+            font-size: 11px;
+        }
+
+        .preview-product-button .rejection-reason p {
+            margin: 0;
+            color: #666;
+            line-height: 1.2;
+            display: inline;
         }
 
         /* Modal Styles */
@@ -486,6 +538,64 @@
                 margin: 0 auto;
             }
         }
+
+        /* Tambahkan style untuk tombol edit produk yang ditolak */
+        .edit-rejected {
+            display: none;
+        }
+
+        .rejection-reason {
+            margin-top: 4px;
+            padding: 4px 8px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 90%;
+            display: inline-block;
+            color: #721c24;
+            line-height: 1.3;
+        }
+
+        .rejection-reason strong {
+            color: #721c24;
+            display: inline;
+            margin-right: 5px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .rejection-reason p {
+            margin: 0;
+            color: #721c24;
+            line-height: 1.3;
+            display: inline;
+            font-size: 12px;
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            display: inline-block;
+            line-height: 1.3;
+        }
+
+        .status.pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status.rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
     </style>
 </head>
 <body>
@@ -523,17 +633,30 @@
                     <h3 style="margin-bottom: 10px; color: #333;">Produk Digital Terbaru</h3>
                     @foreach($digitalProducts as $product)
                     <div class="block-item" onclick="showActionModal({{ $product->id }}, '{{ $product->title }}')">
-
-
-                            <i class="fas fa-grip-vertical drag-handle"></i>
-                            <div class="block-icon">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <div class="block-title">{{ $product->title }}</div>
-                            <div class="block-actions">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </div>
+                        <i class="fas fa-grip-vertical drag-handle"></i>
+                        <div class="block-icon">
+                            <i class="fas fa-file-alt"></i>
                         </div>
+                        <div class="block-title">
+                            {{ $product->title }}
+                            @if($product->verification_status == 'pending')
+                                <span class="status pending">Menunggu Verifikasi</span>
+                            @elseif($product->verification_status == 'rejected')
+                                <span class="status rejected">Ditolak</span>
+                                @if($product->rejection_reason)
+                                    <div class="rejection-reason">
+                                        <strong>Reason:</strong>
+                                        <p>{{ $product->rejection_reason }}</p>
+                                    </div>
+                                @endif
+                            @else
+                                <span class="status approved">Terverifikasi</span>
+                            @endif
+                        </div>
+                        <div class="block-actions">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                    </div>
                     @endforeach
                 </div>
             @endif
@@ -592,7 +715,17 @@
                                 <div class="preview-product-info">
                                     <div class="preview-product-title">{{ $product->title }}</div>
                                 </div>
-                                <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ $product->button_text ?? 'Beli' }}</a>
+                                @if($product->verification_status == 'approved')
+                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ $product->button_text ?? 'Beli' }}</a>
+                                @else
+                                    <button class="preview-product-button" disabled>
+                                        @if($product->verification_status == 'pending')
+                                            <span class="status pending">Menunggu Verifikasi</span>
+                                        @else
+                                            <span class="status rejected">Ditolak</span>
+                                        @endif
+                                    </button>
+                                @endif
                             </div>
                         @endforeach
                     </div>

@@ -172,6 +172,32 @@
             background-color: #ff6600;
             color: white;
         }
+
+        /* Tambahkan style untuk modal */
+        .modal-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -209,36 +235,88 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach($products as $index => $product)
                     <tr>
-                        <td>1.</td>
-                        <td>Budi</td>
+                        <td>{{ $index + 1 }}.</td>
+                        <td>{{ $product->user->name }}</td>
                         <td>
                             <div class="content-preview">
-                                <img src="https://via.placeholder.com/80x50.png?text=Pembelajaran" alt="Pembelajaran">
-                                <span>Pembelajaran</span>
+                                @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
+                                @else
+                                    <img src="https://via.placeholder.com/80x50.png?text=No+Image" alt="No Image">
+                                @endif
+                                <span>{{ $product->title }}</span>
                             </div>
                         </td>
-                        <td>15 Aug 2025</td>
-                        <td><span class="status-completed">● Completed</span></td>
-                        <td><button class="btn accepted">Accepted</button></td>
-                    </tr>
-                    <tr>
-                        <td>2.</td>
-                        <td>Fajar</td>
+                        <td>{{ $product->created_at->format('d M Y') }}</td>
                         <td>
-                            <div class="content-preview">
-                                <img src="https://via.placeholder.com/80x50.png?text=Shopee" alt="Shopee">
-                                <span>Shopee Affiliate</span>
-                            </div>
+                            @if($product->verification_status == 'approved')
+                                <span class="status-completed">● Approved</span>
+                            @elseif($product->verification_status == 'rejected')
+                                <span class="status-pending">● Rejected</span>
+                            @else
+                                <span class="status-pending">● Pending</span>
+                            @endif
                         </td>
-                        <td>17 Aug 2025</td>
-                        <td><span class="status-pending">● Pending</span></td>
-                        <td><button class="btn accept">Accept</button></td>
+                        <td>
+                            @if($product->verification_status == 'pending')
+                                <form action="{{ route('verifikasi.verify', $product->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="btn accept">Approve</button>
+                                </form>
+                                <button type="button" class="btn accept" style="background-color: #dc3545;" onclick="showRejectModal({{ $product->id }})">Reject</button>
+                            @else
+                                <button class="btn accepted" disabled>{{ ucfirst($product->verification_status) }}</button>
+                                @if($product->verification_status == 'rejected' && $product->rejection_reason)
+                                    <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                        Alasan: {{ $product->rejection_reason }}
+                                    </div>
+                                @endif
+                            @endif
+                        </td>
                     </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Modal untuk Reject -->
+    <div id="rejectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tolak Produk</h2>
+                <button class="close-button" onclick="closeRejectModal()">×</button>
+            </div>
+            <form id="rejectForm" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden" name="status" value="rejected">
+                    <div class="form-group">
+                        <label>Alasan Penolakan</label>
+                        <textarea name="rejection_reason" class="form-control" rows="4" required placeholder="Masukkan alasan penolakan produk..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="closeRejectModal()">Batal</button>
+                    <button type="submit" class="btn accept" style="background-color: #dc3545;">Tolak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    function showRejectModal(productId) {
+        document.getElementById('rejectForm').action = `/platformadmin/verifikasi/${productId}`;
+        document.getElementById('rejectModal').style.display = 'block';
+    }
+
+    function closeRejectModal() {
+        document.getElementById('rejectModal').style.display = 'none';
+    }
+    </script>
 
 </body>
 </html>

@@ -23,6 +23,8 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->string('button_text');
             $table->boolean('is_active')->default(true);
+            $table->enum('verification_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('rejection_reason')->nullable();
             $table->timestamps();
         });
     }

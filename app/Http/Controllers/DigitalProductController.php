@@ -105,6 +105,11 @@ public function show($id)
             'price', 'sale_price', 'has_quantity_limit', 'quantity', 'button_text'
         ]);
 
+        // Reset status verifikasi ke pending jika produk ditolak
+        if ($product->verification_status === 'rejected') {
+            $data['verification_status'] = 'pending';
+        }
+
         // Jika has_quantity_limit tidak dicentang, set quantity ke null
         if (!$request->has('has_quantity_limit')) {
             $data['has_quantity_limit'] = false;
@@ -136,9 +141,16 @@ public function show($id)
             $data['image'] = $imagePath;
         }
 
+        // Debug untuk memastikan status berubah
+        \Log::info('Product before update:', ['status' => $product->verification_status]);
+        \Log::info('Data to update:', $data);
+
         $product->update($data);
 
-        return redirect()->route('mylinkan')->with('success', 'Produk berhasil diperbarui!');
+        // Debug untuk memastikan status berubah setelah update
+        \Log::info('Product after update:', ['status' => $product->fresh()->verification_status]);
+
+        return redirect()->route('mylinkan')->with('success', 'Produk berhasil diperbarui dan menunggu verifikasi ulang!');
     }
     
 

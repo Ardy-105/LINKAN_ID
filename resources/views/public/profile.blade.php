@@ -224,21 +224,23 @@
         @if($products && $products->count() > 0)
             <div class="preview-products">
                 @foreach($products as $product)
-                    <div class="preview-product-item">
-                        <div class="preview-product-image">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
-                            @else
-                                <i class="fas fa-file-alt"></i>
-                            @endif
+                    @if($product->verification_status == 'approved')
+                        <div class="preview-product-item">
+                            <div class="preview-product-image">
+                                @if($product->image)
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
+                                @else
+                                    <i class="fas fa-file-alt"></i>
+                                @endif
+                            </div>
+                            <div class="product-info">
+                                <div class="preview-product-title">{{ $product->title }}</div>
+                            </div>
+                            <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)]) }}" class="preview-product-button">
+                                {{ $product->button_text ?? 'Beli' }}
+                            </a>
                         </div>
-                        <div class="product-info">
-                        <div class="preview-product-title">{{ $product->title }}</div>
-                        </div>
-                      <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)]) }}" class="preview-product-button">
-    {{ $product->button_text ?? 'Beli' }}
-</a>
-                    </div>
+                    @endif
                 @endforeach
             </div>
         @endif

@@ -346,6 +346,12 @@
                 </div>
             @endif
 
+            @if(isset($product) && $product->verification_status === 'rejected')
+                <div class="alert alert-warning" style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #856404;">
+                    <i class="fas fa-exclamation-triangle"></i> Produk ini sebelumnya ditolak. Silakan perbaiki dan kirim ulang untuk verifikasi.
+                </div>
+            @endif
+
             
             <form id="digitalProductForm"
       action="{{ isset($product) ? route('digital-product.update', $product->id) : route('digital-product.store') }}"

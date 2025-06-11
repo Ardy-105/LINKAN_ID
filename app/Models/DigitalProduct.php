@@ -22,7 +22,8 @@ class DigitalProduct extends Model
         'has_quantity_limit',
         'quantity',
         'button_text',
-        
+        'verification_status',
+        'rejection_reason'
     ];
      // ✅ Tambahkan ini
     public function user()

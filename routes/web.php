@@ -24,6 +24,7 @@ use App\Models\DigitalProduct;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendDigitalProductMail;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\VerificationController;
 
 // Halaman Utama
 Route::get('/', function () {
@@ -139,7 +140,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('platformadmin')->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
+        Route::post('/verifikasi/{id}', [VerifikasiController::class, 'verify'])->name('verifikasi.verify');
     });
 });
 Route::post('/midtrans/callback', [DigitalProductController::class, 'midtransCallback']);
 Route::post('/transaction/store', [DigitalProductController::class, 'storeTransaction'])->name('transaction.store');
+
+// Route untuk verifikasi produk
+Route::middleware(['auth', 'role:platform_admin'])->group(function () {
+    Route::get('/verification', [VerificationController::class, 'index'])->name('verification.index');
+    Route::post('/verification/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
+});
