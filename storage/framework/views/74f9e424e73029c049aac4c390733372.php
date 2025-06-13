@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <div class="settings-card" onclick="window.location.href='<?php echo e(route('payout.settings')); ?>'">
+            <div class="settings-card" onclick="window.location.href='<?php echo e(route('payout.index')); ?>'">
                 <div class="settings-card-icon">
                     <i class="fas fa-wallet"></i>
                 </div>

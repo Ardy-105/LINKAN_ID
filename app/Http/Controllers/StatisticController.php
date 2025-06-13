@@ -26,12 +26,13 @@ class StatisticController extends Controller
         $totalSales = DB::table('transactions')
             ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
             ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
             ->sum('transactions.total_price');
 
         return view('homeadminS.statistic', compact(
             'totalViews',
             'totalClicks',
-            'totalSales'
+            'totalSales',
         ));
     }
 
@@ -84,6 +85,7 @@ class StatisticController extends Controller
             $saleAmount = DB::table('transactions')
                 ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
                 ->where('digital_products.user_id', $user->id)
+                ->where('transactions.status', 'success')
                 ->whereDate('transactions.created_at', $currentDate)
                 ->sum('transactions.total_price');
             

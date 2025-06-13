@@ -124,20 +124,35 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="method">Withdrawal Method</label>
-                <select id="method" name="method" class="form-control" style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;" required>
-                    <option value="">Select a method</option>
-                    <option value="Bank" {{ (old('method', $payoutDetail->method_type ?? '') == 'Bank') ? 'selected' : '' }}>Via Bank</option>
-                    <option value="DANA" {{ (old('method', $payoutDetail->method_type ?? '') == 'DANA') ? 'selected' : '' }}>DANA</option>
-                    <option value="ShopeePay" {{ (old('method', $payoutDetail->method_type ?? '') == 'ShopeePay') ? 'selected' : '' }}>ShopeePay</option>
-                </select>
-            </div>
+         <div class="form-group">
+    <label for="method">Withdrawal Method</label>
+    <input
+        type="text"
+        id="method"
+        name="method"
+        class="form-control"
+        value="{{ old('method', $payoutDetail->method_type ?? '-') }}"
+        readonly
+        style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;"
+    >
+</div>
 
-            <div class="form-group" id="account-detail-group">
-                <label for="account_detail">Account Number / Phone Number</label>
-                <input type="text" id="account_detail" name="account_detail" class="form-control" placeholder="Enter account number or phone number" style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;" value="{{ old('account_detail', $payoutDetail->account_number ?? '') }}" required>
-            </div>
+
+           <div class="form-group" id="account-detail-group">
+    <label for="account_detail">Account Number / Phone Number</label>
+    <input
+        type="text"
+        id="account_detail"
+        name="account_detail"
+        class="form-control"
+        placeholder="Enter account number or phone number"
+        style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;"
+        value="{{ old('account_detail', $payoutDetail->account_number ?? '') }}"
+        readonly
+        required
+    >
+</div>
+
 
             <input type="hidden" id="account_name_hidden" name="account_name" value="{{ old('account_name', $payoutDetail->account_name ?? '') }}">
 

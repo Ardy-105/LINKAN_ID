@@ -83,7 +83,7 @@
         // Cek jika route aktif untuk settings atau submenu terkait
         $isSettingsActive = request()->routeIs('settings') ||
                             request()->routeIs('account.settings') ||
-                            request()->routeIs('payout.settings');
+                            request()->routeIs('payout.index');
     @endphp
 
     <a href="{{ route('settings') }}" class="{{ $isSettingsActive ? 'active' : '' }}">

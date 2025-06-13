@@ -91,7 +91,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Payout Routes (Dipindahkan keluar dari grup 'admin' dan disesuaikan dengan URL yang diakses user)
     Route::get('/homeadminS/payout-settings', [PayoutController::class, 'index'])->name('payout.index');
-    Route::get('/homeadminS/payout-settings', [PayoutController::class, 'index'])->name('payout.settings');
     Route::get('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'showWithdrawForm'])->name('payout.showWithdrawForm');
     Route::post('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'processWithdrawal'])->name('payout.processWithdrawal');
     Route::get('/homeadminS/payout-settings/history', [PayoutController::class, 'showPayoutHistory'])->name('payout.showPayoutHistory');
