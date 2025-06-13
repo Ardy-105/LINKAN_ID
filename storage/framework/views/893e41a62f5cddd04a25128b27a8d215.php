@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payout Setting</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * { 
@@ -147,18 +147,19 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
-                <h1><a href="{{ route('settings') }}">Settings</a> &gt; <span>Payout Settings</h1>
+                <h1><a href="<?php echo e(route('settings')); ?>">Settings</a> &gt; <span>Payout Settings</h1>
             </div>
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
                 <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?>
 
             <div class="payout-section">
                 <!-- Earnings Card -->
@@ -168,7 +169,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Total Pendapatan</h5>
-                                <h3 class="text-primary">Rp {{ number_format((float)$myEarnings, 0, ',', '.') }}</h3>
+                                <h3 class="text-primary">Rp <?php echo e(number_format((float)$myEarnings, 0, ',', '.')); ?></h3>
                                 <p class="text-muted">Total pendapatan dari semua transaksi yang berhasil</p>
                             </div>
                         </div>
@@ -177,15 +178,15 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Penarikan Terakhir</h5>
-                                <h3 class="text-success">Rp {{ number_format((float)$lastWithdraw, 0, ',', '.') }}</h3>
+                                <h3 class="text-success">Rp <?php echo e(number_format((float)$lastWithdraw, 0, ',', '.')); ?></h3>
                                 <p class="text-muted">Jumlah penarikan terakhir yang berhasil</p>
                             </div>
                         </div>
                     </div>
-                    <a href="{{ route('payout.showWithdrawForm') }}" class="btn btn-withdraw">
+                    <a href="<?php echo e(route('payout.showWithdrawForm')); ?>" class="btn btn-withdraw">
                         <i class="fas fa-paper-plane"></i> Withdraw
                     </a>
-                    <a href="{{ route('payout.showPayoutHistory') }}" class="btn btn-history">
+                    <a href="<?php echo e(route('payout.showPayoutHistory')); ?>" class="btn btn-history">
                         <i class="fas fa-history"></i> History
                     </a>
                 </div>
@@ -194,32 +195,35 @@
                 <div class="payment-card">
                     <h2>Get Paid With</h2>
                     <p>Your money will be transferred to</p>
-                    @if($payoutDetail)
+                    <?php if($payoutDetail): ?>
                     <div class="bank-info">
-                        @if($payoutDetail->method_type === 'Bank')
+                        <?php if($payoutDetail->method_type === 'Bank'): ?>
                             <img src="/images/creditcard.png" alt="Bank">
-                        @elseif($payoutDetail->method_type === 'DANA')
+                        <?php elseif($payoutDetail->method_type === 'DANA'): ?>
                             <img src="/images/dana.png" alt="DANA">
-                        @elseif($payoutDetail->method_type === 'ShopeePay')
+                        <?php elseif($payoutDetail->method_type === 'ShopeePay'): ?>
                             <img src="/images/shopeepay.png" alt="ShopeePay">
-                        @else
+                        <?php else: ?>
                             <i class="fas fa-wallet" style="font-size: 40px; color: #666;"></i>
-                        @endif
+                        <?php endif; ?>
                         <div>
-                            <strong>{{ $payoutDetail->account_name }}</strong><br>
-                            {{ $payoutDetail->method_type }} - {{ $payoutDetail->account_number }}
-                            @if($payoutDetail->method_type === 'Bank' && $payoutDetail->bank_name)
-                                <br>{{ $payoutDetail->bank_name }}
-                            @endif
+                            <strong><?php echo e($payoutDetail->account_name); ?></strong><br>
+                            <?php echo e($payoutDetail->method_type); ?> - <?php echo e($payoutDetail->account_number); ?>
+
+                            <?php if($payoutDetail->method_type === 'Bank' && $payoutDetail->bank_name): ?>
+                                <br><?php echo e($payoutDetail->bank_name); ?>
+
+                            <?php endif; ?>
                         </div>
                     </div>
-                    @else
+                    <?php else: ?>
                     <div style="padding: 20px; color: #666;">
                         <p>Belum ada metode pembayaran yang diatur.</p>
                     </div>
-                    @endif
-                    <a href="{{ route('payout.showMethodForm') }}" class="btn" style="margin-top: 20px; display: inline-block; background: #FF9040; color: white;">
-                        <i class="fas fa-cog"></i> {{ $payoutDetail ? 'Edit Payout Method' : 'Set Payout Method' }}
+                    <?php endif; ?>
+                    <a href="<?php echo e(route('payout.showMethodForm')); ?>" class="btn" style="margin-top: 20px; display: inline-block; background: #FF9040; color: white;">
+                        <i class="fas fa-cog"></i> <?php echo e($payoutDetail ? 'Edit Payout Method' : 'Set Payout Method'); ?>
+
                     </a>
                 </div>
             </div>
@@ -265,4 +269,4 @@
     // Refresh data saat halaman dimuat
     document.addEventListener('DOMContentLoaded', refreshData);
 </script>
-</html>
+</html><?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/payout.blade.php ENDPATH**/ ?>

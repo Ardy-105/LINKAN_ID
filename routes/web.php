@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\SendDigitalProductMail;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\PayoutController;
+use Illuminate\Support\Facades\DB;
 
 // Halaman Utama
 Route::get('/', function () {
@@ -87,10 +89,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/homeadminS/account-settings/update', [AccountController::class, 'update'])->name('account.update');
     Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
 
-    // Payout Settings (via controller atau view)
-    Route::get('/homeadminS/payout-settings', function () {
-        return view('homeadminS.payout');
-    })->name('payout.settings');
+    // Payout Routes (Dipindahkan keluar dari grup 'admin' dan disesuaikan dengan URL yang diakses user)
+    Route::get('/homeadminS/payout-settings', [PayoutController::class, 'index'])->name('payout.index');
+    Route::get('/homeadminS/payout-settings', [PayoutController::class, 'index'])->name('payout.settings');
+    Route::get('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'showWithdrawForm'])->name('payout.showWithdrawForm');
+    Route::post('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'processWithdrawal'])->name('payout.processWithdrawal');
+    Route::get('/homeadminS/payout-settings/history', [PayoutController::class, 'showPayoutHistory'])->name('payout.showPayoutHistory');
+
+    // Payout Method Settings
+    Route::get('/homeadminS/payout-settings/method', [PayoutController::class, 'showPayoutMethodForm'])->name('payout.showMethodForm');
+    Route::post('/homeadminS/payout-settings/method', [PayoutController::class, 'savePayoutMethod'])->name('payout.saveMethod');
 
     // Statistik
     Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
@@ -107,6 +115,15 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
+
+    Route::prefix('digital-product')->group(function () {
+        Route::get('/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('digital-product.checkout');
+        Route::post('/store-transaction', [DigitalProductController::class, 'storeTransaction'])->name('digital-product.store-transaction');
+        Route::get('/success', [DigitalProductController::class, 'success'])->name('digital-product.success');
+        Route::get('/failed', [DigitalProductController::class, 'failed'])->name('digital-product.failed');
+        Route::get('/pending', [DigitalProductController::class, 'pending'])->name('digital-product.pending');
+        Route::post('/midtrans-callback', [DigitalProductController::class, 'midtransCallback'])->name('digital-product.midtrans-callback');
+    });
 
 });
 

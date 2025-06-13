@@ -90,4 +90,60 @@ class OrderController extends Controller
 
         return response()->json($transaction);
     }
+
+    public function updateTransactionStatus(Request $request, $id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $oldStatus = $transaction->status;
+        $newStatus = $request->status;
+
+        // Debug: Log perubahan status
+        \Log::info("Order - Updating transaction status:");
+        \Log::info("Transaction ID: {$transaction->id}");
+        \Log::info("Old Status: {$oldStatus}");
+        \Log::info("New Status: {$newStatus}");
+        \Log::info("Amount: {$transaction->total_price}");
+
+        // Validasi status
+        if (!in_array($newStatus, Transaction::getValidStatuses())) {
+            return response()->json(['error' => 'Invalid status'], 400);
+        }
+
+        // Update status transaksi
+        $transaction->status = $newStatus;
+        $transaction->save();
+
+        // Jika status berubah menjadi success, update balance seller
+        if ($oldStatus !== 'success' && $newStatus === 'success') {
+            $product = $transaction->product;
+            $seller = $product->user;
+            
+            // Debug: Log update balance
+            \Log::info("Order - Updating balance for seller:");
+            \Log::info("Seller ID: {$seller->id}");
+            \Log::info("Amount to add: {$transaction->total_price}");
+            
+            // Update balance seller
+            DB::table('users')
+                ->where('id', $seller->id)
+                ->increment('balance', $transaction->total_price);
+        }
+        // Jika status berubah dari success ke status lain, kurangi balance seller
+        else if ($oldStatus === 'success' && $newStatus !== 'success') {
+            $product = $transaction->product;
+            $seller = $product->user;
+            
+            // Debug: Log update balance
+            \Log::info("Order - Reducing balance for seller:");
+            \Log::info("Seller ID: {$seller->id}");
+            \Log::info("Amount to reduce: {$transaction->total_price}");
+            
+            // Kurangi balance seller
+            DB::table('users')
+                ->where('id', $seller->id)
+                ->decrement('balance', $transaction->total_price);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Transaction status updated']);
+    }
 } 

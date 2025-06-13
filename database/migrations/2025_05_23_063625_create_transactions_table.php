@@ -11,18 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('transactions', function (Blueprint $table) {
-    $table->id();
-    $table->string('order_id')->unique();
-    $table->foreignId('product_id')->constrained('digital_products');
-    $table->string('buyer_name');
-    $table->string('buyer_email');
-    $table->integer('qty');
-    $table->integer('total_price');
-    $table->string('status')->default('pending'); // pending, paid, failed
-    $table->timestamps();
-});
-
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->string('order_id')->unique();
+            $table->foreignId('product_id')->constrained('digital_products');
+            $table->string('buyer_name');
+            $table->string('buyer_email');
+            $table->integer('qty');
+            $table->decimal('total_price', 10, 2);
+            $table->enum('status', ['success', 'pending', 'failed'])->default('pending');
+            $table->timestamps();
+        });
     }
 
     /**

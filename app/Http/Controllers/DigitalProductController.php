@@ -11,6 +11,7 @@ use Midtrans\Snap;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendDigitalProductMail;
+use Illuminate\Support\Facades\DB;
 
 class DigitalProductController extends Controller
 {
@@ -105,11 +106,6 @@ public function show($id)
             'price', 'sale_price', 'has_quantity_limit', 'quantity', 'button_text'
         ]);
 
-        // Reset status verifikasi ke pending jika produk ditolak
-        if ($product->verification_status === 'rejected') {
-            $data['verification_status'] = 'pending';
-        }
-
         // Jika has_quantity_limit tidak dicentang, set quantity ke null
         if (!$request->has('has_quantity_limit')) {
             $data['has_quantity_limit'] = false;
@@ -141,16 +137,9 @@ public function show($id)
             $data['image'] = $imagePath;
         }
 
-        // Debug untuk memastikan status berubah
-        \Log::info('Product before update:', ['status' => $product->verification_status]);
-        \Log::info('Data to update:', $data);
-
         $product->update($data);
 
-        // Debug untuk memastikan status berubah setelah update
-        \Log::info('Product after update:', ['status' => $product->fresh()->verification_status]);
-
-        return redirect()->route('mylinkan')->with('success', 'Produk berhasil diperbarui dan menunggu verifikasi ulang!');
+        return redirect()->route('mylinkan')->with('success', 'Produk berhasil diperbarui!');
     }
     
 
@@ -256,15 +245,37 @@ public function midtransCallback(Request $request)
     $transaction = $notif->transaction_status;
     $orderId = $notif->order_id;
 
+    \Log::info('Midtrans Callback - Transaction Status: ' . $transaction);
+    \Log::info('Midtrans Callback - Order ID: ' . $orderId);
+
     $trx = Transaction::where('order_id', $orderId)->first();
 
     if (!$trx) {
+        \Log::error('Midtrans Callback - Transaction not found for order ID: ' . $orderId);
         return response()->json(['error' => 'Transaction not found'], 404);
     }
 
+    // Ubah status dari Midtrans ke status yang kita gunakan
     if ($transaction == 'capture' || $transaction == 'settlement') {
-        $trx->status = 'paid';
+        $trx->status = 'success';
         $trx->save();
+
+        \Log::info('Midtrans Callback - Updating transaction status to success');
+        \Log::info('Midtrans Callback - Transaction ID: ' . $trx->id);
+        \Log::info('Midtrans Callback - Amount: ' . $trx->total_price);
+
+        // Update balance seller
+        $product = $trx->product;
+        $seller = $product->user;
+        
+        \Log::info('Midtrans Callback - Updating seller balance');
+        \Log::info('Midtrans Callback - Seller ID: ' . $seller->id);
+        \Log::info('Midtrans Callback - Amount to add: ' . $trx->total_price);
+        
+        // Update balance seller
+        DB::table('users')
+            ->where('id', $seller->id)
+            ->increment('balance', $trx->total_price);
 
         // Kirim email produk digital
         $product = $trx->product;
@@ -292,9 +303,23 @@ public function storeTransaction(Request $request)
         'total_price' => 'required|numeric'
     ]);
 
+    \Log::info('Store Transaction - Initial Status: ' . $data['transaction_status']);
+
+    // Ubah status dari Midtrans ke status yang kita gunakan
+    $status = $data['transaction_status'];
+    if ($status === 'capture' || $status === 'settlement') {
+        $status = 'success';
+    } else if ($status === 'pending') {
+        $status = 'pending';
+    } else {
+        $status = 'failed';
+    }
+
+    \Log::info('Store Transaction - Converted Status: ' . $status);
+
     $transaction = Transaction::create([
         'order_id' => $data['order_id'],
-        'status' => $data['transaction_status'],
+        'status' => $status,
         'product_id' => $data['product_id'],
         'buyer_email' => $data['buyer_email'],
         'buyer_name' => $data['buyer_name'],
@@ -302,10 +327,27 @@ public function storeTransaction(Request $request)
         'total_price' => $data['total_price'],
     ]);
 
+    \Log::info('Store Transaction - Created Transaction ID: ' . $transaction->id);
+
+    // Jika transaksi berhasil, update balance seller
+    if ($status === 'success') {
+        $product = DigitalProduct::find($data['product_id']);
+        $seller = $product->user;
+        
+        \Log::info('Store Transaction - Updating seller balance');
+        \Log::info('Store Transaction - Seller ID: ' . $seller->id);
+        \Log::info('Store Transaction - Amount to add: ' . $data['total_price']);
+        
+        // Update balance seller
+        DB::table('users')
+            ->where('id', $seller->id)
+            ->increment('balance', $data['total_price']);
+    }
+
     $product = \App\Models\DigitalProduct::find($data['product_id']);
-Mail::to($transaction->buyer_email)->send(
-    new SendDigitalProductMail($product, $transaction->buyer_name, $transaction)
-);
+    Mail::to($transaction->buyer_email)->send(
+        new SendDigitalProductMail($product, $transaction->buyer_name, $transaction)
+    );
 
     return response()->json(['success' => true, 'message' => 'Transaction stored & email sent']);
 }
@@ -314,4 +356,3 @@ Mail::to($transaction->buyer_email)->send(
 
 
 }
-

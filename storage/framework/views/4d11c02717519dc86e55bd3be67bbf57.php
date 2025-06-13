@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-@php
+<?php
     use Illuminate\Support\Facades\Route;
     $savedQty = session("cart.qty.{$product->id}", 1); // default 1 jika tidak ada di session
-@endphp
+?>
 <html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Checkout - {{ $product->title }}</title>
+    <title>Checkout - <?php echo e($product->title); ?></title>
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -210,13 +210,13 @@
             <i class="fa-solid fa-box-open"></i> Product
         </div>
         <div class="product">
-            <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image" />
+            <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="Product Image" />
             <div class="product-info">
-                <h2>{{ $product->title }}</h2>
-                <div class="qty"><i class="fa-solid fa-cart-shopping"></i> Qty: <strong>{{ $savedQty }}</strong></div>
-                <div class="price"><i class="fa-solid fa-tag"></i> Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+                <h2><?php echo e($product->title); ?></h2>
+                <div class="qty"><i class="fa-solid fa-cart-shopping"></i> Qty: <strong><?php echo e($savedQty); ?></strong></div>
+                <div class="price"><i class="fa-solid fa-tag"></i> Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?></div>
             </div>
-            <a href="{{ route('product.show', ['id' => $product->id]) }}" class="btn-detail" title="Lihat Detail Produk">
+            <a href="<?php echo e(route('product.show', ['id' => $product->id])); ?>" class="btn-detail" title="Lihat Detail Produk">
                 Detail <i class="fa-solid fa-arrow-right"></i>
             </a>
         </div>
@@ -230,13 +230,13 @@
             </div>
             <div class="form-group">
                 <label for="buyer_email">Email *</label>
-                <input id="buyer_email" type="email" name="email" required placeholder="Your Email" value="{{ old('email') }}" />
+                <input id="buyer_email" type="email" name="email" required placeholder="Your Email" value="<?php echo e(old('email')); ?>" />
             </div>
             <div class="form-group">
                 <label for="buyer_name">Name *</label>
-                <input id="buyer_name" type="text" name="name" required placeholder="Your Name" value="{{ old('name') }}" />
+                <input id="buyer_name" type="text" name="name" required placeholder="Your Name" value="<?php echo e(old('name')); ?>" />
             </div>
-            <input type="hidden" name="qty" value="{{ $savedQty }}">
+            <input type="hidden" name="qty" value="<?php echo e($savedQty); ?>">
         </div>
 
         <div class="section payment">
@@ -245,16 +245,17 @@
             </div>
             <div class="payment-row">
                 <span>Subtotal</span>
-                <span>Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}</span>
+                <span>Rp <?php echo e(number_format($product->price * $savedQty, 0, ',', '.')); ?></span>
             </div>
             <div class="payment-row total">
                 <span>Total</span>
-                <span>Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}</span>
+                <span>Rp <?php echo e(number_format($product->price * $savedQty, 0, ',', '.')); ?></span>
             </div>
 
             <div id="select-method"><i class="fa-solid fa-money-bill-wave"></i> Select payment method</div>
             <button id="pay-button" class="btn-buy" type="button">
-                <i class="fa-solid fa-credit-card"></i> BUY NOW - Rp {{ number_format($product->price * $savedQty, 0, ',', '.') }}
+                <i class="fa-solid fa-credit-card"></i> BUY NOW - Rp <?php echo e(number_format($product->price * $savedQty, 0, ',', '.')); ?>
+
             </button>
         </div>
     </form>
@@ -285,7 +286,7 @@
             return;
         }
 
-        snap.pay('{{ $snapToken }}', {
+        snap.pay('<?php echo e($snapToken); ?>', {
             onSuccess: function(result) {
                 console.log('Payment success:', result); // Log hasil pembayaran
                 Swal.fire('Sukses', 'Pembayaran berhasil! Silahkan cek Email Anda', 'success');
@@ -295,21 +296,22 @@
                 const transactionData = {
                     order_id: result.order_id,
                     transaction_status: result.transaction_status,
-                    product_id: {{ $product->id }},
+                    product_id: <?php echo e($product->id); ?>,
                     buyer_email: email,
                     buyer_name: name,
-                    qty: {{ $savedQty }},
-                    total_price: {{ $savedQty * $product->price }}
+                    qty: <?php echo e($savedQty); ?>,
+                    total_price: <?php echo e($savedQty * $product->price); ?>
+
                 };
 
                 console.log('Sending transaction data:', transactionData); // Log data yang akan dikirim
 
                 // Kirim ke server dengan status dari Midtrans
-                fetch("{{ route('digital-product.store-transaction') }}", {
+                fetch("<?php echo e(route('digital-product.store-transaction')); ?>", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
                     },
                     body: JSON.stringify(transactionData)
                 })
@@ -320,7 +322,7 @@
                 .then(data => {
                     console.log('Server data:', data); // Log data dari server
                     if (data.success) {
-                        window.location.href = '{{ route("digital-product.success") }}';
+                        window.location.href = '<?php echo e(route("digital-product.success")); ?>';
                     } else {
                         Swal.fire('Error', data.message, 'error');
                     }
@@ -377,3 +379,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\LINKAN_ID\resources\views/public/checkout.blade.php ENDPATH**/ ?>

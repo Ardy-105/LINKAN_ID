@@ -15,14 +15,25 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
+        // Debug: Log user ID
+        \Log::info('Dashboard - Calculating earnings for user ID: ' . $user->id);
+
         // Ambil produk digital milik user
         $digitalProducts = DigitalProduct::where('user_id', $user->id)->get();
         $totalProducts = $digitalProducts->count();
 
-        // Debug untuk melihat semua data di tabel
-        $allViews = DB::table('link_views')->get();
-        \Log::info('Semua data di link_views:');
-        \Log::info($allViews);
+        // Ambil semua transaksi untuk debugging
+        $allTransactions = DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->select('transactions.*', 'digital_products.title')
+            ->get();
+
+        // Log semua transaksi (termasuk yang tidak success)
+        \Log::info('Dashboard - All transactions for user:');
+        foreach ($allTransactions as $transaction) {
+            \Log::info("Transaction ID: {$transaction->id}, Status: {$transaction->status}, Amount: {$transaction->total_price}, Product: {$transaction->title}, Created: {$transaction->created_at}");
+        }
 
         // Ambil total views dan clicks berdasarkan link_id (username)
         $totalViews = DB::table('link_views')
@@ -34,31 +45,71 @@ class DashboardController extends Controller
             ->count();
 
         // Debug untuk memastikan data
-        \Log::info('Total Views: ' . $totalViews);
-        \Log::info('Username: ' . $user->username);
+        \Log::info('Dashboard - Total Views: ' . $totalViews);
+        \Log::info('Dashboard - Username: ' . $user->username);
 
-        // Ambil data lifetime orders dan sales
+        // Ambil data lifetime orders (hanya transaksi yang berhasil)
         $lifetimeOrders = DB::table('transactions')
             ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
             ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
             ->sum('transactions.qty');
 
-        $lifetimeSales = DB::table('orders')
-            ->where('seller_id', $user->id)
-            ->where('status', 'completed')
-            ->sum('total_amount');
+        \Log::info('Dashboard - Lifetime Orders Calculation: ' . $lifetimeOrders);
 
-        $totalEarnings = DB::table('transactions')
+        // Ambil semua transaksi yang berhasil
+        $successTransactions = DB::table('transactions')
             ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
             ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
+            ->select('transactions.*', 'digital_products.title')
+            ->get();
+
+        // Log transaksi yang berhasil
+        \Log::info('Dashboard - Successful transactions:');
+        foreach ($successTransactions as $transaction) {
+            \Log::info("Success Transaction ID: {$transaction->id}, Amount: {$transaction->total_price}, Product: {$transaction->title}, Created: {$transaction->created_at}");
+        }
+
+        // Hitung total pendapatan dari transaksi yang berhasil
+        $totalEarnings = (float)DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
             ->sum('transactions.total_price');
 
+        // Debug: Log hasil perhitungan
+        \Log::info('Dashboard - Total Earnings Calculation: ' . $totalEarnings);
+        \Log::info('Dashboard - Raw SQL Query: ' . DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
+            ->toSql());
+        \Log::info('Dashboard - Query Bindings: ' . json_encode([
+            'user_id' => $user->id,
+            'status' => 'success'
+        ]));
+
+        // Update balance di tabel users jika berbeda dengan total pendapatan
+        $currentBalance = (float)(DB::table('users')->where('id', $user->id)->value('balance') ?? 0);
+        if ($currentBalance != $totalEarnings) {
+            \Log::info("Dashboard - Updating balance from {$currentBalance} to {$totalEarnings}");
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['balance' => $totalEarnings]);
+        }
+
+        // Debug: Log final values
+        \Log::info('Dashboard - Final Values:');
+        \Log::info('totalEarnings: ' . $totalEarnings);
+        \Log::info('currentBalance: ' . $currentBalance);
+        \Log::info('lifetimeOrders: ' . $lifetimeOrders);
+
         return view('homeadminS.beranda', compact(
+            'totalProducts',
             'totalViews',
             'totalClicks',
             'lifetimeOrders',
-            'lifetimeSales',
-            'totalProducts',
             'totalEarnings'
         ));
     }
