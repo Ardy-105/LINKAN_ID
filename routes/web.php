@@ -159,6 +159,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
         Route::post('/verifikasi/{id}', [VerifikasiController::class, 'verify'])->name('verifikasi.verify');
         Route::get('/print', [PlatformAdminController::class, 'print'])->name('platformadmin.print');
+        Route::post('/print', [PlatformAdminController::class, 'print'])->name('platformadmin.print.post');
     });
 });
 Route::post('/midtrans/callback', [DigitalProductController::class, 'midtransCallback']);

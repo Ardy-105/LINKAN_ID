@@ -153,38 +153,38 @@
     <div class="print-container">
         <div class="print-header">
             <h1>Commission Report</h1>
-            <p>Generated on: {{ date('Y-m-d H:i:s') }}</p>
+            <p>Generated on: <?php echo e(date('Y-m-d H:i:s')); ?></p>
         </div>
 
         <div class="print-content">
             <div class="total-earnings">
                 <h2>Total Earnings</h2>
-                <h3>{{ $data['total_earnings'] ?? 'IDR 0' }}</h3>
+                <h3><?php echo e($data['total_earnings'] ?? 'IDR 0'); ?></h3>
             </div>
 
             <div class="commission-list">
                 <h3>Commission Details</h3>
-                @if(isset($data['commission_details']) && !empty($data['commission_details']))
-                    @foreach($data['commission_details'] as $commission)
+                <?php if(isset($data['commission_details']) && !empty($data['commission_details'])): ?>
+                    <?php $__currentLoopData = $data['commission_details']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $commission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="commission-item">
                             <div class="commission-info">
-                                <strong>{{ $commission['name'] }}</strong>
-                                <small>{{ $commission['email'] }}</small>
+                                <strong><?php echo e($commission['name']); ?></strong>
+                                <small><?php echo e($commission['email']); ?></small>
                             </div>
                             <div class="commission-details">
-                                <div class="date">{{ $commission['date'] }}</div>
-                                <div class="amount">{{ $commission['amount'] }}</div>
+                                <div class="date"><?php echo e($commission['date']); ?></div>
+                                <div class="amount"><?php echo e($commission['amount']); ?></div>
                             </div>
                         </div>
-                    @endforeach
-                @else
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php else: ?>
                     <p>No commission data available.</p>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <div class="print-footer">
-            <p>© {{ date('Y') }} Linkan.ID - Platform Admin</p>
+            <p>© <?php echo e(date('Y')); ?> Linkan.ID - Platform Admin</p>
         </div>
 
         <div class="no-print">
@@ -206,3 +206,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy\resources\views/platformadmin/print.blade.php ENDPATH**/ ?>

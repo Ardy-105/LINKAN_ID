@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Commission History - Admin Platform</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         /* --- Styles dari beranda dan styling umum --- */
@@ -152,8 +152,8 @@
 </head>
 <body>
 
-    {{-- Include sidebar --}}
-    @include('platformadmin.sidebar.sidebarplatform')
+    
+    <?php echo $__env->make('platformadmin.sidebar.sidebarplatform', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <div class="main">
         <!-- Judul -->
@@ -206,14 +206,14 @@
             // Buat form untuk mengirim data
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '{{ route("platformadmin.print.post") }}';
+            form.action = '<?php echo e(route("platformadmin.print.post")); ?>';
             form.target = '_blank';
 
             // Tambahkan CSRF token
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
-            csrfToken.value = '{{ csrf_token() }}';
+            csrfToken.value = '<?php echo e(csrf_token()); ?>';
             form.appendChild(csrfToken);
 
             // Tambahkan data yang akan dicetak
@@ -250,3 +250,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy\resources\views/platformadmin/berandaplatform.blade.php ENDPATH**/ ?>
