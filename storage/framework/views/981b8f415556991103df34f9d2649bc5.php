@@ -1,10 +1,10 @@
 
 <footer class="footer">
         <div class="footer-container">
-            <img src="{{ asset('images/logotext.png') }}" alt="Linkan Logo" class="footer-logo">
+            <img src="<?php echo e(asset('images/logotext.png')); ?>" alt="Linkan Logo" class="footer-logo">
             <nav class="footer-nav">
-                <a href="{{ route('about') }}">About Us</a>
-                <a href="{{ route('contact.form') }}">Contact Us</a>
+                <a href="<?php echo e(route('about')); ?>">About Us</a>
+                <a href="<?php echo e(route('contact.form')); ?>">Contact Us</a>
             </nav>
         </div>
     </footer>
@@ -46,3 +46,4 @@
 }
 
 </style>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy\resources\views/layout/footer.blade.php ENDPATH**/ ?>

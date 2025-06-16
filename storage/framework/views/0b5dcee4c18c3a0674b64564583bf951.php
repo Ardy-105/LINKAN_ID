@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <title>Linkan Dashboard</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -290,11 +290,11 @@
             .main-content {
                 padding: 20px;
             }
-
+            
             .action-buttons {
                 flex-wrap: wrap;
             }
-
+            
             .action-button {
                 min-width: calc(50% - 5px);
             }
@@ -303,8 +303,8 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
-
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        
         <div class="main-content">
             <div class="header">
                 <h1>HOME</h1>
@@ -319,27 +319,28 @@
                         <i class="fas fa-user"></i>
                     </div>
                     <div class="profile-info">
-                        <h3>{{ Auth::user()->name }}</h3>
-                        <a href="{{ route('track.view', ['username' => Auth::user()->username]) }}" style="color: #FF9040;">
-                            {{ url('/linkan.id/' . Auth::user()->username) }}
+                        <h3><?php echo e(Auth::user()->name); ?></h3>
+                        <a href="<?php echo e(route('track.view', ['username' => Auth::user()->username])); ?>" style="color: #FF9040;">
+                            <?php echo e(url('/linkan.id/' . Auth::user()->username)); ?>
+
                         </a>
                     </div>
                     <button
                       class="share-button"
-                      onclick="copyToClipboard('{{ route('track.view', ['username' => Auth::user()->username]) }}')"
+                      onclick="copyToClipboard('<?php echo e(route('track.view', ['username' => Auth::user()->username])); ?>')"
                     >
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>
                 <div class="start-creating">START CREATING NOW...!</div>
                 <div class="action-buttons">
-                    <a href="{{ route('mylinkan') }}" class="action-button">
+                    <a href="<?php echo e(route('mylinkan')); ?>" class="action-button">
                         <i class="fas fa-qrcode"></i> add Linkan
                     </a>
-                    <a href="{{ route('digital-product.create') }}" class="action-button">
+                    <a href="<?php echo e(route('digital-product.create')); ?>" class="action-button">
                         <i class="fas fa-box"></i> Digital Product
                     </a>
-                    <a href="{{ route('about') }}" class="action-button">
+                    <a href="https://indobuzz.id/about-us" class="action-button">
                         <i class="fas fa-headset"></i> About Us
                     </a>
                 </div>
@@ -350,7 +351,7 @@
                     <span>Earnings</span>
                     <i class="fas fa-cog"></i>
                 </div>
-                <div class="earnings-amount">IDR {{ number_format($totalEarnings, 0, ',', '.') }}</div>
+                <div class="earnings-amount">IDR <?php echo e(number_format($totalEarnings, 0, ',', '.')); ?></div>
             </div>
 
             <div class="stats-section">
@@ -364,8 +365,8 @@
                     </div>
                 </div>
                 <div class="stats-numbers">
-                    <span>Views: <span id="totalViews">{{ $totalViews }}</span></span>
-                    <span>Clicks: <span id="totalClicks">{{ $totalClicks }}</span></span>
+                    <span>Views: <span id="totalViews"><?php echo e($totalViews); ?></span></span>
+                    <span>Clicks: <span id="totalClicks"><?php echo e($totalClicks); ?></span></span>
                 </div>
                 <div class="stats-chart">
                     <canvas id="statsChart"></canvas>
@@ -376,17 +377,17 @@
                 <div class="summary-card">
                     <i class="fas fa-shopping-cart"></i>
                     <div class="label">Lifetime Orders</div>
-                    <div class="number">{{ $lifetimeOrders }}</div>
+                    <div class="number"><?php echo e($lifetimeOrders); ?></div>
                 </div>
                 <div class="summary-card">
                     <i class="fas fa-chart-line"></i>
                     <div class="label">Lifetime sales (IDR)</div>
-                    <div class="number">{{ number_format($totalEarnings, 0, ',', '.') }}</div>
+                    <div class="number"><?php echo e(number_format($totalEarnings, 0, ',', '.')); ?></div>
                 </div>
                 <div class="summary-card">
                     <i class="fas fa-box"></i>
                     <div class="label">My Blocks</div>
-                    <div class="number">{{ $totalProducts }}</div>
+                    <div class="number"><?php echo e($totalProducts); ?></div>
                 </div>
             </div>
         </div>
@@ -519,4 +520,4 @@
         }
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy-branch\resources\views/homeadminS/beranda.blade.php ENDPATH**/ ?>

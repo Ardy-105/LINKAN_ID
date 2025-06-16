@@ -64,6 +64,7 @@ Route::get('login/google/callback', [GoogleLoginController::class, 'handleGoogle
 Route::view('/pricing', 'pricing')->name('pricing');
 Route::view('/service', 'service')->name('service');
 Route::view('/faq', 'FAQ')->name('FAQ');
+Route::view('/about', 'about')->name('about');
 
 // Dashboard (middleware auth jika diperlukan)
 Route::get('/dashboard', function () {
@@ -157,6 +158,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('platformadmin')->group(function () {
         Route::get('/verifikasi', [VerifikasiController::class, 'index'])->name('verifikasi.platformadmin');
         Route::post('/verifikasi/{id}', [VerifikasiController::class, 'verify'])->name('verifikasi.verify');
+        Route::get('/print', [PlatformAdminController::class, 'print'])->name('platformadmin.print');
     });
 });
 Route::post('/midtrans/callback', [DigitalProductController::class, 'midtransCallback']);
