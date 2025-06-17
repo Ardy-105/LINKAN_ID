@@ -47,24 +47,24 @@ class AccountController extends Controller
     public function delete()
     {
         $user = Auth::user();
-        
+
         // Hapus semua data terkait user terlebih dahulu
         // Hapus data appearance
         \App\Models\Appearance::where('user_id', $user->id)->delete();
-        
+
         // Hapus data digital products
         \App\Models\DigitalProduct::where('user_id', $user->id)->delete();
-        
-        // Hapus user dari database dengan force delete untuk memastikan benar-benar terhapus
-        $user->forceDelete();
-        
+
+        // Soft delete user (hanya mengisi kolom deleted_at)
+        $user->delete();
+
         // Logout user
         Auth::logout();
-        
+
         // Hapus semua session
         session()->flush();
-        
+
         // Redirect ke halaman landing page
-        return redirect('/')->with('success', 'Akun Anda telah berhasil dihapus. Silakan daftar kembali jika ingin menggunakan layanan kami.');
+        return redirect('/')->with('success', 'Akun Anda telah dinonaktifkan. Jika Anda ingin mengaktifkan kembali akun, silakan hubungi admin.');
     }
 }

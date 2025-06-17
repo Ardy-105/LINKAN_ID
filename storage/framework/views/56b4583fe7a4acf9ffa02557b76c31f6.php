@@ -344,7 +344,107 @@
                 display: none;
             }
         }
+/* ...existing code... */
 
+.burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    z-index: 1100;
+}
+.burger span {
+    height: 4px;
+    width: 100%;
+    background: #FF7733;
+    margin: 4px 0;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 64px;
+        right: 0;
+        width: 70vw;
+        max-width: 320px;
+        background: #fff;
+        flex-direction: column;
+        gap: 0;
+        padding: 2rem 1.5rem;
+        z-index: 1050;
+        height: 100vh;
+        transition: right 0.3s;
+    }
+    .nav-links.active {
+        display: flex;
+        animation: slideInRight 0.3s;
+    }
+    .burger {
+        display: flex;
+    }
+    .navbar {
+        padding: 1rem 5%;
+    }
+}
+@media (max-width: 768px) {
+    .nav-links a {
+        padding: 1rem 0;
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+        border-bottom: 1px solid #eee;
+        width: 100%;
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+    }
+
+    .nav-links a.sign-up {
+        background-color: #FF7733;
+        color: white !important;
+        padding: 0.8rem 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(255,119,51,0.2);
+    }
+
+    .nav-links a.login {
+        color: #FF7733 !important;
+        font-weight: 600;
+        padding: 0.8rem 1.5rem;
+        text-align: center;
+    }
+
+    .nav-links {
+        align-items: flex-start;
+        background: #E6F0FF; /* biru muda dengan transparansi */
+
+
+    }
+}
+
+.burger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger.open span:nth-child(2) {
+    opacity: 0;
+}
+.burger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+@keyframes slideInRight {
+    from { right: -100vw; opacity: 0; }
+    to { right: 0; opacity: 1; }
+}
 </style>
 <nav class="navbar">
         <div class="logo">
@@ -352,11 +452,36 @@
                 <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Linkan Logo" id="logo">
             </a>
         </div>
-        <div class="nav-links">
+          <div class="burger" id="burgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+        <div class="nav-links" id="navLinks">
             <a href="<?php echo e(route('pricing')); ?>">Pricing</a>
             <a href="<?php echo e(route('service')); ?>">Service</a>
                 <a href="<?php echo e(route('FAQ')); ?>">FAQ</a>
             <a href="<?php echo e(route('login')); ?>">Sign In</a>
             <a href="<?php echo e(route('register')); ?>" class="sign-up">SIGN UP FREE</a>
         </div>
-    </nav><?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy\resources\views/layout/header.blade.php ENDPATH**/ ?>
+    </nav>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const burger = document.getElementById('burgerMenu');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            burger.classList.toggle('open');
+        });
+
+        // Optional: close nav when link clicked (on mobile)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                if(window.innerWidth <= 768){
+                    navLinks.classList.remove('active');
+                    burger.classList.remove('open');
+                }
+            });
+        });
+    });
+</script><?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-ardy\resources\views/layout/header.blade.php ENDPATH**/ ?>
