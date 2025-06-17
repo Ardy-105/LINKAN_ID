@@ -290,11 +290,11 @@
             .main-content {
                 padding: 20px;
             }
-            
+
             .action-buttons {
                 flex-wrap: wrap;
             }
-            
+
             .action-button {
                 min-width: calc(50% - 5px);
             }
@@ -304,7 +304,7 @@
 <body>
     <div class="container">
         <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        
+
         <div class="main-content">
             <div class="header">
                 <h1>HOME</h1>
@@ -340,7 +340,7 @@
                     <a href="<?php echo e(route('digital-product.create')); ?>" class="action-button">
                         <i class="fas fa-box"></i> Digital Product
                     </a>
-                    <a href="https://indobuzz.id/about-us" class="action-button">
+                    <a href="<?php echo e(route('about')); ?>" class="action-button">
                         <i class="fas fa-headset"></i> About Us
                     </a>
                 </div>
@@ -520,4 +520,5 @@
         }
     </script>
 </body>
-</html><?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/beranda.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/beranda.blade.php ENDPATH**/ ?>

@@ -137,6 +137,12 @@ public function show($id)
             $data['image'] = $imagePath;
         }
 
+        // Jika produk sebelumnya ditolak, ubah status menjadi pending
+        if ($product->verification_status === 'rejected') {
+            $data['verification_status'] = 'pending';
+            $data['rejection_reason'] = null;
+        }
+
         $product->update($data);
 
         return redirect()->route('mylinkan')->with('success', 'Produk berhasil diperbarui!');

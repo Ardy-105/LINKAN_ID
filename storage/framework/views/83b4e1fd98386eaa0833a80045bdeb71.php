@@ -165,7 +165,9 @@
             <div class="amount">IDR 242.200</div>
             <div class="actions">
                 <button><i class="fa fa-paper-plane"></i> Withdraw</button>
-                <button><i class="fa fa-print"></i> Print</button>
+                <button onclick="printCommissionReport()">
+                    <i class="fa fa-print"></i> Print
+                </button>
             </div>
             <div class="history"><i class="fa fa-paperclip"></i> History</div>
         </div>
@@ -198,6 +200,54 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function printCommissionReport() {
+            // Buat form untuk mengirim data
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?php echo e(route("platformadmin.print.post")); ?>';
+            form.target = '_blank';
+
+            // Tambahkan CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '<?php echo e(csrf_token()); ?>';
+            form.appendChild(csrfToken);
+
+            // Tambahkan data yang akan dicetak
+            const data = {
+                total_earnings: 'IDR 242.200',
+                commission_details: [
+                    {
+                        name: 'Budi',
+                        email: 'Budi@gmail.com',
+                        date: '17 Apr 2025',
+                        amount: 'Rp 153.800'
+                    },
+                    {
+                        name: 'Fajar',
+                        email: 'Fajar@gmail.com',
+                        date: '17 Apr 2025',
+                        amount: 'Rp 88.400'
+                    }
+                ]
+            };
+
+            // Tambahkan data ke form
+            const dataInput = document.createElement('input');
+            dataInput.type = 'hidden';
+            dataInput.name = 'data';
+            dataInput.value = JSON.stringify(data);
+            form.appendChild(dataInput);
+
+            // Tambahkan form ke body dan submit
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }
+    </script>
 </body>
 </html>
 <?php /**PATH C:\LINKAN_ID\resources\views/platformadmin/berandaplatform.blade.php ENDPATH**/ ?>
