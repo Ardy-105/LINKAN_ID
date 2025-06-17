@@ -152,9 +152,17 @@ public function show($id)
     public function destroy($id)
     {
         $product = DigitalProduct::findOrFail($id);
-        $product->delete();
-
-        return redirect()->back()->with('success', 'Produk berhasil dihapus.');
+        
+        // Periksa apakah produk memiliki transaksi
+        if ($product->transactions()->exists()) {
+            // Jika ada transaksi, lakukan soft delete
+            $product->delete();
+            return redirect()->back()->with('success', 'Produk berhasil dihapus (soft delete).');
+        } else {
+            // Jika tidak ada transaksi, lakukan hard delete
+            $product->forceDelete();
+            return redirect()->back()->with('success', 'Produk berhasil dihapus secara permanen.');
+        }
     }
 
     public function updateQty(Request $request)
