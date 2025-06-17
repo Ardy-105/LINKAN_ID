@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -319,7 +318,120 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 119, 51, 0.3);
 }
+/* ...existing code... */
 
+/* Tambahan Efek Transisi & Responsif */
+.hero-title, .hero-description, .create-section, .hero-image {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(.4,0,.2,1), transform 0.8s cubic-bezier(.4,0,.2,1);
+}
+.hero.visible .hero-title,
+.hero.visible .hero-description,
+.hero.visible .create-section,
+.hero.visible .hero-image {
+    opacity: 1;
+    transform: translateY(0);
+}
+.create-button {
+    background: linear-gradient(90deg, #ff8800 0%, #ff7733 100%);
+    color: #fff;
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(255,119,51,0.15);
+    transition: background 0.3s, transform 0.2s;
+}
+.create-button:hover {
+    background: linear-gradient(90deg, #ff7733 0%, #ff8800 100%);
+    transform: scale(1.05);
+}
+.category-button {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+.category-button:hover {
+    transform: translateY(-4px) scale(1.04);
+}
+.testimonial-card {
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+.testimonial-card:hover {
+    box-shadow: 0 8px 24px rgba(255,119,51,0.13);
+    transform: translateY(-6px) scale(1.03);
+}
+.feature-card {
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+.feature-card:hover {
+    box-shadow: 0 8px 24px rgba(47,141,113,0.13);
+    transform: translateY(-6px) scale(1.03);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .features-container {
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+    }
+    .feature-card {
+        max-width: 90vw;
+    }
+    .testimoni-showcase {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .hero-image {
+        margin-top: 2rem;
+    }
+}
+@media (max-width: 600px) {
+    .section-title {
+        font-size: 22px;
+    }
+    .hero-title {
+        font-size: 1.7rem;
+    }
+    .hero-description {
+        font-size: 1rem;
+    }
+    .create-section {
+        flex-direction: column;
+        gap: 0.7rem;
+    }
+    .phone-mockup img {
+        width: 90vw;
+        max-width: 320px;
+    }
+    .slideshow-container img {
+        width: 95vw;
+        height: 130px;
+    }
+    .creators-showcase img {
+        width: 90vw;
+        min-width: 220px;
+    }
+    .button-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .category-button {
+        width: 90vw;
+        max-width: 300px;
+        margin: 0 auto 10px auto;
+    }
+}
+
+/* ...existing code... */
     </style>
 </head>
 <body>
@@ -438,6 +550,12 @@
     
 
     <script>
+          document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+            document.querySelector('.hero').classList.add('visible');
+        }, 200);
+        startAutoSlide();
+    });
          function refreshPage() {
         window.scrollTo(0, 0); // Pindah ke bagian atas halaman
         location.reload(); // Refresh halaman
@@ -520,16 +638,16 @@
             imageElement.style.opacity = "1";
         }, 500);
 
-        // **Hentikan auto-slide sementara (3 detik)**
+        // *Hentikan auto-slide sementara (3 detik)*
         clearInterval(autoSlideInterval); // Hentikan auto-slide sementara
         clearTimeout(timeoutReset); // Hapus timeout sebelumnya agar tidak tumpang tindih
         timeoutReset = setTimeout(() => {
-            startAutoSlide(); // **Restart auto-slide setelah 3 detik**
+            startAutoSlide(); // *Restart auto-slide setelah 3 detik*
         }, 4000);
     }
 
     function autoSlide() {
-        if (!document.hidden) { // **Cegah auto-slide jika tab browser tidak aktif**
+        if (!document.hidden) { // *Cegah auto-slide jika tab browser tidak aktif*
             let category = categories[currentIndex];
             changeImage(null, category);
             currentIndex = (currentIndex + 1) % categories.length;
@@ -538,7 +656,7 @@
 
     function startAutoSlide() {
         clearInterval(autoSlideInterval);
-        autoSlideInterval = setInterval(autoSlide, 1000); // **Auto-slide setiap 1 detik secara konsisten**
+        autoSlideInterval = setInterval(autoSlide, 1000); // *Auto-slide setiap 1 detik secara konsisten*
     }
 
     document.addEventListener("DOMContentLoaded", function () {

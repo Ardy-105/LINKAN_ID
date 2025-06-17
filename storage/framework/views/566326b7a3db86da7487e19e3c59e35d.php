@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - Frequently Asked Questions</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
-    @include('layout.header')
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
+    <?php echo $__env->make('layout.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <style>
         * {
             margin: 0;
@@ -246,4 +246,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </html>
-@include('layout.footer')
+<?php echo $__env->make('layout.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\LINKAN_ID\resources\views/FAQ.blade.php ENDPATH**/ ?>
