@@ -667,25 +667,25 @@
         <div class="preview-header">
             <h2>Preview</h2>
         </div>
-        <div class="phone-preview">
-            <div class="phone-content" style="background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
+        <div class="phone-preview" style="width: 375px; height: 812px; border-radius: 40px; padding: 20px; background: white; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div class="phone-content" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
                 @if($appearance && $appearance->banner)
-                    <div class="banner-preview">
-                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner">
+                    <div class="banner-preview" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">
+                        <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                 @endif
-                <div class="profile-circle">
+                <div class="profile-circle" style="width: 80px; height: 80px; border-radius: 50%; background: #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                     @if($appearance && $appearance->profile_image)
-                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile">
+                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
                         <i class="fas fa-user"></i>
                     @endif
                 </div>
-                <div class="preview-name" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
+                <div class="preview-name" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
                 @if($appearance && $appearance->bio)
-                    <div class="preview-bio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->bio }}</div>
+                    <div class="preview-bio" style="font-size: 14px; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;">{{ $appearance->bio }}</div>
                 @endif
-                <div class="social-links">
+                <div class="social-links" style="display: flex; gap: 15px; margin-bottom: 20px;">
                     @if($appearance && $appearance->instagram)
                         <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
                     @endif
@@ -703,23 +703,23 @@
                     <a href="{{ $appearance->link }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->button_text ?? 'Beli' }}</a>
                 @endif
                 @if($digitalProducts->count() > 0)
-                    <div class="preview-products">
+                    <div class="preview-products" style="width: 100%; padding: 10px; display: flex; flex-direction: column; gap: 10px;">
                         @foreach($digitalProducts as $product)
-                            <div class="preview-product-item">
-                                <div class="preview-product-image">
+                            <div class="preview-product-item" style="background: white; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
+                                <div class="preview-product-image" style="width: 40px; height: 40px; background: #FFE5D3; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
                                     @if($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover;">
                                     @else
                                         <i class="fas fa-file-alt"></i>
                                     @endif
                                 </div>
-                                <div class="preview-product-info">
-                                    <div class="preview-product-title">{{ $product->title }}</div>
+                                <div class="preview-product-info" style="flex: 1; min-width: 0;">
+                                    <div class="preview-product-title" style="font-size: 14px; color: #333; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $product->title }}</div>
                                 </div>
                                 @if($product->verification_status == 'approved')
-                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}" target="_blank">{{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}</a>
+                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer; transition: background-color 0.3s ease; flex-shrink: 0; min-width: 100px; text-align: center; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none;" target="_blank">{{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}</a>
                                 @else
-                                    <button class="preview-product-button" disabled>
+                                    <button class="preview-product-button" disabled style="background-color: #e9ecef; color: #6c757d; cursor: not-allowed; opacity: 1;">
                                         @if($product->verification_status == 'pending')
                                             <span class="status pending">Menunggu Verifikasi</span>
                                         @else
