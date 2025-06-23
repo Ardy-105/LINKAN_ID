@@ -162,7 +162,7 @@
         <!-- Card Total Earnings -->
         <div class="card-earning">
             <div class="total">Total Earnings</div>
-            <div class="amount">IDR 242.200</div>
+            <div class="amount">IDR 0</div>
             <div class="actions">
                 <button><i class="fa fa-paper-plane"></i> Withdraw</button>
                 <button onclick="printCommissionReport()">
@@ -173,35 +173,13 @@
         </div>
 
         <!-- List Komisi Seller -->
-        <div class="list-komisi">
-            <!-- Item 1 -->
-            <div class="komisi-item">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="icon"><i class="fa fa-arrow-down"></i></div>
-                    <div class="info">
-                        <div class="email">Budi@gmail.com</div>
-                        <div class="nama">Budi</div>
-                    </div>
-                </div>
-                <div class="tanggal">17 Apr 2025</div>
-                <div class="nominal">Rp 153.800</div>
-            </div>
-            <!-- Item 2 -->
-            <div class="komisi-item selected">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="icon"><i class="fa fa-arrow-down"></i></div>
-                    <div class="info">
-                        <div class="email">Fajar@gmail.com</div>
-                        <div class="nama">Fajar</div>
-                    </div>
-                </div>
-                <div class="tanggal">17 Apr 2025</div>
-                <div class="nominal">Rp 88.400</div>
-            </div>
-        </div>
+        <div class="list-komisi"></div>
     </div>
 
     <script>
+        let lastFetchedCommissions = [];
+        let lastFetchedTotalEarnings = 0;
+
         function printCommissionReport() {
             // Buat form untuk mengirim data
             const form = document.createElement('form');
@@ -216,23 +194,15 @@
             csrfToken.value = '{{ csrf_token() }}';
             form.appendChild(csrfToken);
 
-            // Tambahkan data yang akan dicetak
+            // Siapkan data yang akan dikirim
             const data = {
-                total_earnings: 'IDR 242.200',
-                commission_details: [
-                    {
-                        name: 'Budi',
-                        email: 'Budi@gmail.com',
-                        date: '17 Apr 2025',
-                        amount: 'Rp 153.800'
-                    },
-                    {
-                        name: 'Fajar',
-                        email: 'Fajar@gmail.com',
-                        date: '17 Apr 2025',
-                        amount: 'Rp 88.400'
-                    }
-                ]
+                total_earnings: 'IDR ' + Number(lastFetchedTotalEarnings).toLocaleString('id-ID'),
+                commission_details: lastFetchedCommissions.map(commission => ({
+                    name: commission.seller_name,
+                    email: commission.seller_email,
+                    date: new Date(commission.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    amount: 'Rp ' + Number(commission.commission).toLocaleString('id-ID')
+                }))
             };
 
             // Tambahkan data ke form
@@ -242,11 +212,51 @@
             dataInput.value = JSON.stringify(data);
             form.appendChild(dataInput);
 
-            // Tambahkan form ke body dan submit
+            // Submit form
             document.body.appendChild(form);
             form.submit();
             document.body.removeChild(form);
         }
+
+        function fetchCommissions() {
+            fetch('{{ route('platformadmin.commissions') }}')
+                .then(response => response.json())
+                .then(data => {
+                    // Simpan ke variabel global
+                    lastFetchedCommissions = data.commissions;
+                    lastFetchedTotalEarnings = data.total_earnings;
+
+                    // Update total earnings
+                    const totalEarnings = document.querySelector('.card-earning .amount');
+                    totalEarnings.textContent = 'IDR ' + Number(data.total_earnings).toLocaleString('id-ID');
+
+                    // Update list komisi
+                    const list = document.querySelector('.list-komisi');
+                    list.innerHTML = '';
+                    data.commissions.forEach(commission => {
+                        const date = new Date(commission.created_at);
+                        const formattedDate = date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+                        const nominal = 'Rp ' + Number(commission.commission).toLocaleString('id-ID');
+                        list.innerHTML += `
+                            <div class="komisi-item">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="icon"><i class="fa fa-arrow-down"></i></div>
+                                    <div class="info">
+                                        <div class="email">${commission.seller_email}</div>
+                                        <div class="nama">${commission.seller_name}</div>
+                                    </div>
+                                </div>
+                                <div class="tanggal">${formattedDate}</div>
+                                <div class="nominal">${nominal}</div>
+                            </div>
+                        `;
+                    });
+                });
+        }
+
+        // Panggil pertama kali dan setiap 10 detik
+        fetchCommissions();
+        setInterval(fetchCommissions, 10000);
     </script>
 </body>
 </html>

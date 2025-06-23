@@ -78,6 +78,12 @@ class DashboardController extends Controller
             ->where('transactions.status', 'success')
             ->sum('transactions.total_price');
 
+        // Kurangi total penarikan yang sudah diajukan
+        $totalWithdrawn = (float)DB::table('payout_transactions')
+            ->where('user_id', $user->id)
+            ->sum('amount');
+        $totalEarnings = $totalEarnings - $totalWithdrawn;
+
         // Debug: Log hasil perhitungan
         \Log::info('Dashboard - Total Earnings Calculation: ' . $totalEarnings);
         \Log::info('Dashboard - Raw SQL Query: ' . DB::table('transactions')

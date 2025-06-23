@@ -170,3 +170,6 @@ Route::middleware(['auth', 'role:platform_admin'])->group(function () {
     Route::get('/verification', [VerificationController::class, 'index'])->name('verification.index');
     Route::post('/verification/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 });
+
+// Platform Admin API untuk komisi (realtime)
+Route::get('/platformadmin/commissions', [PlatformAdminController::class, 'getCommissions'])->name('platformadmin.commissions');

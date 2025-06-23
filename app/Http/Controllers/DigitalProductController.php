@@ -43,8 +43,8 @@ public function show($id)
             'platform_type' => 'required|string|in:upload,dropbox,gdrive,other',
             'platform_url' => 'nullable|url|required_if:platform_type,dropbox,gdrive,other',
             'platform_file' => 'nullable|file|mimes:pdf,zip,rar|required_if:platform_type,upload',
-            'price' => 'required|numeric',
-            'sale_price' => 'nullable|numeric',
+            'price_raw' => 'required|numeric',
+            'sale_price_raw' => 'nullable|numeric',
             'has_quantity_limit' => 'nullable|boolean',
             'quantity' => 'nullable|integer|required_if:has_quantity_limit,1',
             'button_text' => 'required|string',
@@ -52,9 +52,17 @@ public function show($id)
 
         $data = $request->only([
             'title', 'description', 'platform_type', 'platform_url',
-            'price', 'sale_price', 'has_quantity_limit', 'quantity', 'button_text'
+            'has_quantity_limit', 'quantity', 'button_text'
         ]);
 
+        // Gunakan price_raw sebagai price
+        $data['price'] = $request->price_raw;
+        
+        // Gunakan sale_price_raw sebagai sale_price
+        if ($request->filled('sale_price_raw')) {
+            $data['sale_price'] = $request->sale_price_raw;
+        }
+        
         $data['user_id'] = Auth::id(); // ID user yang sedang login
 
         if ($request->hasFile('image')) {
@@ -94,8 +102,8 @@ public function show($id)
             'platform_type' => 'required|string|in:upload,dropbox,gdrive,other',
             'platform_url' => 'nullable|url|required_if:platform_type,dropbox,gdrive,other',
             'platform_file' => 'nullable|file|mimes:pdf,zip,rar',
-            'price' => 'required|numeric',
-            'sale_price' => 'nullable|numeric',
+            'price_raw' => 'required|numeric',
+            'sale_price_raw' => 'nullable|numeric',
             'has_quantity_limit' => 'nullable|boolean',
             'quantity' => 'nullable|integer|min:1',
             'button_text' => 'required|string',
@@ -103,8 +111,18 @@ public function show($id)
 
         $data = $request->only([
             'title', 'description', 'platform_type', 'platform_url',
-            'price', 'sale_price', 'has_quantity_limit', 'quantity', 'button_text'
+            'has_quantity_limit', 'quantity', 'button_text'
         ]);
+
+        // Gunakan price_raw sebagai price
+        $data['price'] = $request->price_raw;
+        
+        // Gunakan sale_price_raw sebagai sale_price
+        if ($request->filled('sale_price_raw')) {
+            $data['sale_price'] = $request->sale_price_raw;
+        } else {
+            $data['sale_price'] = null;
+        }
 
         // Jika has_quantity_limit tidak dicentang, set quantity ke null
         if (!$request->has('has_quantity_limit')) {

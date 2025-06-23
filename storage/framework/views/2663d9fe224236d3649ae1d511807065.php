@@ -102,7 +102,7 @@
 <body>
     <div class="withdraw-card">
         <h2>Withdraw Funds</h2>
-        <p>Current balance: IDR <?php echo e(number_format($currentEarnings ?? 0, 0, ',', '.')); ?></p>
+        <p>Current balance: Rp <?php echo e(number_format($currentEarnings ?? 0, 0, ',', '.')); ?></p>
 
         <?php if($errors->any()): ?>
             <div class="alert-danger">
@@ -119,10 +119,61 @@
             <div class="form-group">
                 <label for="amount">Amount to Withdraw</label>
                 <div class="input-wrapper">
-                    <span class="currency-prefix">IDR</span>
-                    <input type="number" id="amount" name="amount" placeholder="e.g., 50000" min="10000" step="1000" required>
+                    <span class="currency-prefix"></span>
+                    <input style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;" type="text" id="amount" name="amount" placeholder="Rp 0" required
+                        value="<?php echo e(old('amount_raw') ? 'Rp ' . number_format(old('amount_raw'), 0, ',', '.') : ''); ?>"
+                        autocomplete="off">
+                    <input type="hidden" id="amount_raw" name="amount_raw" value="<?php echo e(old('amount_raw')); ?>">
                 </div>
             </div>
+            <script>
+                // Format currency Rupiah
+                function formatRupiah(angka) {
+                    var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                        split = number_string.split(','),
+                        sisa = split[0].length % 3,
+                        rupiah = split[0].substr(0, sisa),
+                        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                    if (ribuan) {
+                        separator = sisa ? '.' : '';
+                        rupiah += separator + ribuan.join('.');
+                    }
+
+                    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                    return 'Rp ' + rupiah;
+                }
+
+                function unformatRupiah(rupiah) {
+                    return rupiah.replace(/[^\d]/g, '');
+                }
+
+                // Amount input formatting
+                const amountInput = document.getElementById('amount');
+                const amountRaw = document.getElementById('amount_raw');
+
+                amountInput.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    let unformatted = unformatRupiah(value);
+                    
+                    if (unformatted !== '') {
+                        let formatted = formatRupiah(unformatted);
+                        e.target.value = formatted;
+                        amountRaw.value = unformatted;
+                    } else {
+                        e.target.value = '';
+                        amountRaw.value = '';
+                    }
+                });
+
+                amountInput.addEventListener('blur', function(e) {
+                    let value = e.target.value;
+                    if (value === '' || value === 'Rp ') {
+                        e.target.value = '';
+                        amountRaw.value = '';
+                    }
+                });
+            </script>
 
          <div class="form-group">
     <label for="method">Withdrawal Method</label>

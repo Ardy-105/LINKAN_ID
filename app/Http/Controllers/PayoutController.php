@@ -47,12 +47,14 @@ class PayoutController extends Controller
             \Log::info("Success Transaction ID: {$transaction->id}, Amount: {$transaction->total_price}, Product: {$transaction->title}, Created: {$transaction->created_at}");
         }
 
-        // Hitung total pendapatan dari transaksi yang berhasil
-        $myEarnings = (float)DB::table('transactions')
-            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
-            ->where('digital_products.user_id', $user->id)
-            ->where('transactions.status', 'success')
-            ->sum('transactions.total_price');
+        // Ambil saldo real time dari kolom 'balance' di tabel users
+        $myEarnings = (float)(DB::table('users')->where('id', $user->id)->value('balance') ?? 0);
+
+        // Kurangi total penarikan yang sudah dilakukan
+        $totalWithdrawn = (float)DB::table('payout_transactions')
+            ->where('user_id', $user->id)
+            ->sum('amount');
+        $myEarnings = $myEarnings - $totalWithdrawn;
 
         // Debug: Log hasil perhitungan
         \Log::info('Payout - Total Earnings Calculation: ' . $myEarnings);
@@ -66,12 +68,10 @@ class PayoutController extends Controller
             'status' => 'success'
         ]));
 
-        // Ambil data penarikan terakhir dari database
+        // Ambil data total penarikan dari database tanpa filter status
         $lastWithdraw = (float)(DB::table('payout_transactions')
             ->where('user_id', $user->id)
-            ->where('status', 'completed')
-            ->latest()
-            ->value('amount') ?? 0);
+            ->sum('amount') ?? 0);
 
         // Ambil detail pembayaran user dari tabel user_payout_details
         $payoutDetail = UserPayoutDetail::where('user_id', $user->id)->first();
@@ -91,7 +91,21 @@ class PayoutController extends Controller
         \Log::info('currentBalance: ' . $currentBalance);
         \Log::info('lastWithdraw: ' . $lastWithdraw);
         
-        return view('homeadminS.payout', compact('myEarnings', 'lastWithdraw', 'payoutDetail'));
+        // Hitung total pendapatan (lifetime earnings)
+        $totalEarnings = (float)DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
+            ->sum('transactions.total_price');
+
+        // Hitung saldo bisa ditarik (currentBalance)
+        $totalWithdrawn = (float)DB::table('payout_transactions')
+            ->where('user_id', $user->id)
+            ->sum('amount');
+        $currentBalance = $totalEarnings - $totalWithdrawn;
+
+        // Kirim ke view
+        return view('homeadminS.payout', compact('totalEarnings', 'totalWithdrawn', 'currentBalance', 'payoutDetail'));
     }
 
     /**
@@ -172,13 +186,24 @@ class PayoutController extends Controller
         // Ambil saldo saat ini dari kolom 'balance' untuk validasi
         $currentEarnings = $user->balance ?? 0; // Menggunakan kolom 'balance' yang baru
 
+        // Hitung saldo bisa ditarik (currentBalance)
+        $totalEarnings = (float)DB::table('transactions')
+            ->join('digital_products', 'transactions.product_id', '=', 'digital_products.id')
+            ->where('digital_products.user_id', $user->id)
+            ->where('transactions.status', 'success')
+            ->sum('transactions.total_price');
+        $totalWithdrawn = (float)DB::table('payout_transactions')
+            ->where('user_id', $user->id)
+            ->sum('amount');
+        $currentBalance = $totalEarnings - $totalWithdrawn;
+
         $request->validate([
-            'amount' => ['required', 'numeric', 'min:10000', 'max:' . $currentEarnings], // Validasi jumlah maksimal
+            'amount_raw' => ['required', 'numeric', 'min:10000', 'max:' . $currentBalance],
             'method' => 'required|string|in:Bank,DANA,ShopeePay',
             'account_detail' => 'required|string|max:255',
-            'account_name' => 'required|string|max:255', // Pastikan account_name juga divalidasi
+            'account_name' => 'required|string|max:255',
         ], [
-            'amount.max' => 'Jumlah penarikan melebihi saldo yang tersedia.',
+            'amount_raw.max' => 'Jumlah penarikan melebihi saldo yang tersedia.',
             'method.required' => 'Metode penarikan wajib diisi.',
             'method.in' => 'Metode penarikan tidak valid.',
             'account_detail.required' => 'Detail akun/nomor telepon wajib diisi.',
@@ -189,31 +214,44 @@ class PayoutController extends Controller
             'account_name.max' => 'Nama akun terlalu panjang.',
         ]);
 
-        $amount = $request->input('amount');
+        $amount = $request->input('amount_raw');
         $method = $request->input('method');
         $accountDetail = $request->input('account_detail');
         $accountName = $request->input('account_name'); // Ambil account_name
 
         // --- Logika Bisnis Penarikan ---
 
-        // 1. Catat transaksi penarikan di database
+        // Hitung komisi 5% untuk platform
+        $commission = $amount * 0.05;
+        $amountAfterCommission = $amount - $commission;
+        $adminPlatformId = 1; // Ganti sesuai id admin platform Anda
+
+        // 1. Catat transaksi penarikan di database (amount yang masuk ke seller adalah setelah dipotong komisi)
         DB::table('payout_transactions')->insert([
             'user_id' => $user->id,
-            'amount' => $amount,
+            'amount' => $amountAfterCommission,
             'method' => $method,
-            'account_detail' => $accountDetail, // Menyimpan detail akun/nomor telepon
-            'account_name' => $accountName, // Menyimpan nama akun
-            'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         
+        // 2. Kurangi saldo pengguna yang dapat ditarik di database (langsung ke DB, total amount)
+        \DB::table('users')->where('id', $user->id)->decrement('balance', $amount);
 
-        // 2. Kurangi saldo pengguna yang dapat ditarik di database (MENGGUNAKAN KOLOM 'balance')
-        $user->decrement('balance', $amount);
-        $user->save(); // Simpan perubahan saldo
-        
-        // 3. Integrasi dengan Gateway Pembayaran Eksternal (Placeholder)
+        // 3. Tambahkan komisi ke saldo admin platform
+        \DB::table('users')->where('id', $adminPlatformId)->increment('balance', $commission);
+
+        // 4. Catat ke tabel platform_commissions
+        DB::table('platform_commissions')->insert([
+            'seller_id' => $user->id,
+            'platform_admin_id' => $adminPlatformId,
+            'amount' => $amount,
+            'commission' => $commission,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // 5. Integrasi dengan Gateway Pembayaran Eksternal (Placeholder)
         //    Di sini Anda akan memanggil API dari penyedia pembayaran (misalnya, Midtrans, Xendit, atau API bank)
         //    untuk memulai transfer dana.
         //    Pastikan Anda memiliki detail bank/e-wallet pengguna yang tersimpan dengan aman.
@@ -231,9 +269,10 @@ class PayoutController extends Controller
 
         // Ambil data riwayat penarikan dari database untuk user yang login
         $history = DB::table('payout_transactions')
-            ->where('user_id', $user->id)
-            ->latest()
-            ->get();
+        ->select('user_id', 'amount', 'method')
+        ->where('user_id', $user->id)
+        ->latest()
+        ->get();
         
         return view('homeadminS.payout_history', compact('history'));
     }

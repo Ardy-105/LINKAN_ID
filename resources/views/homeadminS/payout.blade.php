@@ -37,9 +37,23 @@
             color: #333;
         }
 
-        .payout-section {
+        .payout-main-flex {
             display: flex;
-            gap: 20px;
+            gap: 32px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        .earnings-card, .payment-card {
+            flex: 1 1 350px;
+            min-width: 320px;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+        @media (max-width: 900px) {
+            .payout-main-flex {
+                flex-direction: column;
+                gap: 20px;
+            }
         }
 
         .earnings-card, .payment-card {
@@ -47,7 +61,6 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            flex: 1;
         }
 
         .earnings-card {
@@ -160,65 +173,71 @@
                 </div>
             @endif
 
-            <div class="payout-section">
+            <div class="payout-main-flex">
                 <!-- Earnings Card -->
-                <div class="earnings-card">
-                    <h2>My Earnings</h2>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Pendapatan</h5>
-                                <h3 class="text-primary">Rp {{ number_format((float)$myEarnings, 0, ',', '.') }}</h3>
-                                <p class="text-muted">Total pendapatan dari semua transaksi yang berhasil</p>
+                <div class="earnings-card" style="padding: 30px 24px; border-radius: 16px; background: linear-gradient(90deg, #FF9040 60%, #ffb380 100%); color: white; box-shadow: 0 4px 16px rgba(255,144,64,0.10); margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                    <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 24px; letter-spacing: 1px;">My Earnings</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between;">
+                        <div style="flex: 1 1 180px; min-width: 180px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background: white; color: #FF9040; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-wallet"></i></div>
+                            <div>
+                                <div style="font-size: 13px; opacity: 0.85;">Total Pendapatan</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($totalEarnings, 0, ',', '.') }}</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1 1 180px; min-width: 180px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background: white; color: #28a745; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-arrow-circle-up"></i></div>
+                            <div>
+                                <div style="font-size: 13px; opacity: 0.85;">Total Penarikan</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($totalWithdrawn, 0, ',', '.') }}</div>
+                            </div>
+                        </div>
+                        <div style="flex: 1 1 180px; min-width: 180px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; gap: 16px;">
+                            <div style="background: white; color: #007bff; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-coins"></i></div>
+                            <div>
+                                <div style="font-size: 13px; opacity: 0.85;">Saldo Bisa Ditarik</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($currentBalance, 0, ',', '.') }}</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Penarikan Terakhir</h5>
-                                <h3 class="text-success">Rp {{ number_format((float)$lastWithdraw, 0, ',', '.') }}</h3>
-                                <p class="text-muted">Jumlah penarikan terakhir yang berhasil</p>
-                            </div>
-                        </div>
+                    <div style="display: flex; gap: 16px; margin-top: 28px;">
+                        <a href="{{ route('payout.showWithdrawForm') }}" class="btn btn-withdraw" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
+                            <i class="fas fa-paper-plane"></i> Withdraw
+                        </a>
+                        <a href="{{ route('payout.showPayoutHistory') }}" class="btn btn-history" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
+                            <i class="fas fa-history"></i> History
+                        </a>
                     </div>
-                    <a href="{{ route('payout.showWithdrawForm') }}" class="btn btn-withdraw">
-                        <i class="fas fa-paper-plane"></i> Withdraw
-                    </a>
-                    <a href="{{ route('payout.showPayoutHistory') }}" class="btn btn-history">
-                        <i class="fas fa-history"></i> History
-                    </a>
                 </div>
-
                 <!-- Payment Card -->
-                <div class="payment-card">
-                    <h2>Get Paid With</h2>
-                    <p>Your money will be transferred to</p>
+                <div class="payment-card" style="background: linear-gradient(90deg, #FF9040 60%, #ffb380 100%); border-radius: 16px; box-shadow: 0 4px 16px rgba(255,144,64,0.10); padding: 32px 24px; text-align: center; color: white; display: flex; flex-direction: column; justify-content: center;">
+                    <h2 style="font-size: 20px; font-weight: bold; color: white; margin-bottom: 8px; letter-spacing: 1px;">Metode Penerimaan Dana</h2>
+                    <p style="color: #fffbe6; font-size: 14px; margin-bottom: 24px;">Dana kamu akan ditransfer ke rekening berikut:</p>
                     @if($payoutDetail)
-                    <div class="bank-info">
+                    <div class="bank-info" style="display: flex; align-items: center; gap: 18px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 18px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(255,144,64,0.06); justify-content: center;">
                         @if($payoutDetail->method_type === 'Bank')
-                            <img src="/images/creditcard.png" alt="Bank">
+                            <img src="/images/creditcard.png" alt="Bank" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                         @elseif($payoutDetail->method_type === 'DANA')
-                            <img src="/images/dana.png" alt="DANA">
+                            <img src="/images/dana.png" alt="DANA" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                         @elseif($payoutDetail->method_type === 'ShopeePay')
-                            <img src="/images/shopeepay.png" alt="ShopeePay">
+                            <img src="/images/shopeepay.png" alt="ShopeePay" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
                         @else
-                            <i class="fas fa-wallet" style="font-size: 40px; color: #666;"></i>
+                            <i class="fas fa-wallet" style="font-size: 48px; color: #FF9040; background: #fff; border-radius: 8px; width: 54px; height: 54px; display: flex; align-items: center; justify-content: center;"></i>
                         @endif
-                        <div>
-                            <strong>{{ $payoutDetail->account_name }}</strong><br>
-                            {{ $payoutDetail->method_type }} - {{ $payoutDetail->account_number }}
+                        <div style="text-align: left;">
+                            <div style="font-size: 16px; font-weight: bold; color: white;">{{ $payoutDetail->account_name }}</div>
+                            <div style="font-size: 14px; color: #fffbe6; margin-top: 2px;">{{ $payoutDetail->method_type }} - {{ $payoutDetail->account_number }}</div>
                             @if($payoutDetail->method_type === 'Bank' && $payoutDetail->bank_name)
-                                <br>{{ $payoutDetail->bank_name }}
+                                <div style="font-size: 13px; color: #ffe0b3; margin-top: 2px;">{{ $payoutDetail->bank_name }}</div>
                             @endif
                         </div>
                     </div>
                     @else
-                    <div style="padding: 20px; color: #666;">
+                    <div style="padding: 24px; color: #fffbe6; background: rgba(255,255,255,0.10); border-radius: 12px; margin-bottom: 18px;">
                         <p>Belum ada metode pembayaran yang diatur.</p>
                     </div>
                     @endif
-                    <a href="{{ route('payout.showMethodForm') }}" class="btn" style="margin-top: 20px; display: inline-block; background: #FF9040; color: white;">
+                    <a href="{{ route('payout.showMethodForm') }}" class="btn" style="margin-top: 10px; display: inline-block; background: white; color: #FF9040; font-weight: bold; border-radius: 6px; padding: 12px 32px; font-size: 15px; box-shadow: 0 2px 8px rgba(255,144,64,0.10); text-decoration: none; transition: background 0.2s;">
                         <i class="fas fa-cog"></i> {{ $payoutDetail ? 'Edit Payout Method' : 'Set Payout Method' }}
                     </a>
                 </div>

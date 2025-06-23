@@ -434,7 +434,8 @@
                         <div class="price-group">
                             <div class="price-input">
                                 <label>Price</label>
-                                <input type="number" name="price" class="form-control" placeholder="0" value="{{ isset($product) ? $product->price : old('price') }}">
+                                <input type="text" name="price" id="priceInput" class="form-control" placeholder="Rp 0" value="{{ isset($product) ? 'Rp ' . number_format($product->price, 0, ',', '.') : old('price') }}">
+                                <input type="hidden" name="price_raw" id="priceRaw" value="{{ isset($product) ? $product->price : old('price') }}">
                             </div>
                             <div class="currency-input">
                                 <label>Currency</label>
@@ -445,7 +446,8 @@
 
                     <div class="form-group">
                         <label>Sale Price (Optional)</label>
-                        <input type="number" name="sale_price" class="form-control" placeholder="Sale Price" value="{{ isset($product) ? $product->sale_price : old('sale_price') }}">
+                        <input type="text" name="sale_price" id="salePriceInput" class="form-control" placeholder="Rp 0" value="{{ isset($product) && $product->sale_price ? 'Rp ' . number_format($product->sale_price, 0, ',', '.') : old('sale_price') }}">
+                        <input type="hidden" name="sale_price_raw" id="salePriceRaw" value="{{ isset($product) ? $product->sale_price : old('sale_price') }}">
                     </div>
 
                     <div class="form-group">
@@ -480,6 +482,79 @@
     </div>
 
     <script>
+        // Format currency Rupiah
+        function formatRupiah(angka) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return 'Rp ' + rupiah;
+        }
+
+        function unformatRupiah(rupiah) {
+            return rupiah.replace(/[^\d]/g, '');
+        }
+
+        // Price input formatting
+        const priceInput = document.getElementById('priceInput');
+        const priceRaw = document.getElementById('priceRaw');
+
+        priceInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            let unformatted = unformatRupiah(value);
+            
+            if (unformatted !== '') {
+                let formatted = formatRupiah(unformatted);
+                e.target.value = formatted;
+                priceRaw.value = unformatted;
+            } else {
+                e.target.value = '';
+                priceRaw.value = '';
+            }
+        });
+
+        priceInput.addEventListener('blur', function(e) {
+            let value = e.target.value;
+            if (value === '' || value === 'Rp ') {
+                e.target.value = '';
+                priceRaw.value = '';
+            }
+        });
+
+        // Sale price input formatting
+        const salePriceInput = document.getElementById('salePriceInput');
+        const salePriceRaw = document.getElementById('salePriceRaw');
+
+        salePriceInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            let unformatted = unformatRupiah(value);
+            
+            if (unformatted !== '') {
+                let formatted = formatRupiah(unformatted);
+                e.target.value = formatted;
+                salePriceRaw.value = unformatted;
+            } else {
+                e.target.value = '';
+                salePriceRaw.value = '';
+            }
+        });
+
+        salePriceInput.addEventListener('blur', function(e) {
+            let value = e.target.value;
+            if (value === '' || value === 'Rp ') {
+                e.target.value = '';
+                salePriceRaw.value = '';
+            }
+        });
+
         // Image preview
         document.getElementById('productImage').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {

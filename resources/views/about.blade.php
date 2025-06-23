@@ -35,6 +35,9 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 100px;
         }
 
         .about-header {
@@ -137,6 +140,16 @@
 
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+            .about-container {
+                margin-top: 80px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .about-container {
+                margin-left: 0;
+                padding: 24px 6px;
             }
         }
     </style>

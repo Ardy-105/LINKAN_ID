@@ -162,19 +162,21 @@
             <div style="margin-bottom: 10px; font-weight: 500; color: #888;">Content Purchase Search Result</div>
             <div class="row">
                 <?php $__empty_1 = true; $__currentLoopData = $purchasedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div style="display: flex; align-items: center; background: #f7f8fa; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); padding: 12px 15px;">
-                        <img src="<?php echo e($product->image ? asset('storage/'.$product->image) : asset('images/default-product.png')); ?>" alt="Product Image" style="width: 80px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 15px;">
-                        <div>
-                            <div style="font-weight: 600; color: #222;"><?php echo e($product->title); ?></div>
-                            <div style="font-size: 12px; color: #888;">
-                                <?php echo e(optional($purchases->firstWhere('product_id', $product->id))->created_at ? optional($purchases->firstWhere('product_id', $product->id))->created_at->format('d M Y') : '-'); ?>
+                    <?php if($product): ?>
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div style="display: flex; align-items: center; background: #f7f8fa; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); padding: 12px 15px;">
+                            <img src="<?php echo e($product->image ? asset('storage/'.$product->image) : asset('images/default-product.png')); ?>" alt="Product Image" style="width: 80px; height: 50px; object-fit: cover; border-radius: 6px; margin-right: 15px;" onerror="this.onerror=null;this.src='<?php echo e(asset('images/default-product.png')); ?>';">
+                            <div>
+                                <div style="font-weight: 600; color: #222;"><?php echo e($product->title); ?></div>
+                                <div style="font-size: 12px; color: #888;">
+                                    <?php echo e(optional($purchases->firstWhere('product_id', $product->id))->created_at ? optional($purchases->firstWhere('product_id', $product->id))->created_at->format('d M Y') : '-'); ?>
 
+                                </div>
+                                <span class="badge bg-secondary" style="font-size: 11px;">Purchased</span>
                             </div>
-                            <span class="badge bg-secondary" style="font-size: 11px;">Purchased</span>
                         </div>
                     </div>
-                </div>
+                    <?php endif; ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="col-12">
                     <div style="padding: 30px; text-align: center; color: #aaa;">No purchased content found.</div>
