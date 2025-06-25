@@ -511,7 +511,8 @@
                 </div>
             </div>
 
-          <form method="POST" action="{{ route('appearance.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('appearance.update') }}" enctype="multipart/form-data" id="appearanceForm">
+
     @csrf
                 <div class="content-section">
                     <div class="left-panel">
@@ -757,7 +758,8 @@ function closeProfilePopup() {
     function confirmDeleteProfileImage() {
     if (confirm('Yakin ingin menghapus foto profil?')) {
         document.getElementById('deleteProfileImage').value = 1;
-        document.querySelector('form').submit();
+     document.getElementById('appearanceForm').submit();
+
     }
 }
     function confirmDeleteBanner() {
