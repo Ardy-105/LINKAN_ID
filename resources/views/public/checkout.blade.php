@@ -317,7 +317,14 @@
                     console.log('Server data:', data); // Log data dari server
                     if (data.success) {
                         if (data.redirect) {
-                            window.location.href = data.redirect;
+                            Swal.fire({
+                                title: 'Sukses',
+                                text: 'Pembayaran berhasil! Silahkan cek Email Anda',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.href = data.redirect;
+                            });
                         } else {
                             window.location.href = '{{ route("digital-product.success") }}';
                         }
