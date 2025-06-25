@@ -25,6 +25,9 @@
 
         .main-content {
             flex: 1;
+            width: calc(100vw - 250px);
+            position: relative;
+            left: 250px;
             padding: 25px 30px;
             background-color: #f5f6fa;
         }
@@ -95,6 +98,12 @@
         }
         .form-group {
             margin-bottom: 20px;
+        }
+        @media (max-width: 900px) {
+            .main-content {
+                width: 100vw;
+                left: 0;
+            }
         }
     </style>
 </head>

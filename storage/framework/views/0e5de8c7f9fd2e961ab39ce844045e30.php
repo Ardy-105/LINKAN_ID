@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
         }
 
         .header {
@@ -161,6 +162,12 @@
         .header a {
             color: black !important;
             text-decoration: none; /* kalau mau hilangkan garis bawah juga */
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
         }
 
     </style>

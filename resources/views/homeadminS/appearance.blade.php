@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
         }
 
         .url-section {
@@ -215,14 +216,18 @@
         }
 
         .preview-phone {
-            width: 375px; /* iPhone 11/12/13 width */
-            height: 812px; /* iPhone 11/12/13 height */
+            width: 100%;
+            max-width: 375px;
+            aspect-ratio: 9/19.5;
             border-radius: 40px;
-            padding: 20px;
             background: white;
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .preview-screen {
@@ -484,6 +489,11 @@
     color: red;
 }
 
+@media (max-width: 900px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
 
     </style>
 </head>
@@ -677,7 +687,7 @@
                          <div class="preview-header">
                            <h2 class="card-priview">Preview</h2>
                         </div>
-                            <div class="preview-phone" style="width: 375px; height: 812px; border-radius: 40px; padding: 20px; background: white; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <div class="preview-phone">
                                 <div class="preview-screen" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
                                     @if($appearance && $appearance->banner)
                                         <div class="preview-banner" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">

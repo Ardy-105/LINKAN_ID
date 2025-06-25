@@ -1,0 +1,94 @@
+[33m1d18165[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfinalproject[m[33m, [m[1;31morigin/finalproject[m[33m)[m authmidelware
+[33md3392b5[m beres
+[33mc5020dd[m 100%
+[33m40b6005[m[33m ([m[1;32mardy-branch[m[33m)[m soft delete product
+[33m67774c9[m responsive landing page
+[33m3c37b4c[m perbaikan verifikasi product
+[33m1c2c8fb[m print
+[33m7108d77[m print & aboutus
+[33m6360568[m statistic update
+[33mf9cdfcc[m wah banyak banget deh
+[33m73dbf7e[m setting
+[33m6171373[m tampilan dan fungsionalitas pada halaman verifikasi product
+[33m6065c72[m button preview
+[33m97da6d5[m text box alasan penolakan
+[33mb801dbd[m fungsional verifikasi product
+[33m3977fcb[m rev3
+[33m9a0d6c4[m rev2
+[33md4ba4ce[m rev
+[33m38859dc[m rapihin order
+[33m3ee2a07[m fungsionalitas order
+[33mdb375c6[m purchase
+[33m737563d[m statistic total sales
+[33m68c2f19[m link click
+[33m9c49b41[m link statistic
+[33m0a95734[m order dan total pendapatan masuk ke dalam dashboard
+[33m7a2fa4d[m transaksi produk digital terkirim ke email
+[33m8287f34[m setting detail
+[33mda084f1[m perbaikan logika registrasi
+[33mf6bcc17[m detail beranda seller
+[33m2268447[m detail change password
+[33maafaa8a[m login hak akses
+[33m47e0683[m detail setting
+[33m90504ef[m Merge branch 'ardy-branch' of https://github.com/Ardy-105/LINKAN_ID into ardy-branch
+[33ma4ff386[m nyicil admin-platform
+[33m7d83125[m update tamoilan checkout
+[33mafbbe1b[m tampilan checkout & midtrans
+[33m60d94d3[m tampila checkout frontend
+[33m8d9316e[m perbaikan sedikit
+[33mc768bb6[m orders
+[33mc4568c3[m detail product update
+[33m6031e70[m pop up buy digital product
+[33m1a38acd[m tampilan statistik
+[33m1c0dc89[m detail product public costumer
+[33mad2ef64[m tampilan forgot passwor & reset password
+[33m5018555[m forgot password
+[33m3806f25[m penyesuaian social link
+[33mc65eeda[m hapus profile appereance
+[33m592c4c6[m fitur hapus banner pada appereance
+[33mf7cd646[m Merge branch 'ardy-branch' of https://github.com/Ardy-105/LINKAN_ID into ardy-branch
+[33mf543728[m setting
+[33m22c3b59[m menambahkan pilihan tema
+[33m6b37ccb[m tombol save d setting
+[33mfc0438c[m revisi tampilan registrasi
+[33ma434acc[m setting can beres sadaya
+[33maf13476[m menyesuaikan mylinkan dan profile
+[33m9197df3[m tema background
+[33mee3bef8[m Merge branch 'ardy-branch' of https://github.com/Ardy-105/LINKAN_ID into ardy-branch
+[33m770d758[m contact us,about us footer
+[33m58661ed[m gambar template background
+[33m92aaa05[m ubah warna icon
+[33m45d3bfa[m custome color aperance
+[33m0af3656[m akses link untuk costumer
+[33m854f99f[m save changes appearances
+[33m2dcb640[m appearance preview
+[33m73df465[m update appearance
+[33med75b58[m penyesuaian sidebar
+[33m2f770cb[m Merge branch 'ardy-branch' of https://github.com/Ardy-105/LINKAN_ID into ardy-branch
+[33m8b5dd2d[m editlinkan
+[33mbec4775[m setting,penyesuaian sidebar
+[33m00cef03[m update appearance
+[33m3ff9a58[m shortlink
+[33m1fbbb49[m pergabungan brnach rifqi dan ardy
+[33m08a7398[m Merge branch 'rifqi' into ardy-branch
+[33mae81b61[m[33m ([m[1;31morigin/rifqi[m[33m, [m[1;32mrifqi[m[33m)[m sidebar dan logout
+[33m2bf8e95[m perbaikan merge
+[33m6bcc519[m logout
+[33m3575b8d[m Merge branch 'rifqi' of https://github.com/Ardy-105/LINKAN_ID into rifqi
+[33mb79d09d[m rubah sidebar dan affiliate di home
+[33mcb335f3[m Merge branch 'rifqi' of https://github.com/Ardy-105/LINKAN_ID into rifqi
+[33m282fb74[m icon
+[33m8bff8a6[m Perubahan pada mylinkan.blade.php
+[33m4f46893[m update mylinkan
+[33mf4a7a44[m perbaikan
+[33m4aafb53[m update terbaru
+[33m531ec47[m update terbaru
+[33me410e22[m update crud digital product
+[33m74e471a[m update 1
+[33mfd73d99[m update1
+[33m6aae4a2[m Delete .github/workflows directory
+[33mcf66f9a[m Create laravel.yml
+[33mbf173a7[m Delete percobaan.txt
+[33mdbf5101[m update percobaan
+[33m21c5991[m update percobaan
+[33mfd4d285[m frist commit

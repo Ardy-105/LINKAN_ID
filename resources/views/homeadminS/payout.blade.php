@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
         }
 
         .header {
@@ -53,6 +54,9 @@
             .payout-main-flex {
                 flex-direction: column;
                 gap: 20px;
+            }
+            .main-content {
+                margin-left: 0;
             }
         }
 

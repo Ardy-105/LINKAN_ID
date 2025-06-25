@@ -27,6 +27,7 @@
         .main-content {
             flex: 1;
             padding: 25px 30px;
+            margin-left: 250px;
             background-color: #f5f6fa;
         }
 
@@ -297,6 +298,12 @@
 
             .action-button {
                 min-width: calc(50% - 5px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
             }
         }
     </style>

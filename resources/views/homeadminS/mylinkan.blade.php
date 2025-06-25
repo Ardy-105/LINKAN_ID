@@ -32,6 +32,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             min-width: 0; /* Untuk mencegah overflow */
+            margin-left: 250px;
         }
 
         .header {
@@ -170,7 +171,8 @@
             background: #eee;
             padding: 20px;
             border-radius: 10px;
-            width: 400px; /* Lebar yang lebih besar */
+            width: 100%;
+            max-width: 430px;
             height: fit-content;
             position: sticky;
             top: 20px;
@@ -188,14 +190,21 @@
         }
 
         .phone-preview {
-            width: 375px; /* iPhone 11/12/13 width */
-            height: 812px; /* iPhone 11/12/13 height */
+            width: 100%;
+            max-width: 375px;
+            min-width: 250px;
+            aspect-ratio: 9/19.5;
+            min-height: 500px;
+            max-height: 800px;
             border-radius: 40px;
-            padding: 20px;
             background: white;
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
         }
 
         .phone-content {
@@ -597,6 +606,12 @@
             background-color: #d4edda;
             color: #155724;
         }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -667,7 +682,7 @@
         <div class="preview-header">
             <h2>Preview</h2>
         </div>
-        <div class="phone-preview" style="width: 375px; height: 812px; border-radius: 40px; padding: 20px; background: white; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="phone-preview">
             <div class="phone-content" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
                 @if($appearance && $appearance->banner)
                     <div class="banner-preview" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">

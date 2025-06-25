@@ -28,6 +28,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             min-width: 0; /* Untuk mencegah overflow */
+            margin-left: 250px;
         }
         .header {
             display: flex;
@@ -124,6 +125,11 @@
             color: #666;
             font-size: 14px;
             cursor: pointer;
+        }
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>

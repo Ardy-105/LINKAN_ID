@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 25px 30px;
+            margin-left: 250px;
             background-color: #f5f6fa;
         }
 
@@ -103,6 +104,12 @@
         .stats-chart {
             height: 300px;
             margin-top: 15px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>

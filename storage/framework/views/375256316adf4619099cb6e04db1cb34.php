@@ -3,8 +3,13 @@
     .sidebar {
         width: 250px;
         background-color: #e0e7ff;
-        min-height: 100vh;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
         padding: 20px;
+        overflow-y: auto;
+        z-index: 100;
     }
     .sidebar .logo {
         width: 120px;
@@ -60,7 +65,7 @@
     <a href="<?php echo e(route('beranda.admins')); ?>" class="<?php echo e(request()->routeIs('beranda.admins') ? 'active' : ''); ?>">
         <i class="fas fa-home"></i>Home
     </a>
-    <a href="<?php echo e(route('mylinkan')); ?>" class="<?php echo e(request()->routeIs('mylinkan') ? 'active' : ''); ?>">
+    <a href="<?php echo e(route('mylinkan')); ?>" class="<?php echo e(request()->routeIs('mylinkan') || request()->routeIs('digital-product.*') ? 'active' : ''); ?>">
         <i class="fas fa-user"></i>My Linkan
     </a>
     <a href="<?php echo e(route('appearance')); ?>" class="<?php echo e(request()->routeIs('appearance') ? 'active' : ''); ?>">

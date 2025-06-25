@@ -27,6 +27,7 @@
         .main-content {
             flex: 1;
             padding: 25px 30px;
+            margin-left: 250px;
             background: transparent;
         }
 
@@ -415,6 +416,12 @@
                 width: 50px;
                 height: 50px;
                 font-size: 20px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
             }
         }
     </style>

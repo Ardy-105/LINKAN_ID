@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
         }
 
         .order-header {
@@ -295,6 +296,12 @@
         .debug-info p {
             margin: 5px 0;
             color: #666;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>

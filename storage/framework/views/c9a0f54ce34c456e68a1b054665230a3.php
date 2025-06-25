@@ -22,6 +22,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            padding-left: 250px !important;
         }
 
         .page-header {
@@ -317,6 +318,24 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                padding-left: 0 !important;
+            }
+        }
+
+        .sidebar {
+            width: 250px !important;
+            box-sizing: border-box;
+            max-width: 250px;
+            overflow-x: auto;
+        }
+
+        .sidebar .logo {
+            max-width: 210px;
+            width: 100%;
         }
     </style>
 </head>

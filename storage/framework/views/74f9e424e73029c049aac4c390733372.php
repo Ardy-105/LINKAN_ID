@@ -26,6 +26,7 @@
         .main-content {
             flex: 1;
             padding: 20px;
+            margin-left: 250px;
         }
 
         .header {
@@ -79,6 +80,12 @@
             font-size: 14px;
             color: #666;
             margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
