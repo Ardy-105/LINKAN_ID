@@ -511,29 +511,27 @@
                 </div>
             </div>
 
-           <form action="<?php echo e(route('appearance.update')); ?>" method="POST" enctype="multipart/form-data">
-
-
-                <?php echo csrf_field(); ?>
+          <form method="POST" action="<?php echo e(route('appearance.update')); ?>" enctype="multipart/form-data">
+    <?php echo csrf_field(); ?>
                 <div class="content-section">
                     <div class="left-panel">
                         <!-- Banner -->
                         <div class="card">
                             <h2 class="card-title">Banner</h2>
                             <div class="banner-section">
-                            <?php if($appearance && $appearance->banner): ?>
+<?php if($appearance && $appearance->banner): ?>
     <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner"
          style="width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;" id="previewBanner">
     <input type="hidden" name="delete_banner" id="deleteBanner" value="0">
     <button type="button" onclick="confirmDeleteBanner()" class="upload-button" style="background-color: red; color: white;">
         Hapus Banner
     </button>
-                                <?php else: ?>
-                                    <i class="fas fa-image"></i>
-                                    <p class="banner-text">Optimize banner size 1056 x 638 px</p>
-                                <?php endif; ?>
-                                <input type="file" name="banner" id="bannerInput" style="display: none;" accept="image/*">
-                                <button type="button" class="upload-button" onclick="document.getElementById('bannerInput').click()">Upload Image</button>
+<?php else: ?>
+    <i class="fas fa-image"></i>
+    <p class="banner-text">Optimize banner size 1056 x 638 px</p>
+<?php endif; ?>
+<input type="file" name="banner" id="bannerInput" style="display: none;" accept="image/*">
+<button type="button" class="upload-button" onclick="document.getElementById('bannerInput').click()">Upload Image</button>
                             </div>
                         </div>
 
@@ -760,13 +758,13 @@ function closeProfilePopup() {
         document.querySelector('form').submit();
     }
 }
-
     function confirmDeleteBanner() {
-    if (confirm('Yakin ingin menghapus banner?')) {
-        document.getElementById('deleteBanner').value = 1;
-        document.querySelector('form').submit();
+        if (confirm("Yakin ingin menghapus banner?")) {
+            const form = document.querySelector('form[action="<?php echo e(route('appearance.update')); ?>"]');
+            document.getElementById('deleteBanner').value = 1;
+            form.submit();
+        }
     }
-}
 function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 alert('Link copied to clipboard!');
@@ -909,24 +907,49 @@ if (currentBackground) {
     updatePreviewColor(themeColorInput.value);
 
     // Preview banner
-    document.getElementById('bannerInput').addEventListener('change', function(e) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const img = document.getElementById('previewPhoneBanner');
-            if (img) {
-                img.src = event.target.result;
-            } else {
-                const screen = document.getElementById('previewScreen');
-                const newImg = document.createElement('img');
-                newImg.src = event.target.result;
-                newImg.id = "previewPhoneBanner";
-           newImg.style = "width: 100%; aspect-ratio: 589 / 233; object-fit: cover; border-radius: 10px; margin-bottom: 20px;";
+   document.getElementById('bannerInput').addEventListener('change', function(e) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        // Ganti preview di form (atas)
+        let img = document.getElementById('previewBanner');
+        if (img) {
+            img.src = event.target.result;
+        } else {
+            // Jika sebelumnya tidak ada banner, buat elemen img baru
+            const bannerSection = document.querySelector('.banner-section');
+            img = document.createElement('img');
+            img.id = 'previewBanner';
+            img.src = event.target.result;
+            img.alt = 'Banner';
+            img.style = "width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;";
+            // Sisipkan sebelum tombol upload
+            bannerSection.insertBefore(img, bannerSection.querySelector('button.upload-button'));
+        }
 
-                screen.insertBefore(newImg, screen.firstChild);
+        // Ganti preview di phone (kanan)
+        let phoneBanner = document.querySelector('.preview-banner img');
+        if (phoneBanner) {
+            phoneBanner.src = event.target.result;
+        } else {
+            // Jika belum ada, buat elemen baru di preview-screen
+            const previewScreen = document.getElementById('previewScreen');
+            let previewBannerDiv = previewScreen.querySelector('.preview-banner');
+            if (!previewBannerDiv) {
+                previewBannerDiv = document.createElement('div');
+                previewBannerDiv.className = 'preview-banner';
+                previewBannerDiv.style = "width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;";
+                previewScreen.insertBefore(previewBannerDiv, previewScreen.firstChild);
             }
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    });
+            const newImg = document.createElement('img');
+            newImg.src = event.target.result;
+            newImg.alt = 'Banner';
+            newImg.style = "width: 100%; height: 100%; object-fit: cover;";
+            previewBannerDiv.innerHTML = '';
+            previewBannerDiv.appendChild(newImg);
+        }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+});
 
     // Preview profile image
     document.getElementById('profileImageInput').addEventListener('change', function(e) {

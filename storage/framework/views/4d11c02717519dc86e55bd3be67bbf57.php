@@ -251,12 +251,7 @@
                 <span>Total</span>
                 <span>Rp <?php echo e(number_format($product->price * $savedQty, 0, ',', '.')); ?></span>
             </div>
-
-            <div id="select-method"><i class="fa-solid fa-money-bill-wave"></i> Select payment method</div>
-            <button id="pay-button" class="btn-buy" type="button">
-                <i class="fa-solid fa-credit-card"></i> BUY NOW - Rp <?php echo e(number_format($product->price * $savedQty, 0, ',', '.')); ?>
-
-            </button>
+            <div id="select-method"><i class="fa-solid fa-money-bill-wave"></i> Buy Now </div>
         </div>
     </form>
 </div>
@@ -322,7 +317,11 @@
                 .then(data => {
                     console.log('Server data:', data); // Log data dari server
                     if (data.success) {
-                        window.location.href = '<?php echo e(route("digital-product.success")); ?>';
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        } else {
+                            window.location.href = '<?php echo e(route("digital-product.success")); ?>';
+                        }
                     } else {
                         Swal.fire('Error', data.message, 'error');
                     }

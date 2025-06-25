@@ -381,7 +381,18 @@ public function storeTransaction(Request $request)
         new SendDigitalProductMail($product, $transaction->buyer_name, $transaction)
     );
 
-    return response()->json(['success' => true, 'message' => 'Transaction stored & email sent']);
+    // Cari user berdasarkan email pembeli
+    $buyerUser = \App\Models\User::where('email', $transaction->buyer_email)->first();
+    $redirectUrl = null;
+    if ($buyerUser) {
+        $redirectUrl = route('public.profile', ['username' => $buyerUser->username]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Transaction stored & email sent',
+        'redirect' => $redirectUrl
+    ]);
 }
 
 

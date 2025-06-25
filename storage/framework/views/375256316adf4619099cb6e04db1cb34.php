@@ -98,13 +98,15 @@
 
     <hr>
 
-    <div class="marketing-tools">
-        <a href="<?php echo e(route('welcome')); ?>">
-            <span style="display: flex; align-items: center;">
-                <img src="<?php echo e(asset('images/logout.png')); ?>" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
-                LogOut
-            </span>
-        </a>
-    </div>
+  <div class="marketing-tools">
+    <form action="<?php echo e(route('logout')); ?>" method="POST" style="display: flex; align-items: center;">
+        <?php echo csrf_field(); ?>
+        <button type="submit" style="background: none; border: none; padding: 10px; margin: 0; display: flex; align-items: center; color: #1a1a1a; cursor: pointer;">
+            <img src="<?php echo e(asset('images/logout.png')); ?>" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
+            Logout
+        </button>
+    </form>
+</div>
+
 </div>
 <?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/sidebar/sidebar.blade.php ENDPATH**/ ?>
