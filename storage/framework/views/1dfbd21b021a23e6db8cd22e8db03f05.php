@@ -489,37 +489,37 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="url-section">
                 <div class="url-input-group">
-                    <input type="text" class="url-input"value="My Linkan: {{ url('linkan.id/' . Auth::user()->username) }}"readonly>
-                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/{{ Auth::user()->username }}')">
+                    <input type="text" class="url-input"value="My Linkan: <?php echo e(url('linkan.id/' . Auth::user()->username)); ?>"readonly>
+                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/<?php echo e(Auth::user()->username); ?>')">
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>
             </div>
 
-          <form method="POST" action="{{ route('appearance.update') }}" enctype="multipart/form-data">
-    @csrf
+          <form method="POST" action="<?php echo e(route('appearance.update')); ?>" enctype="multipart/form-data">
+    <?php echo csrf_field(); ?>
                 <div class="content-section">
                     <div class="left-panel">
                         <!-- Banner -->
                         <div class="card">
                             <h2 class="card-title">Banner</h2>
                             <div class="banner-section">
-@if($appearance && $appearance->banner)
-    <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner"
+<?php if($appearance && $appearance->banner): ?>
+    <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner"
          style="width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;" id="previewBanner">
     <input type="hidden" name="delete_banner" id="deleteBanner" value="0">
     <button type="button" onclick="confirmDeleteBanner()" class="upload-button" style="background-color: red; color: white;">
         Hapus Banner
     </button>
-@else
+<?php else: ?>
     <i class="fas fa-image"></i>
     <p class="banner-text">Optimize banner size 1056 x 638 px</p>
-@endif
+<?php endif; ?>
 <input type="file" name="banner" id="bannerInput" style="display: none;" accept="image/*">
 <button type="button" class="upload-button" onclick="document.getElementById('bannerInput').click()">Upload Image</button>
                             </div>
@@ -530,23 +530,23 @@
                             <h2 class="card-title">Profile</h2>
                             <div class="profile-section">
                                <div class="profile-image" onclick="openProfilePopup()">
-                                    @if($appearance && $appearance->profile_image)
-                                        <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile" id="previewProfileImage">
-                                    @else
+                                    <?php if($appearance && $appearance->profile_image): ?>
+                                        <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" id="previewProfileImage">
+                                    <?php else: ?>
                                         <i class="fas fa-user" id="defaultProfileIcon"></i>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                                 <input type="file" name="profile_image" id="profileImageInput" style="display: none;" accept="image/*">
-                                <input type="text" name="name" class="profile-name" placeholder="Your Name" value="{{ $appearance ? $appearance->name : Auth::user()->name }}" id="inputName">
+                                <input type="text" name="name" class="profile-name" placeholder="Your Name" value="<?php echo e($appearance ? $appearance->name : Auth::user()->name); ?>" id="inputName">
                                 <div class="bio-section">
-                                    <textarea name="bio" placeholder="Write your bio here..." id="inputBio">{{ $appearance ? $appearance->bio : '' }}</textarea>
+                                    <textarea name="bio" placeholder="Write your bio here..." id="inputBio"><?php echo e($appearance ? $appearance->bio : ''); ?></textarea>
                                 </div>
                                 <!-- 🎨 Color Picker -->
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
     <label for="colorPicker">Customize Color:</label>
-    <input type="color" id="colorPicker" name="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
+    <input type="color" id="colorPicker" name="themeColor" value="<?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>">
 
-   <input type="hidden" name="theme_color" id="themeColor" value="{{ $appearance ? $appearance->theme_color : '#FF9040' }}">
+   <input type="hidden" name="theme_color" id="themeColor" value="<?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>">
 </div>
 
                             </div>
@@ -557,10 +557,9 @@
 
     <!-- Tombol Pilih Platform -->
     <div id="social-buttons" style="margin-bottom: 10px;">
-        @foreach(['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord'] as $platform)
-            <button type="button" class="social-btn" data-platform="{{ $platform }}">
-                <i class="{{
-                    [
+        <?php $__currentLoopData = ['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $platform): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <button type="button" class="social-btn" data-platform="<?php echo e($platform); ?>">
+                <i class="<?php echo e([
                         'instagram'=>'fab fa-instagram',
                         'tiktok'=>'fab fa-tiktok',
                         'whatsapp'=>'fab fa-whatsapp',
@@ -572,20 +571,19 @@
                         'telegram'=>'fab fa-telegram',
                         'email'=>'fas fa-envelope',
                         'discord'=>'fab fa-discord'
-                    ][$platform]
-                }}"></i>
-                {{ ucfirst($platform) }}
+                    ][$platform]); ?>"></i>
+                <?php echo e(ucfirst($platform)); ?>
+
             </button>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 
     <!-- Input yang akan muncul -->
     <div id="social-link-inputs">
-        @foreach(['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord'] as $platform)
-            <div class="social-input" data-platform="{{ $platform }}"
-                 style="{{ ($appearance && $appearance->$platform) ? '' : 'display:none;' }}">
-                <i class="{{
-                    [
+        <?php $__currentLoopData = ['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $platform): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="social-input" data-platform="<?php echo e($platform); ?>"
+                 style="<?php echo e(($appearance && $appearance->$platform) ? '' : 'display:none;'); ?>">
+                <i class="<?php echo e([
                         'instagram'=>'fab fa-instagram',
                         'tiktok'=>'fab fa-tiktok',
                         'whatsapp'=>'fab fa-whatsapp',
@@ -597,18 +595,17 @@
                         'telegram'=>'fab fa-telegram',
                         'email'=>'fas fa-envelope',
                         'discord'=>'fab fa-discord'
-                    ][$platform]
-                }}"></i>
+                    ][$platform]); ?>"></i>
                 <input
-                    type="{{ $platform=='email' ? 'email' : 'url' }}"
-                    id="input{{ ucfirst($platform) }}"
-                    name="{{ $platform }}"
-                    placeholder="{{ ucfirst($platform) }} {{ $platform=='email' ? 'Address' : 'URL' }}"
-                    value="{{ $appearance->$platform ?? '' }}"
+                    type="<?php echo e($platform=='email' ? 'email' : 'url'); ?>"
+                    id="input<?php echo e(ucfirst($platform)); ?>"
+                    name="<?php echo e($platform); ?>"
+                    placeholder="<?php echo e(ucfirst($platform)); ?> <?php echo e($platform=='email' ? 'Address' : 'URL'); ?>"
+                    value="<?php echo e($appearance->$platform ?? ''); ?>"
                 >
                 <button type="button" class="remove-social" title="Hapus">&times;</button>
             </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
 
@@ -619,25 +616,26 @@
     <div class="theme-options" id="themeOptions"
          style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
 
-        @php
+        <?php
             $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png','sunset.png', 'mountain.png','library.png','news paper.png'];
-        @endphp
+        ?>
 
-        @foreach ($themes as $theme)
+        <?php $__currentLoopData = $themes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $theme): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div style="text-align: center;">
-                <img src="{{ asset('images/previewt/' . $theme) }}"
-                     data-bg="{{ asset('images/background/' . $theme) }}"
-                     data-name="{{ $theme }}"
+                <img src="<?php echo e(asset('images/previewt/' . $theme)); ?>"
+                     data-bg="<?php echo e(asset('images/background/' . $theme)); ?>"
+                     data-name="<?php echo e($theme); ?>"
                      class="theme-preview"
                      style="width: 100px; height: 70px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 8px; transition: transform 0.2s;">
                 <div style="font-size: 13px; margin-top: 6px; color: #333;">
-                    {{ ucwords(str_replace(['-', '_'], ' ', pathinfo($theme, PATHINFO_FILENAME))) }}
+                    <?php echo e(ucwords(str_replace(['-', '_'], ' ', pathinfo($theme, PATHINFO_FILENAME)))); ?>
+
                 </div>
             </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     </div>
-    <input type="hidden" name="background_color" id="backgroundColor" value="{{ $appearance ? $appearance->background_color : '' }}">
+    <input type="hidden" name="background_color" id="backgroundColor" value="<?php echo e($appearance ? $appearance->background_color : ''); ?>">
 </div>
 
 
@@ -653,15 +651,15 @@
     <div class="popup-content">
         <span class="close-btn" onclick="closeProfilePopup()">&times;</span>
         
-        @if($appearance && $appearance->profile_image)
+        <?php if($appearance && $appearance->profile_image): ?>
             <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Upload Image</button>
            <input type="hidden" name="delete_profile_image" id="deleteProfileImage" value="0">
     <button type="button" onclick="confirmDeleteProfileImage()" class="upload-button" style="background-color: red; color: white; margin-top: 10px;">
         Hapus Foto Profil
     </button>
-        @else
+        <?php else: ?>
             <button type="button" class="upload-button" onclick="document.getElementById('profileImageInput').click()">Upload Image</button>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
@@ -676,57 +674,57 @@
                            <h2 class="card-priview">Preview</h2>
                         </div>
                             <div class="preview-phone" style="width: 375px; height: 812px; border-radius: 40px; padding: 20px; background: white; position: relative; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                                <div class="preview-screen" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}'); background-size: cover; background-position: center;">
-                                    @if($appearance && $appearance->banner)
+                                <div class="preview-screen" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('<?php echo e($appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : ''); ?>'); background-size: cover; background-position: center;">
+                                    <?php if($appearance && $appearance->banner): ?>
                                         <div class="preview-banner" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">
-                                            <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                                            <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                     <div class="preview-profile" id="previewPhoneProfile" style="width: 80px; height: 80px; border-radius: 50%; background: #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                                        @if($appearance && $appearance->profile_image)
-                                            <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                                        @else
+                                        <?php if($appearance && $appearance->profile_image): ?>
+                                            <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                                        <?php else: ?>
                                             <i class="fas fa-user"></i>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="preview-name" id="livePreviewName" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
-                                    <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;">{{ $appearance ? $appearance->bio : '' }}</div>
+                                    <div class="preview-name" id="livePreviewName" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance ? $appearance->name : Auth::user()->name); ?></div>
+                                    <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;"><?php echo e($appearance ? $appearance->bio : ''); ?></div>
                                     <div class="preview-social-links" id="livePreviewSocialLinks" style="display: flex; gap: 15px; margin-bottom: 20px;">
-                                        @if($appearance && $appearance->instagram)
-                                            <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
-                                        @endif
-                                        @if($appearance && $appearance->tiktok)
-                                            <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
-                                        @endif
-                                        @if($appearance && $appearance->whatsapp)
-                                            <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
-                                        @endif
+                                        <?php if($appearance && $appearance->instagram): ?>
+                                            <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                        <?php endif; ?>
+                                        <?php if($appearance && $appearance->tiktok): ?>
+                                            <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                        <?php endif; ?>
+                                        <?php if($appearance && $appearance->whatsapp): ?>
+                                            <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                        <?php endif; ?>
                                     </div>
-                                    @if($appearance && $appearance->description)
-                                        <div class="preview-bio" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->description }}</div>
-                                    @endif
-                                    @if($appearance && $appearance->link)
-                                        <a href="{{ $appearance->link }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance->button_text ?? 'Beli' }}</a>
-                                    @endif
-                                    @if($digitalProducts && $digitalProducts->count() > 0)
+                                    <?php if($appearance && $appearance->description): ?>
+                                        <div class="preview-bio" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->description); ?></div>
+                                    <?php endif; ?>
+                                    <?php if($appearance && $appearance->link): ?>
+                                        <a href="<?php echo e($appearance->link); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->button_text ?? 'Beli'); ?></a>
+                                    <?php endif; ?>
+                                    <?php if($digitalProducts && $digitalProducts->count() > 0): ?>
                                         <div class="preview-products" style="width: 100%; padding: 10px; display: flex; flex-direction: column; gap: 10px;">
-                                            @foreach($digitalProducts as $product)
+                                            <?php $__currentLoopData = $digitalProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <div class="preview-product-item" style="background: white; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
                                                     <div class="preview-product-image" style="width: 40px; height: 40px; background: #FFE5D3; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                                                        @if($product->image)
-                                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                                        @else
+                                                        <?php if($product->image): ?>
+                                                            <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                                        <?php else: ?>
                                                             <i class="fas fa-file-alt"></i>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </div>
                                                     <div class="preview-product-info" style="flex: 1; min-width: 0;">
-                                                        <div class="preview-product-title" style="font-size: 14px; color: #333; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $product->title }}</div>
+                                                        <div class="preview-product-title" style="font-size: 14px; color: #333; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo e($product->title); ?></div>
                                                     </div>
-                                                    <a href="{{ route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#']) }}" class="preview-product-button" style="background-color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer; transition: background-color 0.3s ease; flex-shrink: 0; min-width: 100px; text-align: center; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none;" target="_blank">{{ $product->button_text ?? 'Beli' }}</a>
+                                                    <a href="<?php echo e(route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#'])); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer; transition: background-color 0.3s ease; flex-shrink: 0; min-width: 100px; text-align: center; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none;" target="_blank"><?php echo e($product->button_text ?? 'Beli'); ?></a>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
 
@@ -752,7 +750,7 @@ function closeProfilePopup() {
 }
     function confirmDeleteBanner() {
         if (confirm("Yakin ingin menghapus banner?")) {
-            const form = document.querySelector('form[action="{{ route('appearance.update') }}"]');
+            const form = document.querySelector('form[action="<?php echo e(route('appearance.update')); ?>"]');
             document.getElementById('deleteBanner').value = 1;
             form.submit();
         }
@@ -862,7 +860,7 @@ document.querySelectorAll('.social-btn').forEach(btn => {
         if (el) el.addEventListener('input', updateSocialPreview);
     });
     // Terapkan background dari database saat halaman dimuat ulang
-const currentBackground = "{{ $appearance ? $appearance->background_color : '' }}";
+const currentBackground = "<?php echo e($appearance ? $appearance->background_color : ''); ?>";
 if (currentBackground) {
     const matchedTheme = document.querySelector(`.theme-preview[data-name="${currentBackground}"]`);
     if (matchedTheme) {
@@ -1030,3 +1028,4 @@ function updateSocialPreview() {
 
 </body>
 </html>
+<?php /**PATH C:\Users\dhefa\OneDrive\Desktop\LINKAN_ID\resources\views/homeadminS/appearance.blade.php ENDPATH**/ ?>
