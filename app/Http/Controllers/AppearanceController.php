@@ -50,10 +50,13 @@ class AppearanceController extends Controller
             $appearance->user_id = $user->id;
         }
           // Cek jika ada request untuk menghapus banner
- if ($request->input('delete_banner') == "1" && $appearance->banner) {
-    Storage::delete('public/' . $appearance->banner);
-    $appearance->banner = null;
+if ($request->input('delete_banner') == 1) {
+    if ($appearance && $appearance->banner) {
+        Storage::delete($appearance->banner);
+        $appearance->banner = null;
+    }
 }
+
 
 if ($request->has('delete_profile_image') && $request->delete_profile_image == 1) {
     // Hapus file lama
