@@ -184,7 +184,7 @@
         </div>
 
         <div class="preview-name"><?php echo e($appearance->name ?? $user->name); ?></div>
-        <div class="preview-bio"><?php echo e($appearance->bio); ?></div>
+        <div class="preview-bio"><?php echo $appearance->bio; ?></div>
 
              <div class="preview-social-links" id="livePreviewSocialLinks">
                                      <?php if($appearance && $appearance->instagram): ?>

@@ -466,25 +466,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Sale Price (Optional)</label>
-                        <input type="text" name="sale_price" id="salePriceInput" class="form-control" placeholder="Rp 0" value="<?php echo e(isset($product) && $product->sale_price ? 'Rp ' . number_format($product->sale_price, 0, ',', '.') : old('sale_price')); ?>">
-                        <input type="hidden" name="sale_price_raw" id="salePriceRaw" value="<?php echo e(isset($product) ? $product->sale_price : old('sale_price')); ?>">
-                    </div>
-
-                    <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <label style="margin: 0;">Item Quantity</label>
-                            <input type="hidden" name="has_quantity_limit" value="0">
-                            <label class="toggle-switch">
-                                <input type="checkbox" name="has_quantity_limit" value="1" <?php echo e((isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'checked' : ''); ?>>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <div id="quantityStatus" style="color: #666; margin-bottom: 10px; display: <?php echo e((isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'none' : 'block'); ?>;">Unlimited</div>
-                        <input type="number" name="quantity" class="form-control" placeholder="Enter maximum quantity" style="display: <?php echo e((isset($product) && $product->has_quantity_limit) || old('has_quantity_limit') ? 'block' : 'none'); ?>;" value="<?php echo e(isset($product) ? $product->quantity : old('quantity')); ?>">
-                    </div>
-
-                    <div class="form-group">
                         <label>Purchase Button</label>
                         <select name="button_text" class="select-dropdown">
                             <option value="buy_now" <?php echo e((isset($product) && $product->button_text == 'buy_now') || old('button_text') == 'buy_now' ? 'selected' : ''); ?>>Buy Now</option>
@@ -550,32 +531,6 @@
             }
         });
 
-        // Sale price input formatting
-        const salePriceInput = document.getElementById('salePriceInput');
-        const salePriceRaw = document.getElementById('salePriceRaw');
-
-        salePriceInput.addEventListener('input', function(e) {
-            let value = e.target.value;
-            let unformatted = unformatRupiah(value);
-            
-            if (unformatted !== '') {
-                let formatted = formatRupiah(unformatted);
-                e.target.value = formatted;
-                salePriceRaw.value = unformatted;
-            } else {
-                e.target.value = '';
-                salePriceRaw.value = '';
-            }
-        });
-
-        salePriceInput.addEventListener('blur', function(e) {
-            let value = e.target.value;
-            if (value === '' || value === 'Rp ') {
-                e.target.value = '';
-                salePriceRaw.value = '';
-            }
-        });
-
         // Image preview
         document.getElementById('productImage').addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
@@ -615,24 +570,6 @@
                 }
             });
         });
-
-        // Toggle quantity input
-        const quantityToggle = document.querySelector('input[name="has_quantity_limit"]');
-        const quantityInput = document.querySelector('input[name="quantity"]');
-        const quantityStatus = document.querySelector('#quantityStatus');
-
-        function toggleQuantityInput() {
-            if (quantityToggle.checked) {
-                quantityInput.style.display = 'block';
-                quantityStatus.style.display = 'none';
-            } else {
-                quantityInput.style.display = 'none';
-                quantityStatus.style.display = 'block';
-            }
-        }
-
-        toggleQuantityInput(); // run on page load
-        quantityToggle.addEventListener('change', toggleQuantityInput);
     </script>
 </body>
 </html>
