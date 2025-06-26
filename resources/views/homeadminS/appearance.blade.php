@@ -29,6 +29,7 @@
             flex: 1;
             padding: 20px;
             margin-left: 250px;
+            margin-right: 440px; /* Lebar preview + jarak */
         }
 
         .url-section {
@@ -208,13 +209,25 @@
             background: #eee;
             padding: 20px;
             border-radius: 10px;
-            width: 400px; /* Lebar yang lebih besar */
-            height: fit-content;
-            position: sticky;
+            width: 400px;
+            position: fixed;
             top: 20px;
+            right: 20px;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+
+        @media (max-width: 1200px) {
+            .preview-section {
+                position: static;
+                width: 100%;
+                max-width: 100vw;
+                right: unset;
+                top: unset;
+                margin-top: 20px;
+            }
         }
 
         .preview-phone {
