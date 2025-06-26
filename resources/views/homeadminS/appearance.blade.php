@@ -750,329 +750,271 @@
         </div>
     </div>
 <script>
-    function openProfilePopup() {
-    document.getElementById('profilePopup').style.display = 'flex';
-}
+// Semua script dalam satu blok DOMContentLoaded
 
-function closeProfilePopup() {
-    document.getElementById('profilePopup').style.display = 'none';
-}
-
-    function confirmDeleteProfileImage() {
-    if (confirm('Yakin ingin menghapus foto profil?')) {
-        document.getElementById('deleteProfileImage').value = 1;
-     document.getElementById('appearanceForm').submit();
-
-    }
-}
-    function confirmDeleteBanner() {
-        if (confirm("Yakin ingin menghapus banner?")) {
-            const form = document.querySelector('form[action="{{ route('appearance.update') }}"]');
-            document.getElementById('deleteBanner').value = 1;
-            form.submit();
-        }
-    }
-function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('Link copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
-        }
 document.addEventListener('DOMContentLoaded', function () {
+    // --- Quill.js ---
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: 'Tulis bio Anda di sini...',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link'],
+                ['clean']
+            ]
+        },
+        bounds: '#editor'
+    });
+    quill.on('text-change', function() {
+        const content = quill.root.innerHTML;
+        const previewBio = document.getElementById('livePreviewBio');
+        if (previewBio) previewBio.innerHTML = content;
+        const bioInput = document.getElementById('bioInput');
+        if (bioInput) bioInput.value = content;
+    });
+
+    // --- Color Picker & Theme Color ---
     const colorPicker = document.getElementById('colorPicker');
     const themeColorInput = document.getElementById('themeColor');
-    const backgroundColorInput = document.getElementById('backgroundColor');
     const previewName = document.getElementById('livePreviewName');
     const previewBio = document.getElementById('livePreviewBio');
     const previewButtons = document.querySelectorAll('.preview-product-button');
     const previewSocialLinks = document.getElementById('livePreviewSocialLinks');
-    const saveButton = document.querySelector('.save-button');
- // Placeholder sesuai platform
-const placeholderMap = {
-    instagram: 'https://instagram.com/',
-    tiktok: 'https://tiktok.com/',
-    whatsapp: 'https://wa.me/08xxxxxxxxxx',
-    linkedin: 'https://linkedin.com/in/username',
-    facebook: 'https://facebook.com/username',
-    website: 'https://yourwebsite.com',
-    twitter: 'https://twitter.com/username',
-    youtube: 'https://youtube.com/@channel',
-    telegram: 'https://t.me/username',
-    email: 'Your email',
-    discord: 'https://discord.gg/invitecode'
-};
-
-// Toggle tampil input saat klik tombol platform
-document.querySelectorAll('.social-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const p = btn.dataset.platform;
-        const inputDiv = document.querySelector(`.social-input[data-platform="${p}"]`);
-        
-        if (inputDiv) {
-            // Toggle tampilkan/hidden input
-            inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
-
-            // Ambil elemen input dan set placeholder sesuai map
-            const input = inputDiv.querySelector('input');
-            if (input && placeholderMap[p]) {
-                input.placeholder = placeholderMap[p];
-            }
-            updateSocialPreview();
-    updatePreviewColor(document.getElementById('themeColor').value);
-        }
-    });
-});
-
-
-    // Hapus satu social-input
-    document.querySelectorAll('.remove-social').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const div = btn.closest('.social-input');
-            if (div) {
-                // kosongkan nilai dan sembunyikan
-                const inp = div.querySelector('input');
-                inp.value = '';
-                div.style.display = 'none';
-            }
-        });
-    });
-
-    // Live preview (sama cara Anda pakai untuk Instagram)
-    function updateSocialPreview() {
-        const container = document.getElementById('livePreviewSocialLinks');
-        container.innerHTML = '';
-
-        ['instagram','tiktok','whatsapp','linkedin','facebook','website','twitter','youtube','telegram','email','discord']
-        .forEach(p => {
-            const val = document.getElementById(`input${p.charAt(0).toUpperCase()+p.slice(1)}`).value;
-            if (val) {
-                const icon = document.createElement('i');
-                icon.className = {
-                    instagram: 'fab fa-instagram',
-                    tiktok:    'fab fa-tiktok',
-                    whatsapp:  'fab fa-whatsapp',
-                    linkedin:  'fab fa-linkedin',
-                    facebook:  'fab fa-facebook',
-                    website:   'fas fa-globe',
-                    twitter:   'fab fa-twitter',
-                    youtube:   'fab fa-youtube',
-                    telegram:  'fab fa-telegram',
-                    email:     'fas fa-envelope',
-                    discord:   'fab fa-discord'
-                }[p];
-                const a = document.createElement('a');
-                a.href = val;
-                a.target = '_blank';
-                a.appendChild(icon);
-                container.appendChild(a);
-            }
-        });
-    }
-
-    // Bind event untuk semua input
-    ['Instagram','Tiktok','Whatsapp','Linkedin','Facebook','Website','Twitter','Youtube','Telegram','Email','Discord']
-    .forEach(name => {
-        const el = document.getElementById(`input${name}`);
-        if (el) el.addEventListener('input', updateSocialPreview);
-    });
-    // Terapkan background dari database saat halaman dimuat ulang
-const currentBackground = "{{ $appearance ? $appearance->background_color : '' }}";
-if (currentBackground) {
-    const matchedTheme = document.querySelector(`.theme-preview[data-name="${currentBackground}"]`);
-    if (matchedTheme) {
-        const bgUrl = matchedTheme.getAttribute('data-bg');
-        const previewScreen = document.getElementById('previewScreen');
-        previewScreen.style.backgroundImage = `url('${bgUrl}')`;
-        previewScreen.style.backgroundSize = 'cover';
-        previewScreen.style.backgroundPosition = 'center';
-
-        // Tambahkan border aktif
-        matchedTheme.style.border = "2px solid #FF9040";
-    }
-}
-
-
     function updatePreviewColor(color) {
-        previewName.style.color = color;
-        previewBio.style.color = color;
+        if (previewName) previewName.style.color = color;
+        if (previewBio) previewBio.style.color = color;
         previewButtons.forEach(btn => btn.style.backgroundColor = color);
-        themeColorInput.value = color;
-        colorPicker.value = color;
-
+        if (themeColorInput) themeColorInput.value = color;
+        if (colorPicker) colorPicker.value = color;
         if (previewSocialLinks) {
             previewSocialLinks.querySelectorAll('a i').forEach(icon => {
                 icon.style.color = color;
             });
         }
     }
-
-    colorPicker.addEventListener('input', function () {
-        updatePreviewColor(this.value);
-    });
-
-    updatePreviewColor(themeColorInput.value);
-
-    // Preview banner
-   document.getElementById('bannerInput').addEventListener('change', function(e) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        // Ganti preview di form (atas)
-        let img = document.getElementById('previewBanner');
-        if (img) {
-            img.src = event.target.result;
-        } else {
-            // Jika sebelumnya tidak ada banner, buat elemen img baru
-            const bannerSection = document.querySelector('.banner-section');
-            img = document.createElement('img');
-            img.id = 'previewBanner';
-            img.src = event.target.result;
-            img.alt = 'Banner';
-            img.style = "width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;";
-            // Sisipkan sebelum tombol upload
-            bannerSection.insertBefore(img, bannerSection.querySelector('button.upload-button'));
-        }
-
-        // Ganti preview di phone (kanan)
-        let phoneBanner = document.querySelector('.preview-banner img');
-        if (phoneBanner) {
-            phoneBanner.src = event.target.result;
-        } else {
-            // Jika belum ada, buat elemen baru di preview-screen
-            const previewScreen = document.getElementById('previewScreen');
-            let previewBannerDiv = previewScreen.querySelector('.preview-banner');
-            if (!previewBannerDiv) {
-                previewBannerDiv = document.createElement('div');
-                previewBannerDiv.className = 'preview-banner';
-                previewBannerDiv.style = "width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;";
-                previewScreen.insertBefore(previewBannerDiv, previewScreen.firstChild);
-            }
-            const newImg = document.createElement('img');
-            newImg.src = event.target.result;
-            newImg.alt = 'Banner';
-            newImg.style = "width: 100%; height: 100%; object-fit: cover;";
-            previewBannerDiv.innerHTML = '';
-            previewBannerDiv.appendChild(newImg);
-        }
-    };
-    reader.readAsDataURL(e.target.files[0]);
-});
-
-    // Preview profile image
-    document.getElementById('profileImageInput').addEventListener('change', function(e) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            const previewProfile = document.getElementById('previewPhoneProfile');
-            previewProfile.innerHTML = `<img src="${event.target.result}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">`;
-            document.querySelector('.profile-image').innerHTML = `<img src="${event.target.result}" alt="Profile">`;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    });
-
-    // Live preview name and bio
-    document.getElementById('inputName').addEventListener('input', function() {
-        previewName.textContent = this.value;
-    });
-    document.getElementById('inputBio').addEventListener('input', function() {
-        previewBio.textContent = this.value;
-    });
-
-   // Live preview social links
-function updateSocialPreview() {
-    const platforms = [
-        { id: 'inputInstagram', icon: 'fab fa-instagram' },
-        { id: 'inputTiktok', icon: 'fab fa-tiktok' },
-        { id: 'inputWhatsapp', icon: 'fab fa-whatsapp' },
-        { id: 'inputLinkedin', icon: 'fab fa-linkedin' },
-        { id: 'inputFacebook', icon: 'fab fa-facebook' },
-        { id: 'inputWebsite', icon: 'fas fa-globe' },
-        { id: 'inputTwitter', icon: 'fab fa-twitter' },
-        { id: 'inputYoutube', icon: 'fab fa-youtube' },
-        { id: 'inputTelegram', icon: 'fab fa-telegram' },
-        { id: 'inputEmail', icon: 'fas fa-envelope', isEmail: true },
-        { id: 'inputDiscord', icon: 'fab fa-discord' },
-    ];
-
-    const container = document.getElementById('livePreviewSocialLinks');
-    container.innerHTML = '';
-
-    platforms.forEach(platform => {
-        const input = document.getElementById(platform.id);
-        if (input && input.value) {
-            const href = platform.isEmail ? `mailto:${input.value}` : input.value;
-            container.innerHTML += `<a href="${href}" target="_blank"><i class="${platform.icon}"></i></a>`;
-        }
-    });
-}
-
-// Tambahkan event listener untuk semua input
-[
-    'inputInstagram', 'inputTiktok', 'inputWhatsapp', 'inputLinkedin',
-    'inputFacebook', 'inputWebsite', 'inputTwitter', 'inputYoutube',
-    'inputTelegram', 'inputEmail', 'inputDiscord'
-].forEach(id => {
-    const input = document.getElementById(id);
-    if (input) {
-        input.addEventListener('input', updateSocialPreview);
+    if (colorPicker) {
+        colorPicker.addEventListener('input', function () {
+            updatePreviewColor(this.value);
+        });
     }
-});
+    if (themeColorInput) updatePreviewColor(themeColorInput.value);
 
+    // --- Live Preview Name ---
+    const inputName = document.getElementById('inputName');
+    if (inputName && previewName) {
+        inputName.addEventListener('input', function() {
+            previewName.textContent = this.value;
+        });
+    }
 
-    // Pilihan background tema (gambar)
+    // --- Social Links ---
+    const placeholderMap = {
+        instagram: 'https://instagram.com/',
+        tiktok: 'https://tiktok.com/',
+        whatsapp: 'https://wa.me/08xxxxxxxxxx',
+        linkedin: 'https://linkedin.com/in/username',
+        facebook: 'https://facebook.com/username',
+        website: 'https://yourwebsite.com',
+        twitter: 'https://twitter.com/username',
+        youtube: 'https://youtube.com/@channel',
+        telegram: 'https://t.me/username',
+        email: 'Your email',
+        discord: 'https://discord.gg/invitecode'
+    };
+    // Toggle tampil input saat klik tombol platform
+    document.querySelectorAll('.social-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const p = btn.dataset.platform;
+            const inputDiv = document.querySelector(`.social-input[data-platform="${p}"]`);
+            if (inputDiv) {
+                inputDiv.style.display = inputDiv.style.display === 'none' ? 'flex' : 'none';
+                const input = inputDiv.querySelector('input');
+                if (input && placeholderMap[p]) {
+                    input.placeholder = placeholderMap[p];
+                }
+                updateSocialPreview();
+                updatePreviewColor(themeColorInput.value);
+            }
+        });
+    });
+    // Hapus satu social-input
+    document.querySelectorAll('.remove-social').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const div = btn.closest('.social-input');
+            if (div) {
+                const inp = div.querySelector('input');
+                if (inp) inp.value = '';
+                div.style.display = 'none';
+                updateSocialPreview();
+            }
+        });
+    });
+    // Live preview social links
+    function updateSocialPreview() {
+        const platforms = [
+            { id: 'inputInstagram', icon: 'fab fa-instagram' },
+            { id: 'inputTiktok', icon: 'fab fa-tiktok' },
+            { id: 'inputWhatsapp', icon: 'fab fa-whatsapp' },
+            { id: 'inputLinkedin', icon: 'fab fa-linkedin' },
+            { id: 'inputFacebook', icon: 'fab fa-facebook' },
+            { id: 'inputWebsite', icon: 'fas fa-globe' },
+            { id: 'inputTwitter', icon: 'fab fa-twitter' },
+            { id: 'inputYoutube', icon: 'fab fa-youtube' },
+            { id: 'inputTelegram', icon: 'fab fa-telegram' },
+            { id: 'inputEmail', icon: 'fas fa-envelope', isEmail: true },
+            { id: 'inputDiscord', icon: 'fab fa-discord' },
+        ];
+        if (!previewSocialLinks) return;
+        previewSocialLinks.innerHTML = '';
+        platforms.forEach(platform => {
+            const input = document.getElementById(platform.id);
+            if (input && input.value) {
+                const href = platform.isEmail ? `mailto:${input.value}` : input.value;
+                previewSocialLinks.innerHTML += `<a href="${href}" target="_blank"><i class="${platform.icon}"></i></a>`;
+            }
+        });
+        // Update warna icon
+        updatePreviewColor(themeColorInput.value);
+    }
+    [
+        'inputInstagram', 'inputTiktok', 'inputWhatsapp', 'inputLinkedin',
+        'inputFacebook', 'inputWebsite', 'inputTwitter', 'inputYoutube',
+        'inputTelegram', 'inputEmail', 'inputDiscord'
+    ].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', updateSocialPreview);
+        }
+    });
+    updateSocialPreview();
+
+    // --- Banner Preview ---
+    const bannerInput = document.getElementById('bannerInput');
+    if (bannerInput) {
+        bannerInput.addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                let img = document.getElementById('previewBanner');
+                if (img) {
+                    img.src = event.target.result;
+                } else {
+                    const bannerSection = document.querySelector('.banner-section');
+                    img = document.createElement('img');
+                    img.id = 'previewBanner';
+                    img.src = event.target.result;
+                    img.alt = 'Banner';
+                    img.style = "width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;";
+                    bannerSection.insertBefore(img, bannerSection.querySelector('button.upload-button'));
+                }
+                let phoneBanner = document.querySelector('.preview-banner img');
+                if (phoneBanner) {
+                    phoneBanner.src = event.target.result;
+                } else {
+                    const previewScreen = document.getElementById('previewScreen');
+                    let previewBannerDiv = previewScreen.querySelector('.preview-banner');
+                    if (!previewBannerDiv) {
+                        previewBannerDiv = document.createElement('div');
+                        previewBannerDiv.className = 'preview-banner';
+                        previewBannerDiv.style = "width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;";
+                        previewScreen.insertBefore(previewBannerDiv, previewScreen.firstChild);
+                    }
+                    const newImg = document.createElement('img');
+                    newImg.src = event.target.result;
+                    newImg.alt = 'Banner';
+                    newImg.style = "width: 100%; height: 100%; object-fit: cover;";
+                    previewBannerDiv.innerHTML = '';
+                    previewBannerDiv.appendChild(newImg);
+                }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    }
+
+    // --- Profile Image Preview ---
+    const profileImageInput = document.getElementById('profileImageInput');
+    if (profileImageInput) {
+        profileImageInput.addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const previewProfile = document.getElementById('previewPhoneProfile');
+                if (previewProfile) previewProfile.innerHTML = `<img src="${event.target.result}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">`;
+                const profileImage = document.querySelector('.profile-image');
+                if (profileImage) profileImage.innerHTML = `<img src="${event.target.result}" alt="Profile">`;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        });
+    }
+
+    // --- Theme Pilihan (Background Gambar) ---
+    const backgroundColorInput = document.getElementById('backgroundColor');
+    const previewScreen = document.getElementById('previewScreen');
+    // Terapkan background dari database saat halaman dimuat ulang
+    const currentBackground = backgroundColorInput ? backgroundColorInput.value : '';
+    if (currentBackground) {
+        const matchedTheme = document.querySelector(`.theme-preview[data-name="${currentBackground}"]`);
+        if (matchedTheme && previewScreen) {
+            const bgUrl = matchedTheme.getAttribute('data-bg');
+            previewScreen.style.backgroundImage = `url('${bgUrl}')`;
+            previewScreen.style.backgroundSize = 'cover';
+            previewScreen.style.backgroundPosition = 'center';
+            matchedTheme.style.border = "2px solid #FF9040";
+        }
+    }
     document.querySelectorAll('.theme-preview').forEach(img => {
         img.addEventListener('click', function () {
             const bgUrl = this.getAttribute('data-bg');
             const bgName = this.getAttribute('data-name');
-
-            // Simpan nilai ke input hidden
-            backgroundColorInput.value = bgName;
-
-            // Terapkan background ke preview
-            const previewScreen = document.getElementById('previewScreen');
-            previewScreen.style.backgroundImage = `url('${bgUrl}')`;
-            previewScreen.style.backgroundSize = 'cover';
-            previewScreen.style.backgroundPosition = 'center';
-
-            // Tambahkan border active
+            if (backgroundColorInput) backgroundColorInput.value = bgName;
+            if (previewScreen) {
+                previewScreen.style.backgroundImage = `url('${bgUrl}')`;
+                previewScreen.style.backgroundSize = 'cover';
+                previewScreen.style.backgroundPosition = 'center';
+            }
             document.querySelectorAll('.theme-preview').forEach(tp => {
                 tp.style.border = "2px solid transparent";
             });
             this.style.border = "2px solid #FF9040";
         });
     });
-});
 
-// Initialize Quill.js
-var quill = new Quill('#editor', {
-    theme: 'snow',
-    placeholder: 'Tulis bio Anda di sini...',
-    modules: {
-        toolbar: [
-            ['bold', 'italic', 'underline'],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['link'],
-            ['clean']
-        ]
-    },
-    bounds: '#editor'
-});
+    // --- Copy to Clipboard ---
+    window.copyToClipboard = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
 
-// Real-time preview update
-quill.on('text-change', function() {
-    const content = quill.root.innerHTML;
-    document.getElementById('livePreviewBio').innerHTML = content;
-    
-    // Update hidden input untuk form submission
-    document.getElementById('bioInput').value = content;
+    // --- Popup Profile ---
+    window.openProfilePopup = function() {
+        const popup = document.getElementById('profilePopup');
+        if (popup) popup.style.display = 'flex';
+    };
+    window.closeProfilePopup = function() {
+        const popup = document.getElementById('profilePopup');
+        if (popup) popup.style.display = 'none';
+    };
+    window.confirmDeleteProfileImage = function() {
+        if (confirm('Yakin ingin menghapus foto profil?')) {
+            const del = document.getElementById('deleteProfileImage');
+            if (del) del.value = 1;
+            const form = document.getElementById('appearanceForm');
+            if (form) form.submit();
+        }
+    };
+    window.confirmDeleteBanner = function() {
+        if (confirm('Yakin ingin menghapus banner?')) {
+            const form = document.getElementById('appearanceForm');
+            const del = document.getElementById('deleteBanner');
+            if (del) del.value = 1;
+            if (form) form.submit();
+        }
+    };
 });
-
-// Update existing event listener to work with Quill
-document.getElementById('inputName').addEventListener('input', function() {
-    previewName.textContent = this.value;
-});
-
-// Remove the old textarea event listener since Quill handles it
 </script>
 
 </body>
