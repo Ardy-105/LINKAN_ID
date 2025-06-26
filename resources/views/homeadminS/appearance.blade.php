@@ -6,6 +6,8 @@
     <title>Appearance - Linkan</title>
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -550,7 +552,8 @@
                                 <input type="file" name="profile_image" id="profileImageInput" style="display: none;" accept="image/*">
                                 <input type="text" name="name" class="profile-name" placeholder="Your Name" value="{{ $appearance ? $appearance->name : Auth::user()->name }}" id="inputName">
                                 <div class="bio-section">
-                                    <textarea name="bio" placeholder="Write your bio here..." id="inputBio">{{ $appearance ? $appearance->bio : '' }}</textarea>
+                                    <div id="editor" style="height: 150px; margin-bottom: 10px;">{!! $appearance ? $appearance->bio : '' !!}</div>
+                                    <input type="hidden" name="bio" id="bioInput" value="{{ $appearance ? $appearance->bio : '' }}">
                                 </div>
                                 <!-- 🎨 Color Picker -->
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
@@ -701,7 +704,7 @@
                                         @endif
                                     </div>
                                     <div class="preview-name" id="livePreviewName" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}">{{ $appearance ? $appearance->name : Auth::user()->name }}</div>
-                                    <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;">{{ $appearance ? $appearance->bio : '' }}</div>
+                                    <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;">{!! $appearance ? $appearance->bio : '' !!}</div>
                                     <div class="preview-social-links" id="livePreviewSocialLinks" style="display: flex; gap: 15px; margin-bottom: 20px;">
                                         @if($appearance && $appearance->instagram)
                                             <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram" style="color: {{ $appearance ? $appearance->theme_color : '#FF9040' }}"></i></a>
@@ -1038,6 +1041,38 @@ function updateSocialPreview() {
         });
     });
 });
+
+// Initialize Quill.js
+var quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'Tulis bio Anda di sini...',
+    modules: {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link'],
+            ['clean']
+        ]
+    },
+    bounds: '#editor'
+});
+
+// Real-time preview update
+quill.on('text-change', function() {
+    const content = quill.root.innerHTML;
+    document.getElementById('livePreviewBio').innerHTML = content;
+    
+    // Update hidden input untuk form submission
+    document.getElementById('bioInput').value = content;
+});
+
+// Update existing event listener to work with Quill
+document.getElementById('inputName').addEventListener('input', function() {
+    previewName.textContent = this.value;
+});
+
+// Remove the old textarea event listener since Quill handles it
 </script>
 
 </body>

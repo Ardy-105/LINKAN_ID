@@ -184,7 +184,7 @@
         </div>
 
         <div class="preview-name">{{ $appearance->name ?? $user->name }}</div>
-        <div class="preview-bio">{{ $appearance->bio }}</div>
+        <div class="preview-bio">{!! $appearance->bio !!}</div>
 
              <div class="preview-social-links" id="livePreviewSocialLinks">
                                      @if($appearance && $appearance->instagram)

@@ -700,7 +700,7 @@
                 </div>
                 <div class="preview-name" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance ? $appearance->name : Auth::user()->name); ?></div>
                 <?php if($appearance && $appearance->bio): ?>
-                    <div class="preview-bio" style="font-size: 14px; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;"><?php echo e($appearance->bio); ?></div>
+                    <div class="preview-bio" style="font-size: 14px; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;"><?php echo $appearance->bio; ?></div>
                 <?php endif; ?>
                 <div class="social-links" style="display: flex; gap: 15px; margin-bottom: 20px;">
                     <?php if($appearance && $appearance->instagram): ?>
