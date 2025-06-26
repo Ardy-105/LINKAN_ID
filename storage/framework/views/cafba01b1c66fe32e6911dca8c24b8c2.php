@@ -323,10 +323,14 @@
             <div class="account-section">
                 <div class="profile">
                     <div class="profile-image">
-                        <i class="fas fa-user"></i>
+                        <?php if($appearance && $appearance->profile_image): ?>
+                            <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        <?php else: ?>
+                            <i class="fas fa-user"></i>
+                        <?php endif; ?>
                     </div>
                     <div class="profile-info">
-                        <h3><?php echo e(Auth::user()->name); ?></h3>
+                        <h3><?php echo e($appearance && $appearance->name ? $appearance->name : Auth::user()->name); ?></h3>
                         <a href="<?php echo e(route('track.view', ['username' => Auth::user()->username])); ?>" style="color: #FF9040;">
                             <?php echo e(url('/linkan.id/' . Auth::user()->username)); ?>
 

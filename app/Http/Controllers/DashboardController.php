@@ -111,12 +111,16 @@ class DashboardController extends Controller
         \Log::info('currentBalance: ' . $currentBalance);
         \Log::info('lifetimeOrders: ' . $lifetimeOrders);
 
+        // Ambil data appearance untuk profile
+        $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
+
         return view('homeadminS.beranda', compact(
             'totalProducts',
             'totalViews',
             'totalClicks',
             'lifetimeOrders',
-            'totalEarnings'
+            'totalEarnings',
+            'appearance'
         ));
     }
 

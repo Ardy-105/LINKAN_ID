@@ -403,7 +403,7 @@
     <div class="product-description"><?php echo e($product->description); ?></div>
 
     <a href="<?php echo e(route('track.click', ['link_id' => $user->username, 'target' => $product->platform_url ?? '#'])); ?>" class="buy-button" target="_blank">
-        <?php echo e($product->button_text ?? 'Beli'); ?>
+        <?php echo e(str_replace('_', ' ', $product->button_text ?? 'Beli')); ?>
 
     </a>
 </div>
