@@ -284,7 +284,7 @@
         snap.pay('<?php echo e($snapToken); ?>', {
             onSuccess: function(result) {
                 console.log('Payment success:', result); // Log hasil pembayaran
-                Swal.fire('Sukses', 'Pembayaran berhasil! Silahkan cek Email Anda', 'success');
+                Swal.fire('Sukses', 'Pembayaran berhasil!', 'success');
                 paymentSelected = true;
                 transactionResult = result;
 
@@ -319,10 +319,10 @@
                     if (data.success) {
                         if (data.redirect) {
                             Swal.fire({
-                                title: 'Sukses',
-                                text: 'Pembayaran berhasil! Silahkan cek Email Anda',
+                                title: 'Produk Terkirim!',
+                                text: 'Produk digital telah dikirim ke email Anda. Silahkan cek inbox atau spam folder.',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'kembali ke halaman profile'
                             }).then(() => {
                                 window.location.href = data.redirect;
                             });

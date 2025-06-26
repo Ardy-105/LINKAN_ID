@@ -47,14 +47,23 @@ class OrderController extends Controller
         \Log::info('SQL Query: ' . $query->toSql());
         \Log::info('Query Bindings: ' . json_encode($query->getBindings()));
 
-        $transactions = $query->orderBy('created_at', 'desc')->get();
+        $transactions = $query->orderBy('created_at', 'desc')->paginate(5);
 
         // Debug: Log jumlah transaksi yang ditemukan
         \Log::info('Number of transactions found: ' . $transactions->count());
 
         if ($request->ajax()) {
             return response()->json([
-                'transactions' => $transactions,
+                'transactions' => $transactions->items(),
+                'pagination' => [
+                    'current_page' => $transactions->currentPage(),
+                    'last_page' => $transactions->lastPage(),
+                    'per_page' => $transactions->perPage(),
+                    'total' => $transactions->total(),
+                    'has_more_pages' => $transactions->hasMorePages(),
+                    'next_page_url' => $transactions->nextPageUrl(),
+                    'prev_page_url' => $transactions->previousPageUrl(),
+                ],
                 'debug' => [
                     'user_id' => $user->id,
                     'query' => $query->toSql(),

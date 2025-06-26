@@ -352,6 +352,7 @@
                     </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
+                
                 <div class="order-details" id="orderDetails">
                     <div class="empty-detail">
                         <div class="icon-detail">📋</div>
@@ -435,104 +436,156 @@
 
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(function() {
-                const status = $('#statusFilter').val();
-                const date = $('#dateFilter').val();
-                const search = $('#searchInput').val().trim();
+                loadOrders(1); // Reset ke halaman 1 saat filter berubah
+            }, 300);
+        });
 
-                // Tampilkan loading state
-                $('.product-orders').append('<div class="loading">Loading...</div>');
+        // Function to load orders with pagination
+        function loadOrders(page = 1) {
+            const status = $('#statusFilter').val();
+            const date = $('#dateFilter').val();
+            const search = $('#searchInput').val().trim();
 
-                // Hapus pesan "tidak ada transaksi" yang mungkin ada
-                $('.no-data, .error').remove();
+            // Tampilkan loading state
+            $('.product-orders').append('<div class="loading">Loading...</div>');
 
-                // Siapkan data untuk request
-                const requestData = {};
-                if (status) requestData.status = status;
-                if (date) requestData.date = date;
-                if (search) requestData.search = search;
+            // Hapus pesan "tidak ada transaksi" yang mungkin ada
+            $('.no-data, .error').remove();
 
-                // Kirim request ke server
-                $.ajax({
-                    url: '/homeadminS/orders',
-                    method: 'GET',
-                    data: requestData,
-                    success: function(response) {
-                        // Hapus loading state
-                        $('.loading').remove();
-                        
-                        // Update tampilan dengan data baru
-                        const $orderList = $('.product-orders');
-                        $orderList.find('.order-item').remove();
+            // Siapkan data untuk request
+            const requestData = { page: page };
+            if (status) requestData.status = status;
+            if (date) requestData.date = date;
+            if (search) requestData.search = search;
 
-                        if (response.transactions && response.transactions.length > 0) {
-                            response.transactions.forEach(function(transaction) {
-                                const statusClass = {
-                                    'success': 'status-success',
-                                    'failed': 'status-failed',
-                                    'pending': 'status-pending'
-                                }[transaction.status] || '';
+            // Kirim request ke server
+            $.ajax({
+                url: '/homeadminS/orders',
+                method: 'GET',
+                data: requestData,
+                success: function(response) {
+                    // Hapus loading state
+                    $('.loading').remove();
+                    
+                    // Update tampilan dengan data baru
+                    const $orderList = $('.product-orders');
+                    $orderList.find('.order-item').remove();
+                    $orderList.find('.pagination-container').remove();
 
-                                const html = `
-                                    <div class="order-item" data-id="${transaction.id}" data-status="${transaction.status}" data-date="${transaction.created_at}">
-                                        <img src="/storage/${transaction.product.image}" alt="${transaction.product.title}" class="product-image">
-                                        <div class="product-info">
-                                            <div class="product-title">${transaction.product.title}</div>
-                                            <div class="product-meta">
-                                                ${transaction.buyer_name} • ${new Date(transaction.created_at).toLocaleDateString()}
-                                            </div>
+                    if (response.transactions && response.transactions.length > 0) {
+                        response.transactions.forEach(function(transaction) {
+                            const statusClass = {
+                                'success': 'status-success',
+                                'failed': 'status-failed',
+                                'pending': 'status-pending'
+                            }[transaction.status] || '';
+
+                            const html = `
+                                <div class="order-item" data-id="${transaction.id}" data-status="${transaction.status}" data-date="${transaction.created_at}">
+                                    <img src="/storage/${transaction.product.image}" alt="${transaction.product.title}" class="product-image">
+                                    <div class="product-info">
+                                        <div class="product-title">${transaction.product.title}</div>
+                                        <div class="product-meta">
+                                            ${transaction.buyer_name} • ${new Date(transaction.created_at).toLocaleDateString()}
                                         </div>
-                                        <button class="btn-detail" onclick="loadOrderDetail(${transaction.id})">Detail</button>
                                     </div>
-                                `;
-                                $orderList.append(html);
-                            });
-                        } else {
-                            // Hapus semua order-item yang ada sebelum menampilkan pesan tidak ada data
-                            $('.order-item').remove();
-                            
-                            let debugInfo = '';
-                            if (response.debug) {
-                                debugInfo = `
-                                    <div class="debug-info">
-                                        <p>User ID: ${response.debug.user_id}</p>
-                                        <p>Query: ${response.debug.query}</p>
-                                        <p>Bindings: ${JSON.stringify(response.debug.bindings)}</p>
-                                        <p>Count: ${response.debug.count}</p>
-                                        <p>Active Filters:</p>
-                                        <ul>
-                                            ${Object.entries(response.debug.filters)
-                                                .filter(([_, value]) => value)
-                                                .map(([key, value]) => `<li>${key}: ${value}</li>`)
-                                                .join('')}
-                                        </ul>
+                                    <button class="btn-detail" onclick="loadOrderDetail(${transaction.id})">Detail</button>
+                                </div>
+                            `;
+                            $orderList.append(html);
+                        });
+
+                        // Add pagination controls
+                        if (response.pagination && response.pagination.last_page > 1) {
+                            const pagination = response.pagination;
+                            let paginationHtml = `
+                                <div class="pagination-container" style="margin-top: 20px; text-align: center;">
+                                    <div class="pagination-info" style="margin-bottom: 10px; color: #666; font-size: 14px;">
+                                        Showing ${((pagination.current_page - 1) * pagination.per_page) + 1} to ${Math.min(pagination.current_page * pagination.per_page, pagination.total)} of ${pagination.total} results
                                     </div>
-                                `;
+                                    <div class="pagination-links">
+                            `;
+
+                            // Previous button
+                            if (pagination.current_page > 1) {
+                                paginationHtml += `<a href="#" onclick="loadOrders(${pagination.current_page - 1}); return false;" class="pagination-link" style="padding: 8px 12px; margin: 0 5px; background: #FFA86A; color: white; text-decoration: none; border-radius: 5px;">Previous</a>`;
+                            } else {
+                                paginationHtml += `<span class="pagination-disabled" style="padding: 8px 12px; margin: 0 5px; background: #f5f5f5; color: #999; border-radius: 5px; cursor: not-allowed;">Previous</span>`;
                             }
-                            $orderList.append(`
-                                <div class="no-data">
-                                    <div class="empty-detail">
-                                        <div class="icon-detail">📋</div>
-                                        <p>Belum ada transaksi dengan status ini</p>
+
+                            // Page numbers
+                            for (let i = 1; i <= pagination.last_page; i++) {
+                                if (i == pagination.current_page) {
+                                    paginationHtml += `<span class="pagination-current" style="padding: 8px 12px; margin: 0 5px; background: #FF9040; color: white; border-radius: 5px;">${i}</span>`;
+                                } else {
+                                    paginationHtml += `<a href="#" onclick="loadOrders(${i}); return false;" class="pagination-link" style="padding: 8px 12px; margin: 0 5px; background: #f5f5f5; color: #666; text-decoration: none; border-radius: 5px;">${i}</a>`;
+                                }
+                            }
+
+                            // Next button
+                            if (pagination.has_more_pages) {
+                                paginationHtml += `<a href="#" onclick="loadOrders(${pagination.current_page + 1}); return false;" class="pagination-link" style="padding: 8px 12px; margin: 0 5px; background: #FFA86A; color: white; text-decoration: none; border-radius: 5px;">Next</a>`;
+                            } else {
+                                paginationHtml += `<span class="pagination-disabled" style="padding: 8px 12px; margin: 0 5px; background: #f5f5f5; color: #999; border-radius: 5px; cursor: not-allowed;">Next</span>`;
+                            }
+
+                            paginationHtml += `
                                     </div>
                                 </div>
-                            `);
+                            `;
+                            $orderList.append(paginationHtml);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('.loading').remove();
-                        $('.product-orders').append(`
-                            <div class="error">
-                                Error loading data
+                    } else {
+                        // Hapus semua order-item yang ada sebelum menampilkan pesan tidak ada data
+                        $('.order-item').remove();
+                        
+                        let debugInfo = '';
+                        if (response.debug) {
+                            debugInfo = `
                                 <div class="debug-info">
-                                    <p>Status: ${status}</p>
-                                    <p>Error: ${error}</p>
+                                    <p>User ID: ${response.debug.user_id}</p>
+                                    <p>Query: ${response.debug.query}</p>
+                                    <p>Bindings: ${JSON.stringify(response.debug.bindings)}</p>
+                                    <p>Count: ${response.debug.count}</p>
+                                    <p>Active Filters:</p>
+                                    <ul>
+                                        ${Object.entries(response.debug.filters)
+                                            .filter(([_, value]) => value)
+                                            .map(([key, value]) => `<li>${key}: ${value}</li>`)
+                                            .join('')}
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                        $orderList.append(`
+                            <div class="no-data">
+                                <div class="empty-detail">
+                                    <div class="icon-detail">📋</div>
+                                    <p>Belum ada transaksi dengan status ini</p>
                                 </div>
                             </div>
                         `);
                     }
-                });
-            }, 300);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    $('.loading').remove();
+                    $('.product-orders').append(`
+                        <div class="error">
+                            Error loading data
+                            <div class="debug-info">
+                                <p>Status: ${status}</p>
+                                <p>Error: ${error}</p>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        // Load initial data
+        $(document).ready(function() {
+            loadOrders(1);
         });
     </script>
 </body>

@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Checkout - {{ $product->title }}</title>
-
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -284,7 +284,7 @@
         snap.pay('{{ $snapToken }}', {
             onSuccess: function(result) {
                 console.log('Payment success:', result); // Log hasil pembayaran
-                Swal.fire('Sukses', 'Pembayaran berhasil! Silahkan cek Email Anda', 'success');
+                Swal.fire('Sukses', 'Pembayaran berhasil!', 'success');
                 paymentSelected = true;
                 transactionResult = result;
 
@@ -318,10 +318,10 @@
                     if (data.success) {
                         if (data.redirect) {
                             Swal.fire({
-                                title: 'Sukses',
-                                text: 'Pembayaran berhasil! Silahkan cek Email Anda',
+                                title: 'Produk Terkirim!',
+                                text: 'Produk digital telah dikirim ke email Anda. Silahkan cek inbox atau spam folder.',
                                 icon: 'success',
-                                confirmButtonText: 'OK'
+                                confirmButtonText: 'kembali ke halaman profile'
                             }).then(() => {
                                 window.location.href = data.redirect;
                             });
