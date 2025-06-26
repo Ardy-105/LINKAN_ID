@@ -33,11 +33,12 @@
         }
 
         .url-section {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            border: none;
         }
 
         .url-input-group {
@@ -66,7 +67,7 @@
 
         .content-section {
     display: flex;
-    gap: 20px;
+    gap: 32px;
     min-height: 100vh;
 }
 
@@ -105,20 +106,158 @@
             min-width: 300px;
         }
 
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .card, .preview-section, .preview-phone {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-radius: 16px;
         }
-
+        .card {
+            background: #fff;
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            border: none;
+        }
+        .preview-section {
+            background: #f7f8fa;
+            padding: 24px 20px;
+            border-radius: 16px;
+            width: 400px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .preview-phone {
+            width: 100%;
+            max-width: 375px;
+            height: 700px;
+            border-radius: 32px;
+            background: #fff;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1.5px solid #e5e7eb;
+        }
+        .preview-screen {
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            border-radius: 24px;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+        .preview-banner {
+            width: 100%;
+            height: 120px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .preview-profile {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .preview-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .preview-bio {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 18px;
+            padding: 0 16px;
+            line-height: 1.5;
+        }
+        .preview-social-links {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .preview-products {
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .preview-product-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #ececec;
+            transition: transform 0.2s;
+        }
+        .preview-product-item:hover {
+            transform: translateY(-2px) scale(1.01);
+        }
+        .preview-product-image {
+            width: 40px;
+            height: 40px;
+            background: #FFE5D3;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .preview-product-title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .preview-product-button {
+            background: #FF9040;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0;
+            min-width: 90px;
+            text-align: center;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        .preview-product-button:hover {
+            opacity: 0.92;
+        }
         .card-title {
             font-size: 18px;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
-        
         .card-priview {
             font-size: 16px;
             color: #333;
@@ -205,227 +344,6 @@
             margin-top: 10px;
         }
 
-        .preview-section {
-            background: #eee;
-            padding: 20px;
-            border-radius: 10px;
-            width: 400px;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        @media (max-width: 1200px) {
-            .preview-section {
-                position: static;
-                width: 100%;
-                max-width: 100vw;
-                right: unset;
-                top: unset;
-                margin-top: 20px;
-            }
-        }
-
-        .preview-phone {
-            width: 100%;
-            max-width: 375px;
-            aspect-ratio: 9/19.5;
-            border-radius: 40px;
-            background: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-        }
-
-        .preview-screen {
-            width: 100%;
-            height: 100%;
-            background: #f8f9fa;
-            border-radius: 30px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-y: auto;
-        }
-
-        .preview-banner {
-            width: 100%;
-            height: 120px;
-            background: #ddd;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .preview-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-profile {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #ddd;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .preview-profile img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .preview-bio {
-            font-size: 14px;
-            color: #666;
-            text-align: center;
-            margin-bottom: 15px;
-            padding: 0 20px;
-            line-height: 1.4;
-        }
-
-        .preview-social-links {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .preview-social-links a {
-            font-size: 20px;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .preview-social-links a:hover {
-            opacity: 0.8;
-        }
-
-        .preview-products {
-            width: 100%;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .preview-product-item {
-            background: white;
-            border-radius: 8px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .preview-product-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .preview-product-image {
-            width: 40px;
-            height: 40px;
-            background: #FFE5D3;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .preview-product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .preview-product-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .preview-product-title {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .preview-product-button {
-            background: #FF9040;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .preview-product-button:hover {
-            opacity: 0.9;
-        }
-
-
-        .save-button:hover {
-            opacity: 0.9;
-        }
-
-        .theme-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .theme-option {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .theme-option.active {
-            border-color: #FF9040;
-        }
-
-        @media (max-width: 768px) {
-            .content-section {
-                flex-direction: column;
-            }
-
-            .right-panel {
-                min-width: 100%;
-            }
-        }
         .preview-name,
         .preview-bio,
         .preview-screen button {
@@ -517,24 +435,23 @@
         <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
-            <div class="url-section">
-                <div class="url-input-group">
-                    <input type="text" class="url-input"value="My Linkan: <?php echo e(url('linkan.id/' . Auth::user()->username)); ?>"readonly>
-                    <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/<?php echo e(Auth::user()->username); ?>')">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                </div>
-            </div>
+            <form method="POST" action="<?php echo e(route('appearance.update')); ?>" enctype="multipart/form-data" id="appearanceForm">
+            <?php echo csrf_field(); ?>
+            <div class="content-section">
+                <div class="left-panel">
+                    <div class="url-section card">
+                        <div class="url-input-group">
+                            <input type="text" class="url-input" value="My Linkan: <?php echo e(url('linkan.id/' . Auth::user()->username)); ?>" readonly>
+                            <button class="share-button" onclick="copyToClipboard('http://localhost:8000/linkan.id/<?php echo e(Auth::user()->username); ?>')">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                        </div>
+                    </div>
 
-    <form method="POST" action="<?php echo e(route('appearance.update')); ?>" enctype="multipart/form-data" id="appearanceForm">
-
-    <?php echo csrf_field(); ?>
-                <div class="content-section">
-                    <div class="left-panel">
-                        <!-- Banner -->
-                        <div class="card">
-                            <h2 class="card-title">Banner</h2>
-                            <div class="banner-section">
+                    <!-- Banner -->
+                    <div class="card">
+                        <h2 class="card-title">Banner</h2>
+                        <div class="banner-section">
 <?php if($appearance && $appearance->banner): ?>
     <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner"
          style="width: 589px; height: 233px; object-fit: cover; margin-bottom: 15px;" id="previewBanner">
@@ -548,27 +465,27 @@
 <?php endif; ?>
 <input type="file" name="banner" id="bannerInput" style="display: none;" accept="image/*">
 <button type="button" class="upload-button" onclick="document.getElementById('bannerInput').click()">Upload Image</button>
-                            </div>
                         </div>
+                    </div>
 
-                        <!-- Profile -->
-                        <div class="card">
-                            <h2 class="card-title">Profile</h2>
-                            <div class="profile-section">
-                               <div class="profile-image" onclick="openProfilePopup()">
-                                    <?php if($appearance && $appearance->profile_image): ?>
-                                        <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" id="previewProfileImage">
-                                    <?php else: ?>
-                                        <i class="fas fa-user" id="defaultProfileIcon"></i>
-                                    <?php endif; ?>
-                                </div>
-                                <input type="file" name="profile_image" id="profileImageInput" style="display: none;" accept="image/*">
-                                <input type="text" name="name" class="profile-name" placeholder="Your Name" value="<?php echo e($appearance ? $appearance->name : Auth::user()->name); ?>" id="inputName">
-                                <div class="bio-section">
-                                    <div id="editor" style="height: 150px; margin-bottom: 10px;"><?php echo $appearance ? $appearance->bio : ''; ?></div>
-                                    <input type="hidden" name="bio" id="bioInput" value="<?php echo e($appearance ? $appearance->bio : ''); ?>">
-                                </div>
-                                <!-- 🎨 Color Picker -->
+                    <!-- Profile -->
+                    <div class="card">
+                        <h2 class="card-title">Profile</h2>
+                        <div class="profile-section">
+                           <div class="profile-image" onclick="openProfilePopup()">
+                                <?php if($appearance && $appearance->profile_image): ?>
+                                    <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" id="previewProfileImage">
+                                <?php else: ?>
+                                    <i class="fas fa-user" id="defaultProfileIcon"></i>
+                                <?php endif; ?>
+                            </div>
+                            <input type="file" name="profile_image" id="profileImageInput" style="display: none;" accept="image/*">
+                            <input type="text" name="name" class="profile-name" placeholder="Your Name" value="<?php echo e($appearance ? $appearance->name : Auth::user()->name); ?>" id="inputName">
+                            <div class="bio-section">
+                                <div id="editor" style="height: 150px; margin-bottom: 10px;"><?php echo $appearance ? $appearance->bio : ''; ?></div>
+                                <input type="hidden" name="bio" id="bioInput" value="<?php echo e($appearance ? $appearance->bio : ''); ?>">
+                            </div>
+                            <!-- 🎨 Color Picker -->
 <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
     <label for="colorPicker">Customize Color:</label>
     <input type="color" id="colorPicker" name="themeColor" value="<?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>">
@@ -576,9 +493,9 @@
    <input type="hidden" name="theme_color" id="themeColor" value="<?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>">
 </div>
 
-                            </div>
                         </div>
- <!-- Social Media Links -->
+                    </div>
+                 <!-- Social Media Links -->
 <div class="card">
     <h2 class="card-title">Social Links</h2>
 
@@ -690,74 +607,74 @@
     </div>
 </div>
 
-                    </div>
-
-                    <!-- Preview -->
-
-                  
-                        <div class="preview-section">
-                              <div class="right-panel">
-                         <div class="preview-header">
-                           <h2 class="card-priview">Preview</h2>
-                        </div>
-                            <div class="preview-phone">
-                                <div class="preview-screen" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('<?php echo e($appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : ''); ?>'); background-size: cover; background-position: center;">
-                                    <?php if($appearance && $appearance->banner): ?>
-                                        <div class="preview-banner" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">
-                                            <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
-                                        </div>
-                                    <?php endif; ?>
-                                    <div class="preview-profile" id="previewPhoneProfile" style="width: 80px; height: 80px; border-radius: 50%; background: #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                                        <?php if($appearance && $appearance->profile_image): ?>
-                                            <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                                        <?php else: ?>
-                                            <i class="fas fa-user"></i>
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="preview-name" id="livePreviewName" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance ? $appearance->name : Auth::user()->name); ?></div>
-                                    <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;"><?php echo $appearance ? $appearance->bio : ''; ?></div>
-                                    <div class="preview-social-links" id="livePreviewSocialLinks" style="display: flex; gap: 15px; margin-bottom: 20px;">
-                                        <?php if($appearance && $appearance->instagram): ?>
-                                            <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
-                                        <?php endif; ?>
-                                        <?php if($appearance && $appearance->tiktok): ?>
-                                            <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
-                                        <?php endif; ?>
-                                        <?php if($appearance && $appearance->whatsapp): ?>
-                                            <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
-                                        <?php endif; ?>
-                                    </div>
-                                    <?php if($appearance && $appearance->description): ?>
-                                        <div class="preview-bio" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->description); ?></div>
-                                    <?php endif; ?>
-                                    <?php if($appearance && $appearance->link): ?>
-                                        <a href="<?php echo e($appearance->link); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->button_text ?? 'Beli'); ?></a>
-                                    <?php endif; ?>
-                                    <?php if($digitalProducts && $digitalProducts->count() > 0): ?>
-                                        <div class="preview-products" style="width: 100%; padding: 10px; display: flex; flex-direction: column; gap: 10px;">
-                                            <?php $__currentLoopData = $digitalProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <div class="preview-product-item" style="background: white; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
-                                                    <div class="preview-product-image" style="width: 40px; height: 40px; background: #FFE5D3; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                                                        <?php if($product->image): ?>
-                                                            <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>" style="width: 100%; height: 100%; object-fit: cover;">
-                                                        <?php else: ?>
-                                                            <i class="fas fa-file-alt"></i>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <div class="preview-product-info" style="flex: 1; min-width: 0;">
-                                                        <div class="preview-product-title" style="font-size: 14px; color: #333; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo e($product->title); ?></div>
-                                                    </div>
-                                                    <a href="<?php echo e(route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#'])); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer; transition: background-color 0.3s ease; flex-shrink: 0; min-width: 100px; text-align: center; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none;" target="_blank"><?php echo e(str_replace('_', ' ', $product->button_text ?? 'Beli')); ?></a>
-                                                </div>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
+
+                <!-- Preview -->
+
+              
+                    <div class="preview-section">
+                          <div class="right-panel">
+                     <div class="preview-header">
+                       <h2 class="card-priview">Preview</h2>
+                      </div>
+                          <div class="preview-phone">
+                              <div class="preview-screen" id="previewScreen" style="width: 100%; height: 100%; background: #f8f9fa; border-radius: 30px; padding: 20px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background-image: url('<?php echo e($appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : ''); ?>'); background-size: cover; background-position: center;">
+                                  <?php if($appearance && $appearance->banner): ?>
+                                      <div class="preview-banner" style="width: 100%; height: 120px; background: #ddd; border-radius: 10px; margin-bottom: 20px; overflow: hidden;">
+                                          <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner" style="width: 100%; height: 100%; object-fit: cover;">
+                                      </div>
+                                  <?php endif; ?>
+                                  <div class="preview-profile" id="previewPhoneProfile" style="width: 80px; height: 80px; border-radius: 50%; background: #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                      <?php if($appearance && $appearance->profile_image): ?>
+                                          <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                                      <?php else: ?>
+                                          <i class="fas fa-user"></i>
+                                      <?php endif; ?>
+                                  </div>
+                                  <div class="preview-name" id="livePreviewName" style="font-size: 18px; font-weight: 600; margin-bottom: 10px; text-align: center; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance ? $appearance->name : Auth::user()->name); ?></div>
+                                  <div class="preview-bio" id="livePreviewBio" style="font-size: 14px; color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; text-align: center; margin-bottom: 15px; padding: 0 20px; line-height: 1.4;"><?php echo $appearance ? $appearance->bio : ''; ?></div>
+                                  <div class="preview-social-links" id="livePreviewSocialLinks" style="display: flex; gap: 15px; margin-bottom: 20px;">
+                                      <?php if($appearance && $appearance->instagram): ?>
+                                          <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                      <?php endif; ?>
+                                      <?php if($appearance && $appearance->tiktok): ?>
+                                          <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                      <?php endif; ?>
+                                      <?php if($appearance && $appearance->whatsapp): ?>
+                                          <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"></i></a>
+                                      <?php endif; ?>
+                                  </div>
+                                  <?php if($appearance && $appearance->description): ?>
+                                      <div class="preview-bio" style="color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->description); ?></div>
+                                  <?php endif; ?>
+                                  <?php if($appearance && $appearance->link): ?>
+                                      <a href="<?php echo e($appearance->link); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>"><?php echo e($appearance->button_text ?? 'Beli'); ?></a>
+                                  <?php endif; ?>
+                                  <?php if($digitalProducts && $digitalProducts->count() > 0): ?>
+                                      <div class="preview-products" style="width: 100%; padding: 10px; display: flex; flex-direction: column; gap: 10px;">
+                                          <?php $__currentLoopData = $digitalProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                              <div class="preview-product-item" style="background: white; border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s ease;">
+                                                  <div class="preview-product-image" style="width: 40px; height: 40px; background: #FFE5D3; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                                                      <?php if($product->image): ?>
+                                                          <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                                      <?php else: ?>
+                                                          <i class="fas fa-file-alt"></i>
+                                                      <?php endif; ?>
+                                                  </div>
+                                                  <div class="preview-product-info" style="flex: 1; min-width: 0;">
+                                                      <div class="preview-product-title" style="font-size: 14px; color: #333; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo e($product->title); ?></div>
+                                                  </div>
+                                                  <a href="<?php echo e(route('track.click', ['link_id' => Auth::user()->username, 'target' => $product->platform_url ?? '#'])); ?>" class="preview-product-button" style="background-color: <?php echo e($appearance ? $appearance->theme_color : '#FF9040'); ?>; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; border: none; cursor: pointer; transition: background-color 0.3s ease; flex-shrink: 0; min-width: 100px; text-align: center; height: 28px; display: flex; align-items: center; justify-content: center; text-decoration: none;" target="_blank"><?php echo e(str_replace('_', ' ', $product->button_text ?? 'Beli')); ?></a>
+                                              </div>
+                                          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                      </div>
+                                  <?php endif; ?>
+                              </div>
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
         </div>
     </div>
 <script>
