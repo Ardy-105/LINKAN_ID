@@ -38,4 +38,10 @@ class ShortlinkController extends Controller
         $shortlink = Shortlink::where('slug', $slug)->firstOrFail();
         return redirect($shortlink->destination);
     }
+
+    public function index()
+    {
+        $shortlinks = Shortlink::orderBy('created_at', 'desc')->paginate(5);
+        return view('shortlink.create', compact('shortlinks'));
+    }
 }

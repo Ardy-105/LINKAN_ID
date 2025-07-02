@@ -128,7 +128,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Route lain yang tidak perlu auth
-Route::get('/shortlink', [ShortlinkController::class, 'create'])->name('shortlink.index');
+Route::get('/shortlink', [ShortlinkController::class, 'index'])->name('shortlink.index');
 Route::post('/shorten', [ShortlinkController::class, 'store']);
 
 // Contact Form
