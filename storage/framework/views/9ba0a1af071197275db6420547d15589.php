@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistic - Dashboard</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -124,7 +124,7 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
@@ -143,8 +143,8 @@
                     </div>
                 </div>
                 <div class="stats-numbers">
-                    <span>Views: {{ $totalViews }}</span>
-                    <span>Clicks: {{ $totalClicks }}</span>
+                    <span>Views: <?php echo e($totalViews); ?></span>
+                    <span>Clicks: <?php echo e($totalClicks); ?></span>
                 </div>
                 <div class="stats-chart">
                     <canvas id="statsChart1"></canvas>
@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <div class="stats-numbers">
-                    <span>Total Sales: IDR {{ number_format($totalSales, 0, ',', '.') }}</span>
+                    <span>Total Sales: IDR <?php echo e(number_format($totalSales, 0, ',', '.')); ?></span>
                 </div>
                 <div class="stats-chart">
                     <canvas id="statsChart2"></canvas>
@@ -183,7 +183,7 @@
             if (startDate1) params.append('start_date', startDate1);
             if (endDate1) params.append('end_date', endDate1);
 
-            fetch(`{{ route('statistic.chart-data') }}?${params.toString()}`)
+            fetch(`<?php echo e(route('statistic.chart-data')); ?>?${params.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (chart1) {
@@ -252,7 +252,7 @@
             if (startDate2) params.append('start_date', startDate2);
             if (endDate2) params.append('end_date', endDate2);
 
-            fetch(`{{ route('statistic.chart-data') }}?${params.toString()}`)
+            fetch(`<?php echo e(route('statistic.chart-data')); ?>?${params.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (chart2) {
@@ -351,3 +351,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/statistic.blade.php ENDPATH**/ ?>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Set Payout Method</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
@@ -94,41 +94,41 @@
     <div class="card">
         <h2>Set Payout Method</h2>
 
-        @if ($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
             </div>
-        @endif
+        <?php endif; ?>
 
-        <form action="{{ route('payout.saveMethod') }}" method="POST">
-            @csrf
+        <form action="<?php echo e(route('payout.saveMethod')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label for="method_type">Method Type</label>
                 <select id="method_type" name="method_type" class="form-control" required>
                     <option value="">Select a method</option>
-                    <option value="Bank" {{ old('method_type', $payoutDetail->method_type ?? '') == 'Bank' ? 'selected' : '' }}>Via Bank</option>
-                    <option value="DANA" {{ old('method_type', $payoutDetail->method_type ?? '') == 'DANA' ? 'selected' : '' }}>DANA</option>
-                    <option value="ShopeePay" {{ old('method_type', $payoutDetail->method_type ?? '') == 'ShopeePay' ? 'selected' : '' }}>ShopeePay</option>
+                    <option value="Bank" <?php echo e(old('method_type', $payoutDetail->method_type ?? '') == 'Bank' ? 'selected' : ''); ?>>Via Bank</option>
+                    <option value="DANA" <?php echo e(old('method_type', $payoutDetail->method_type ?? '') == 'DANA' ? 'selected' : ''); ?>>DANA</option>
+                    <option value="ShopeePay" <?php echo e(old('method_type', $payoutDetail->method_type ?? '') == 'ShopeePay' ? 'selected' : ''); ?>>ShopeePay</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="account_name">Account Name</label>
-                <input type="text" id="account_name" name="account_name" class="form-control" value="{{ old('account_name', $payoutDetail->account_name ?? '') }}" placeholder="e.g., Budi Fulan" required>
+                <input type="text" id="account_name" name="account_name" class="form-control" value="<?php echo e(old('account_name', $payoutDetail->account_name ?? '')); ?>" placeholder="e.g., Budi Fulan" required>
             </div>
 
             <div class="form-group">
                 <label for="account_number">Account Number / Phone Number</label>
-                <input type="text" id="account_number" name="account_number" class="form-control" value="{{ old('account_number', $payoutDetail->account_number ?? '') }}" placeholder="Enter account number or phone number" required>
+                <input type="text" id="account_number" name="account_number" class="form-control" value="<?php echo e(old('account_number', $payoutDetail->account_number ?? '')); ?>" placeholder="Enter account number or phone number" required>
             </div>
 
             <div class="form-group" id="bank_name_group" style="display: none;">
                 <label for="bank_name">Bank Name</label>
-                <input type="text" id="bank_name" name="bank_name" class="form-control" value="{{ old('bank_name', $payoutDetail->bank_name ?? '') }}" placeholder="e.g., Bank BJB">
+                <input type="text" id="bank_name" name="bank_name" class="form-control" value="<?php echo e(old('bank_name', $payoutDetail->bank_name ?? '')); ?>" placeholder="e.g., Bank BJB">
             </div>
 
             <div class="form-actions">
@@ -163,3 +163,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/payout_method_form.blade.php ENDPATH**/ ?>

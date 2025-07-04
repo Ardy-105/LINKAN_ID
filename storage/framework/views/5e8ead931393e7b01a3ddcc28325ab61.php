@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payout History</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -390,21 +390,21 @@
             .main-content {
                 padding: 15px;
             }
-
+            
             .history-container {
                 padding: 20px;
                 border-radius: 15px;
             }
-
+            
             .stats-cards {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
-
+            
             .history-table {
                 font-size: 13px;
             }
-
+            
             .history-table th,
             .history-table td {
                 padding: 12px 8px;
@@ -421,27 +421,18 @@
 
         @media (max-width: 900px) {
             .main-content {
-                margin-left: 0 !important;
-                padding: 10px !important;
-            }
-            table, thead, tbody, th, td, tr {
-                display: block;
-                width: 100%;
-            }
-            th, td {
-                box-sizing: border-box;
-                padding: 10px 5px;
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
-                <h1><a href="{{ route('payout.index') }}">Payout Settings</a> &gt; <span>Payout History</span></h1>
+                <h1><a href="<?php echo e(route('payout.index')); ?>">Payout Settings</a> &gt; <span>Payout History</span></h1>
             </div>
 
             <div class="history-container">
@@ -454,27 +445,27 @@
                 <div class="stats-cards">
                     <div class="stat-card">
                         <i class="fas fa-wallet"></i>
-                        <div class="stat-number">{{ $history->count() }}</div>
+                        <div class="stat-number"><?php echo e($history->count()); ?></div>
                         <div class="stat-label">Total Transaksi</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-money-bill-wave"></i>
-                        <div class="stat-number">Rp {{ number_format($history->sum('amount'), 0, ',', '.') }}</div>
+                        <div class="stat-number">Rp <?php echo e(number_format($history->sum('amount'), 0, ',', '.')); ?></div>
                         <div class="stat-label">Total Penarikan</div>
                     </div>
                     <div class="stat-card">
                         <i class="fas fa-chart-line"></i>
-                        <div class="stat-number">{{ $history->groupBy('method')->count() }}</div>
+                        <div class="stat-number"><?php echo e($history->groupBy('method')->count()); ?></div>
                         <div class="stat-label">Metode Pembayaran</div>
                     </div>
                 </div>
 
-                @if ($history->isEmpty())
+                <?php if($history->isEmpty()): ?>
                     <div class="no-records">
                         <i class="fas fa-inbox"></i>
                         <p>Belum ada riwayat penarikan</p>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="history-table">
                         <table>
                             <thead>
@@ -485,31 +476,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($history as $record)
+                                <?php $__currentLoopData = $history; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $record->user_id }}</td>
-                                        <td class="amount-cell">Rp {{ number_format($record->amount, 0, ',', '.') }}</td>
+                                        <td><?php echo e($record->user_id); ?></td>
+                                        <td class="amount-cell">Rp <?php echo e(number_format($record->amount, 0, ',', '.')); ?></td>
                                         <td>
                                             <div class="method-cell">
-                                                <div class="method-icon method-{{ strtolower($record->method) }}">
-                                                    <i class="fas fa-{{ $record->method == 'Bank' ? 'university' : 'wallet' }}"></i>
+                                                <div class="method-icon method-<?php echo e(strtolower($record->method)); ?>">
+                                                    <i class="fas fa-<?php echo e($record->method == 'Bank' ? 'university' : 'wallet'); ?>"></i>
                                                 </div>
-                                                {{ $record->method }}
+                                                <?php echo e($record->method); ?>
+
                                             </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
 
         <!-- Floating Action Button -->
-        <div class="floating-action" onclick="window.location.href='{{ route('payout.index') }}'">
+        <div class="floating-action" onclick="window.location.href='<?php echo e(route('payout.index')); ?>'">
             <i class="fas fa-arrow-left"></i>
         </div>
     </div>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/payout_history.blade.php ENDPATH**/ ?>

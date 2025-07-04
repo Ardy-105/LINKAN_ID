@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -321,7 +321,7 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         <div class="main-content">
             <div class="header">
                 <h2 class="order-header">Order History</h2>
@@ -329,8 +329,9 @@
 
             <div class="link-share">
                 <div class="linkan-url">
-                    <a href="{{ url('/linkan.id/' . Auth::user()->username) }}" style="color: #FF9040;">
-                        {{ url('/linkan.id/' . Auth::user()->username) }}
+                    <a href="<?php echo e(url('/linkan.id/' . Auth::user()->username)); ?>" style="color: #FF9040;">
+                        <?php echo e(url('/linkan.id/' . Auth::user()->username)); ?>
+
                     </a>
                 </div>
                 <button class="btn-share">Share</button>
@@ -351,18 +352,19 @@
                         <input type="text" value="Product Title" readonly>
                         <input type="text" id="searchInput" placeholder="Search by product title or buyer name">
                     </div>
-                    @foreach($transactions as $transaction)
-                    <div class="order-item" data-id="{{ $transaction->id }}" data-status="{{ $transaction->status }}" data-date="{{ $transaction->created_at->format('Y-m-d') }}">
-                        <img src="{{ asset('storage/' . $transaction->product->image) }}" alt="{{ $transaction->product->title }}" class="product-image">
+                    <?php $__currentLoopData = $transactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="order-item" data-id="<?php echo e($transaction->id); ?>" data-status="<?php echo e($transaction->status); ?>" data-date="<?php echo e($transaction->created_at->format('Y-m-d')); ?>">
+                        <img src="<?php echo e(asset('storage/' . $transaction->product->image)); ?>" alt="<?php echo e($transaction->product->title); ?>" class="product-image">
                         <div class="product-info">
-                            <div class="product-title">{{ $transaction->product->title }}</div>
+                            <div class="product-title"><?php echo e($transaction->product->title); ?></div>
                             <div class="product-meta">
-                                {{ $transaction->buyer_name }} • {{ $transaction->created_at->format('d M Y') }}
+                                <?php echo e($transaction->buyer_name); ?> • <?php echo e($transaction->created_at->format('d M Y')); ?>
+
                             </div>
                         </div>
-                        <button class="btn-detail" onclick="loadOrderDetail({{ $transaction->id }})">Detail</button>
+                        <button class="btn-detail" onclick="loadOrderDetail(<?php echo e($transaction->id); ?>)">Detail</button>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 <div class="order-details" id="orderDetails">
@@ -602,3 +604,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/orders.blade.php ENDPATH**/ ?>

@@ -83,19 +83,19 @@
 </button>
 
 <div class="sidebar">
-    <img src="{{ asset('images/logo.png') }}" alt="Linkan Logo" class="logo">
-    <a href="{{ route('beranda.platformadmin') }}" class="{{ request()->routeIs('beranda.platformadmin') ? 'active' : '' }}">
+    <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Linkan Logo" class="logo">
+    <a href="<?php echo e(route('beranda.platformadmin')); ?>" class="<?php echo e(request()->routeIs('beranda.platformadmin') ? 'active' : ''); ?>">
         <i class="fas fa-home"></i>Home
     </a>
-    <a href="{{ route('verifikasi.platformadmin') }}" class="{{ request()->routeIs('verifikasi.platformadmin') ? 'active' : '' }}">
+    <a href="<?php echo e(route('verifikasi.platformadmin')); ?>" class="<?php echo e(request()->routeIs('verifikasi.platformadmin') ? 'active' : ''); ?>">
         <i class="fas fa-check-circle"></i> Verification
     </a>
     <hr>
 
     <div class="marketing-tools">
-        <a href="{{ route('welcome') }}">
+        <a href="<?php echo e(route('welcome')); ?>">
             <span style="display: flex; align-items: center;">
-                <img src="{{ asset('images/logout.png') }}" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
+                <img src="<?php echo e(asset('images/logout.png')); ?>" alt="Logout" style="width: 20px; height: 20px; margin-right: 10px;">
                 LogOut
             </span>
         </a>
@@ -113,3 +113,4 @@
     });
 </script>
 
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/platformadmin/sidebar/sidebarplatform.blade.php ENDPATH**/ ?>

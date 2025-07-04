@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Digital Product - Linkan</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/shared.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/shared.css')); ?>">
     <style>
         body {
             background-color: #F8F9FE;
@@ -382,7 +382,7 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="page-header">
@@ -390,50 +390,51 @@
             </div>
 
             <!-- ✅ Alert messages -->
-            @if (session('success'))
+            <?php if(session('success')): ?>
                 <div class="alert alert-success" style="background: #e0ffe0; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #007500;">
-                    {{ session('success') }}
-                </div>
-            @endif
+                    <?php echo e(session('success')); ?>
 
-            @if ($errors->any())
+                </div>
+            <?php endif; ?>
+
+            <?php if($errors->any()): ?>
                 <div class="alert alert-danger" style="background: #ffe3e3; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
                     <ul style="margin: 0; padding-left: 20px; color: #b30000;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            @if(isset($product) && $product->verification_status === 'rejected')
+            <?php if(isset($product) && $product->verification_status === 'rejected'): ?>
                 <div class="alert alert-warning" style="background: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 20px; color: #856404;">
                     <i class="fas fa-exclamation-triangle"></i> Produk ini sebelumnya ditolak. Silakan perbaiki dan kirim ulang untuk verifikasi.
                 </div>
-            @endif
+            <?php endif; ?>
 
 
             <form id="digitalProductForm"
-      action="{{ isset($product) ? route('digital-product.update', $product->id) : route('digital-product.store') }}"
+      action="<?php echo e(isset($product) ? route('digital-product.update', $product->id) : route('digital-product.store')); ?>"
       method="POST" enctype="multipart/form-data">
-    @csrf
-    @if (isset($product))
-        @method('PUT')
-    @endif
+    <?php echo csrf_field(); ?>
+    <?php if(isset($product)): ?>
+        <?php echo method_field('PUT'); ?>
+    <?php endif; ?>
 
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div class="content-card">
                     <h2 class="card-title">Details</h2>
 
                     <div class="form-group">
                         <label>Image</label>
                         <div class="image-upload" onclick="document.getElementById('productImage').click()">
-                            @if(isset($product) && $product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" style="max-width: 100%; max-height: 100%; border-radius: 5px;">
-                            @else
+                            <?php if(isset($product) && $product->image): ?>
+                                <img src="<?php echo e(asset('storage/' . $product->image)); ?>" style="max-width: 100%; max-height: 100%; border-radius: 5px;">
+                            <?php else: ?>
                                 <i class="fas fa-image"></i>
                                 <span>Add Image</span>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="format-info">Format: PNG, JPEG, JPG <strong> (Optimize size 566 x 525 px)</strong> </div>
                         <input type="file" id="productImage" name="image" accept=".png,.jpg,.jpeg" style="display: none">
@@ -441,33 +442,34 @@
 
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="title" class="form-control" placeholder="Title" value="{{ isset($product) ? $product->title : old('title') }}">
+                        <input type="text" name="title" class="form-control" placeholder="Title" value="<?php echo e(isset($product) ? $product->title : old('title')); ?>">
                     </div>
 
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea name="description" class="form-control" rows="3" placeholder="Description">{{ isset($product) ? $product->description : old('description') }}</textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Description"><?php echo e(isset($product) ? $product->description : old('description')); ?></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Platform</label>
                         <div class="platform-container">
                             <div class="platform-options">
-                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'upload' ? 'active' : '' }}" data-platform="upload">Upload</button>
-                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'dropbox' ? 'active' : '' }}" data-platform="dropbox">Dropbox</button>
-                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'gdrive' ? 'active' : '' }}" data-platform="gdrive">G-Drive</button>
-                                <button type="button" class="platform-button {{ isset($product) && $product->platform_type == 'other' ? 'active' : '' }}" data-platform="other">Other</button>
+                                <button type="button" class="platform-button <?php echo e(isset($product) && $product->platform_type == 'upload' ? 'active' : ''); ?>" data-platform="upload">Upload</button>
+                                <button type="button" class="platform-button <?php echo e(isset($product) && $product->platform_type == 'dropbox' ? 'active' : ''); ?>" data-platform="dropbox">Dropbox</button>
+                                <button type="button" class="platform-button <?php echo e(isset($product) && $product->platform_type == 'gdrive' ? 'active' : ''); ?>" data-platform="gdrive">G-Drive</button>
+                                <button type="button" class="platform-button <?php echo e(isset($product) && $product->platform_type == 'other' ? 'active' : ''); ?>" data-platform="other">Other</button>
                             </div>
-                            <input type="hidden" name="platform_type" value="{{ isset($product) ? $product->platform_type : 'upload' }}">
-                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: {{ isset($product) && $product->platform_type != 'upload' ? 'block' : 'none' }};" value="{{ isset($product) ? $product->platform_url : old('platform_url') }}">
-                            <div class="select-file-button form-control" onclick="document.getElementById('platform_file').click()" style="text-align: center; cursor: pointer; display: {{ isset($product) && $product->platform_type == 'upload' ? 'block' : 'none' }};">
+                            <input type="hidden" name="platform_type" value="<?php echo e(isset($product) ? $product->platform_type : 'upload'); ?>">
+                            <input type="text" class="form-control platform-input" placeholder="Enter your URL here" name="platform_url" style="display: <?php echo e(isset($product) && $product->platform_type != 'upload' ? 'block' : 'none'); ?>;" value="<?php echo e(isset($product) ? $product->platform_url : old('platform_url')); ?>">
+                            <div class="select-file-button form-control" onclick="document.getElementById('platform_file').click()" style="text-align: center; cursor: pointer; display: <?php echo e(isset($product) && $product->platform_type == 'upload' ? 'block' : 'none'); ?>;">
                                 <i class="fas fa-paperclip"></i>
                                 <span id="selected-file-name">
-                                    @if(isset($product) && $product->platform_file)
-                                        {{ basename($product->platform_file) }}
-                                    @else
+                                    <?php if(isset($product) && $product->platform_file): ?>
+                                        <?php echo e(basename($product->platform_file)); ?>
+
+                                    <?php else: ?>
                                         Select File
-                                    @endif
+                                    <?php endif; ?>
                                 </span>
                             </div>
                             <input type="file" id="platform_file" name="platform_file" style="display: none;">
@@ -484,7 +486,7 @@
                             <!-- ✅ Hidden input + checkbox -->
                             <input type="hidden" name="pay_what_want" value="0">
                             <label class="toggle-switch">
-                                <input type="checkbox" name="pay_what_want" value="1" {{ old('pay_what_want') ? 'checked' : '' }}>
+                                <input type="checkbox" name="pay_what_want" value="1" <?php echo e(old('pay_what_want') ? 'checked' : ''); ?>>
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -494,8 +496,8 @@
                         <div class="price-group">
                             <div class="price-input">
                                 <label>Price</label>
-                                <input type="text" name="price" id="priceInput" class="form-control" placeholder="Rp 0" value="{{ isset($product) ? 'Rp ' . number_format($product->price, 0, ',', '.') : old('price') }}">
-                                <input type="hidden" name="price_raw" id="priceRaw" value="{{ isset($product) ? $product->price : old('price') }}">
+                                <input type="text" name="price" id="priceInput" class="form-control" placeholder="Rp 0" value="<?php echo e(isset($product) ? 'Rp ' . number_format($product->price, 0, ',', '.') : old('price')); ?>">
+                                <input type="hidden" name="price_raw" id="priceRaw" value="<?php echo e(isset($product) ? $product->price : old('price')); ?>">
                             </div>
                             <div class="currency-input">
                                 <label>Currency</label>
@@ -507,9 +509,9 @@
                     <div class="form-group">
                         <label>Purchase Button</label>
                         <select name="button_text" class="select-dropdown">
-                            <option value="buy_now" {{ (isset($product) && $product->button_text == 'buy_now') || old('button_text') == 'buy_now' ? 'selected' : '' }}>Buy Now</option>
-                            <option value="purchase" {{ (isset($product) && $product->button_text == 'purchase') || old('button_text') == 'purchase' ? 'selected' : '' }}>Purchase</option>
-                            <option value="get_now" {{ (isset($product) && $product->button_text == 'get_now') || old('button_text') == 'get_now' ? 'selected' : '' }}>Get Now</option>
+                            <option value="buy_now" <?php echo e((isset($product) && $product->button_text == 'buy_now') || old('button_text') == 'buy_now' ? 'selected' : ''); ?>>Buy Now</option>
+                            <option value="purchase" <?php echo e((isset($product) && $product->button_text == 'purchase') || old('button_text') == 'purchase' ? 'selected' : ''); ?>>Purchase</option>
+                            <option value="get_now" <?php echo e((isset($product) && $product->button_text == 'get_now') || old('button_text') == 'get_now' ? 'selected' : ''); ?>>Get Now</option>
                         </select>
                     </div>
                 </div>
@@ -612,3 +614,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/digital-product.blade.php ENDPATH**/ ?>

@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $product->title }} - Detail</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <title><?php echo e($product->title); ?> - Detail</title>
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         /* Global Styles */
@@ -355,10 +355,10 @@
 <body>
 <div class="product-wrapper">
     <div class="header">
-        <a href="{{ route('public.profile', ['username' => $user->username]) }}">
+        <a href="<?php echo e(route('public.profile', ['username' => $user->username])); ?>">
             <i class="fa fa-arrow-left"></i> <!-- Ganti dengan kode ini -->
         </a>
-        <div class="username">{{ $user->username }}</div>
+        <div class="username"><?php echo e($user->username); ?></div>
     </div>
 
     <!-- Modal Popup -->
@@ -369,11 +369,11 @@
         <h3 style="margin-bottom: 20px;">Cart (<span id="cartCount">1</span>)</h3>
         <div style="border: 1px solid #ddd; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
             <div style="display: flex; gap: 10px; align-items: center;">
-                <img id="modalImage" src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" style="width: 50px; height: 50px; object-fit: cover;">
+                <img id="modalImage" src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>" style="width: 50px; height: 50px; object-fit: cover;">
                 <div style="flex: 1;">
-                    <div id="modalTitle" style="font-size: 14px; font-weight: bold;">{{ $product->title }}</div>
+                    <div id="modalTitle" style="font-size: 14px; font-weight: bold;"><?php echo e($product->title); ?></div>
                     <div style="font-size: 13px;">Qty. <span id="modalQty">1</span></div>
-                    <div style="font-size: 13px;">IDR <span id="modalPrice">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+                    <div style="font-size: 13px;">IDR <span id="modalPrice"><?php echo e(number_format($product->price, 0, ',', '.')); ?></span></div>
                     <button id="editButton" style="background: none; color: blue; border: none; cursor: pointer; font-size: 13px;">Edit</button>
                 </div>
             </div>
@@ -389,14 +389,14 @@
         <div style="margin: 15px 0 10px 0; color: #888; font-size: 12px; font-weight: bold;">ORDER SUMMARY</div>
         <div style="display: flex; justify-content: space-between; font-size: 14px;">
             <div>Total (<span id="cartCount2">1</span> Items)</div>
-            <div>IDR <span id="totalItem">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+            <div>IDR <span id="totalItem"><?php echo e(number_format($product->price, 0, ',', '.')); ?></span></div>
         </div>
         <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
             <div>Grand total</div>
-            <div>IDR <span id="grandTotal">{{ number_format($product->price, 0, ',', '.') }}</span></div>
+            <div>IDR <span id="grandTotal"><?php echo e(number_format($product->price, 0, ',', '.')); ?></span></div>
         </div>
         <button class="cart-btn" onclick="closeModal()">
-            <a href="{{ route('checkout', ['id' => $product->id]) }}" class="cart-btn">Checkout</a>
+            <a href="<?php echo e(route('checkout', ['id' => $product->id])); ?>" class="cart-btn">Checkout</a>
 
         </button>
 
@@ -405,23 +405,24 @@
 
 
     <div class="product-image">
-        @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
-        @else
+        <?php if($product->image): ?>
+            <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>">
+        <?php else: ?>
             <img src="https://via.placeholder.com/400x200?text=No+Image" alt="No image">
-        @endif
+        <?php endif; ?>
     </div>
 
     <div class="title-price">
-        <div class="product-title">{{ $product->title }}</div>
-        <div class="product-price">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
+        <div class="product-title"><?php echo e($product->title); ?></div>
+        <div class="product-price">Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?></div>
     </div>
 
     <div class="description-label">DESCRIPTION :</div>
-    <div class="product-description">{{ $product->description }}</div>
+    <div class="product-description"><?php echo e($product->description); ?></div>
 
-    <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => $product->platform_url ?? '#']) }}" class="buy-button" target="_blank">
-        {{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}
+    <a href="<?php echo e(route('track.click', ['link_id' => $user->username, 'target' => $product->platform_url ?? '#'])); ?>" class="buy-button" target="_blank">
+        <?php echo e(str_replace('_', ' ', $product->button_text ?? 'Beli')); ?>
+
     </a>
 </div>
 <script>
@@ -436,7 +437,7 @@
     const totalItem = document.getElementById('totalItem');
     const grandTotal = document.getElementById('grandTotal');
 
-    const price = {{ $product->price }};
+    const price = <?php echo e($product->price); ?>;
 
     buyButton.addEventListener('click', function(e) {
         e.preventDefault();
@@ -454,14 +455,14 @@
   updateQty.addEventListener('click', function() {
     const qty = parseInt(qtyInput.value);
     if (qty > 0) {
-        fetch('{{ route("cart.updateQty") }}', {
+        fetch('<?php echo e(route("cart.updateQty")); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
             },
             body: JSON.stringify({
-                product_id: {{ $product->id }},
+                product_id: <?php echo e($product->id); ?>,
                 qty: qty
             })
         }).then(response => response.json())
@@ -490,3 +491,4 @@
 
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/public/product-detail.blade.php ENDPATH**/ ?>

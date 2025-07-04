@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -96,14 +96,14 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
                 <h1>Settings</h1>
             </div>
 
-            <div class="settings-card" onclick="window.location.href='{{ route('account.settings') }}'">
+            <div class="settings-card" onclick="window.location.href='<?php echo e(route('account.settings')); ?>'">
                 <div class="settings-card-icon">
                     <i class="fas fa-user"></i>
                 </div>
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <div class="settings-card" onclick="window.location.href='{{ route('payout.index') }}'">
+            <div class="settings-card" onclick="window.location.href='<?php echo e(route('payout.index')); ?>'">
                 <div class="settings-card-icon">
                     <i class="fas fa-wallet"></i>
                 </div>
@@ -127,3 +127,4 @@
     </div>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/setting.blade.php ENDPATH**/ ?>

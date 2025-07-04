@@ -147,6 +147,18 @@
                 padding: 0;
             }
         }
+
+        @media (max-width: 900px) {
+            .print-container {
+                padding: 8px !important;
+                max-width: 100vw !important;
+            }
+            .commission-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 6px !important;
+            }
+        }
     </style>
 </head>
 <body>

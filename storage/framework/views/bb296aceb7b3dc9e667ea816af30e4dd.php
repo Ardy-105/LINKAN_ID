@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payout Setting</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -169,18 +169,19 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
-                <h1><a href="{{ route('settings') }}">Settings</a> &gt; <span>Payout Settings</h1>
+                <h1><a href="<?php echo e(route('settings')); ?>">Settings</a> &gt; <span>Payout Settings</h1>
             </div>
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
                 <div style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?>
 
             <div class="payout-main-flex">
                 <!-- Earnings Card -->
@@ -191,29 +192,29 @@
                             <div style="background: white; color: #FF9040; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-wallet"></i></div>
                             <div>
                                 <div style="font-size: 13px; opacity: 0.85;">Total Pendapatan</div>
-                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($totalEarnings, 0, ',', '.') }}</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp <?php echo e(number_format($totalEarnings, 0, ',', '.')); ?></div>
                             </div>
                         </div>
                         <div style="flex: 1 1 180px; min-width: 180px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; gap: 16px;">
                             <div style="background: white; color: #28a745; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-arrow-circle-up"></i></div>
                             <div>
                                 <div style="font-size: 13px; opacity: 0.85;">Total Penarikan</div>
-                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($totalWithdrawn, 0, ',', '.') }}</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp <?php echo e(number_format($totalWithdrawn, 0, ',', '.')); ?></div>
                             </div>
                         </div>
                         <div style="flex: 1 1 180px; min-width: 180px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 16px; display: flex; align-items: center; gap: 16px;">
                             <div style="background: white; color: #007bff; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fas fa-coins"></i></div>
                             <div>
                                 <div style="font-size: 13px; opacity: 0.85;">Saldo Bisa Ditarik</div>
-                                <div style="font-size: 20px; font-weight: bold;">Rp {{ number_format($currentBalance, 0, ',', '.') }}</div>
+                                <div style="font-size: 20px; font-weight: bold;">Rp <?php echo e(number_format($currentBalance, 0, ',', '.')); ?></div>
                             </div>
                         </div>
                     </div>
                     <div style="display: flex; gap: 16px; margin-top: 28px;">
-                        <a href="{{ route('payout.showWithdrawForm') }}" class="btn btn-withdraw" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
+                        <a href="<?php echo e(route('payout.showWithdrawForm')); ?>" class="btn btn-withdraw" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
                             <i class="fas fa-paper-plane"></i> Withdraw
                         </a>
-                        <a href="{{ route('payout.showPayoutHistory') }}" class="btn btn-history" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
+                        <a href="<?php echo e(route('payout.showPayoutHistory')); ?>" class="btn btn-history" style="background: white; color: #FF9040; border: none; font-weight: bold; border-radius: 6px; padding: 12px 28px; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 8px; text-decoration: none; transition: background 0.2s;">
                             <i class="fas fa-history"></i> History
                         </a>
                     </div>
@@ -222,32 +223,33 @@
                 <div class="payment-card" style="background: linear-gradient(90deg, #FF9040 60%, #ffb380 100%); border-radius: 16px; box-shadow: 0 4px 16px rgba(255,144,64,0.10); padding: 32px 24px; text-align: center; color: white; display: flex; flex-direction: column; justify-content: center;">
                     <h2 style="font-size: 20px; font-weight: bold; color: white; margin-bottom: 8px; letter-spacing: 1px;">Metode Penerimaan Dana</h2>
                     <p style="color: #fffbe6; font-size: 14px; margin-bottom: 24px;">Dana kamu akan ditransfer ke rekening berikut:</p>
-                    @if($payoutDetail)
+                    <?php if($payoutDetail): ?>
                     <div class="bank-info" style="display: flex; align-items: center; gap: 18px; background: rgba(255,255,255,0.10); border-radius: 12px; padding: 18px 18px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(255,144,64,0.06); justify-content: center;">
-                        @if($payoutDetail->method_type === 'Bank')
+                        <?php if($payoutDetail->method_type === 'Bank'): ?>
                             <img src="/images/creditcard.png" alt="Bank" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                        @elseif($payoutDetail->method_type === 'DANA')
+                        <?php elseif($payoutDetail->method_type === 'DANA'): ?>
                             <img src="/images/dana.png" alt="DANA" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                        @elseif($payoutDetail->method_type === 'ShopeePay')
+                        <?php elseif($payoutDetail->method_type === 'ShopeePay'): ?>
                             <img src="/images/shopeepay.png" alt="ShopeePay" style="width: 54px; height: 54px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                        @else
+                        <?php else: ?>
                             <i class="fas fa-wallet" style="font-size: 48px; color: #FF9040; background: #fff; border-radius: 8px; width: 54px; height: 54px; display: flex; align-items: center; justify-content: center;"></i>
-                        @endif
+                        <?php endif; ?>
                         <div style="text-align: left;">
-                            <div style="font-size: 16px; font-weight: bold; color: white;">{{ $payoutDetail->account_name }}</div>
-                            <div style="font-size: 14px; color: #fffbe6; margin-top: 2px;">{{ $payoutDetail->method_type }} - {{ $payoutDetail->account_number }}</div>
-                            @if($payoutDetail->method_type === 'Bank' && $payoutDetail->bank_name)
-                                <div style="font-size: 13px; color: #ffe0b3; margin-top: 2px;">{{ $payoutDetail->bank_name }}</div>
-                            @endif
+                            <div style="font-size: 16px; font-weight: bold; color: white;"><?php echo e($payoutDetail->account_name); ?></div>
+                            <div style="font-size: 14px; color: #fffbe6; margin-top: 2px;"><?php echo e($payoutDetail->method_type); ?> - <?php echo e($payoutDetail->account_number); ?></div>
+                            <?php if($payoutDetail->method_type === 'Bank' && $payoutDetail->bank_name): ?>
+                                <div style="font-size: 13px; color: #ffe0b3; margin-top: 2px;"><?php echo e($payoutDetail->bank_name); ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    @else
+                    <?php else: ?>
                     <div style="padding: 24px; color: #fffbe6; background: rgba(255,255,255,0.10); border-radius: 12px; margin-bottom: 18px;">
                         <p>Belum ada metode pembayaran yang diatur.</p>
                     </div>
-                    @endif
-                    <a href="{{ route('payout.showMethodForm') }}" class="btn" style="margin-top: 10px; display: inline-block; background: white; color: #FF9040; font-weight: bold; border-radius: 6px; padding: 12px 32px; font-size: 15px; box-shadow: 0 2px 8px rgba(255,144,64,0.10); text-decoration: none; transition: background 0.2s;">
-                        <i class="fas fa-cog"></i> {{ $payoutDetail ? 'Edit Payout Method' : 'Set Payout Method' }}
+                    <?php endif; ?>
+                    <a href="<?php echo e(route('payout.showMethodForm')); ?>" class="btn" style="margin-top: 10px; display: inline-block; background: white; color: #FF9040; font-weight: bold; border-radius: 6px; padding: 12px 32px; font-size: 15px; box-shadow: 0 2px 8px rgba(255,144,64,0.10); text-decoration: none; transition: background 0.2s;">
+                        <i class="fas fa-cog"></i> <?php echo e($payoutDetail ? 'Edit Payout Method' : 'Set Payout Method'); ?>
+
                     </a>
                 </div>
             </div>
@@ -294,3 +296,4 @@
     document.addEventListener('DOMContentLoaded', refreshData);
 </script>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/payout.blade.php ENDPATH**/ ?>

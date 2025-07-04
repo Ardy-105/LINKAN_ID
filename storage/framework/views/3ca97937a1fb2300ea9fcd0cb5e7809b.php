@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Verification Content</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
     body {
@@ -479,14 +479,14 @@ tr:not(:last-child) {
 </head>
 <body>
 
-    {{-- Sidebar --}}
-    @include('platformadmin.sidebar.sidebarplatform')
+    
+    <?php echo $__env->make('platformadmin.sidebar.sidebarplatform', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-    {{-- Main Content --}}
+    
     <div class="content">
         <div class="header">Verification Content</div>
 
-        {{-- Tabs --}}
+        
         <div class="tabs">
             <button class="tab active" data-tab="pending">Pending Verification</button>
             <button class="tab" data-tab="approved">Approved</button>
@@ -494,7 +494,7 @@ tr:not(:last-child) {
             <button class="tab" data-tab="archive">Archive</button>
         </div>
 
-        {{-- Filter Container --}}
+        
         <div class="filter-container">
             <div class="filter-controls">
                 <div class="search-box">
@@ -517,7 +517,7 @@ tr:not(:last-child) {
             </div>
         </div>
 
-        {{-- Table Container --}}
+        
         <div class="table-container">
             <table>
                 <thead>
@@ -535,89 +535,94 @@ tr:not(:last-child) {
                     </tr>
                 </thead>
                 <tbody id="productTableBody">
-                    @foreach($products as $index => $product)
+                    <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr class="product-row"
-                        data-status="{{ $product->verification_status }}"
-                        data-platform="{{ $product->platform_type }}"
-                        data-date="{{ $product->created_at->format('Y-m-d') }}"
-                        data-title="{{ strtolower($product->title) }}"
+                        data-status="<?php echo e($product->verification_status); ?>"
+                        data-platform="<?php echo e($product->platform_type); ?>"
+                        data-date="<?php echo e($product->created_at->format('Y-m-d')); ?>"
+                        data-title="<?php echo e(strtolower($product->title)); ?>"
                         >
-                        <td>{{ $index + 1 }}.</td>
-                        <td>{{ $product->user->name }}</td>
+                        <td><?php echo e($index + 1); ?>.</td>
+                        <td><?php echo e($product->user->name); ?></td>
                         <td>
                             <div class="content-preview">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image">
-                                @else
+                                <?php if($product->image): ?>
+                                    <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="Product Image">
+                                <?php else: ?>
                                     <img src="https://via.placeholder.com/100x60.png?text=No+Image" alt="No Image">
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
                         <td class="description-cell">
-                            {{ Str::limit($product->description, 50) }}
-                            @if(strlen($product->description) > 50)
-                                <span class="read-more-link" onclick="showDescriptionModal(this)" data-full-description="{{ addslashes($product->description) }}">Baca Selengkapnya</span>
-                            @endif
+                            <?php echo e(Str::limit($product->description, 50)); ?>
+
+                            <?php if(strlen($product->description) > 50): ?>
+                                <span class="read-more-link" onclick="showDescriptionModal(this)" data-full-description="<?php echo e(addslashes($product->description)); ?>">Baca Selengkapnya</span>
+                            <?php endif; ?>
                         </td>
                         <td>
-                            @if($product->sale_price)
-                                <span style="text-decoration: line-through; color: #999;">Rp {{ number_format($product->price) }}</span>
+                            <?php if($product->sale_price): ?>
+                                <span style="text-decoration: line-through; color: #999;">Rp <?php echo e(number_format($product->price)); ?></span>
                                 <br>
-                                <span style="color: #dc3545;">Rp {{ number_format($product->sale_price) }}</span>
-                            @else
-                                Rp {{ number_format($product->price) }}
-                            @endif
+                                <span style="color: #dc3545;">Rp <?php echo e(number_format($product->sale_price)); ?></span>
+                            <?php else: ?>
+                                Rp <?php echo e(number_format($product->price)); ?>
+
+                            <?php endif; ?>
                         </td>
-                        <td>{{ ucfirst($product->platform_type) }}</td>
+                        <td><?php echo e(ucfirst($product->platform_type)); ?></td>
                         <td>
-                            @if($product->has_quantity_limit)
-                                {{ $product->quantity }}
-                            @else
+                            <?php if($product->has_quantity_limit): ?>
+                                <?php echo e($product->quantity); ?>
+
+                            <?php else: ?>
                                 Unlimited
-                            @endif
+                            <?php endif; ?>
                         </td>
-                        <td>{{ $product->created_at->format('d M Y') }}</td>
+                        <td><?php echo e($product->created_at->format('d M Y')); ?></td>
                         <td>
-                            @if($product->verification_status == 'approved')
+                            <?php if($product->verification_status == 'approved'): ?>
                                 <span class="status-completed">● Approved</span>
-                            @elseif($product->verification_status == 'rejected')
+                            <?php elseif($product->verification_status == 'rejected'): ?>
                                 <span class="status-pending">● Rejected</span>
-                            @else
+                            <?php else: ?>
                                 <span class="status-pending">● Pending</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td>
-                            @if($product->verification_status == 'pending')
+                            <?php if($product->verification_status == 'pending'): ?>
                                 <div class="action-buttons">
-                                    <button type="button" class="btn accept" onclick="showPlatformModal({{ $product->id }}, '{{ $product->platform_type }}', '{{ $product->platform_url }}', '{{ $product->platform_file }}')">
+                                    <button type="button" class="btn accept" onclick="showPlatformModal(<?php echo e($product->id); ?>, '<?php echo e($product->platform_type); ?>', '<?php echo e($product->platform_url); ?>', '<?php echo e($product->platform_file); ?>')">
                                         <i class="fas fa-eye"></i> View Platform
                                     </button>
-                                    <form action="{{ route('verifikasi.verify', $product->id) }}" method="POST">
-                                        @csrf
+                                    <form action="<?php echo e(route('verifikasi.verify', $product->id)); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
                                         <input type="hidden" name="status" value="approved">
                                         <button type="submit" class="btn accept">
                                             <i class="fas fa-check"></i> Approve
                                         </button>
                                     </form>
-                                    <button type="button" class="btn accept" style="background-color: #dc3545;" onclick="showRejectModal({{ $product->id }})">
+                                    <button type="button" class="btn accept" style="background-color: #dc3545;" onclick="showRejectModal(<?php echo e($product->id); ?>)">
                                         <i class="fas fa-times"></i> Reject
                                     </button>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <div class="action-buttons">
                                     <button class="btn accepted" disabled>
-                                        <i class="fas fa-check-circle"></i> {{ ucfirst($product->verification_status) }}
+                                        <i class="fas fa-check-circle"></i> <?php echo e(ucfirst($product->verification_status)); ?>
+
                                     </button>
-                                    @if($product->verification_status == 'rejected' && $product->rejection_reason)
+                                    <?php if($product->verification_status == 'rejected' && $product->rejection_reason): ?>
                                         <div class="rejection-reason">
-                                            <i class="fas fa-info-circle"></i> Alasan: {{ $product->rejection_reason }}
+                                            <i class="fas fa-info-circle"></i> Alasan: <?php echo e($product->rejection_reason); ?>
+
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
             <div id="noDataMessage" class="no-data" style="display: none;">
@@ -663,7 +668,7 @@ tr:not(:last-child) {
         </div>
 
             <form id="rejectForm" method="POST">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div class="modal-body">
                     <input type="hidden" name="status" value="rejected">
                     <div class="form-group">
@@ -705,7 +710,7 @@ tr:not(:last-child) {
         if (platformType === 'upload') {
             urlGroup.style.display = 'none';
             fileGroup.style.display = 'block';
-            document.getElementById('platformFile').innerHTML = `<a href="{{ asset('storage/') }}/${platformFile}" target="_blank">Lihat File</a>`;
+            document.getElementById('platformFile').innerHTML = `<a href="<?php echo e(asset('storage/')); ?>/${platformFile}" target="_blank">Lihat File</a>`;
         } else {
             urlGroup.style.display = 'block';
             fileGroup.style.display = 'none';
@@ -834,3 +839,4 @@ tr:not(:last-child) {
 
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/platformadmin/verifikasi.blade.php ENDPATH**/ ?>

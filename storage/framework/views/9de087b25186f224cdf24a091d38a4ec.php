@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linkan - Powering Creators Economy</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    @include('layout.header')
+    <?php echo $__env->make('layout.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <style>
         * {
             margin: 0;
@@ -451,23 +451,23 @@
             <!-- Shortlink Generator Section (Landing Page) -->
     <section class="shortlink-landing-card" style="max-width:420px;margin:32px auto 0 auto;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(24,24,24,0.10);padding:32px 28px 28px 28px;">
         <h2 style="font-size:22px;color:#181818;margin-bottom:18px;font-weight:700;">Buat Shortlink Instan</h2>
-        @if(session('success'))
-            @php
+        <?php if(session('success')): ?>
+            <?php
                 $shortUrl = explode(': ', session('success'))[1] ?? '';
-            @endphp
+            ?>
             <div class="success-message" style="display:flex;align-items:center;gap:16px;color:#fff;background:linear-gradient(90deg,#FF9040 0%,#2ecc40 100%);border-radius:12px;padding:18px 24px;margin-bottom:26px;font-weight:700;font-size:17px;box-shadow:0 4px 18px rgba(255,144,64,0.10);border:2px solid #FF9040;position:relative;">
                 <span class="notif-icon" style="background:#fff;color:#2ecc40;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 2px 8px rgba(46,204,64,0.10);flex-shrink:0;"><i class="fas fa-check"></i></span>
                 <span>
                     Shortlink berhasil dibuat:<br>
                     <div class="shortlink-result" style="display:flex;align-items:center;max-width:340px;margin-top:10px;box-shadow:0 2px 8px rgba(0,0,0,0.04);background:#fff;border-radius:8px;border:1.5px solid #FF9040;">
-                        <input id="shortlinkInput" type="text" value="{{ $shortUrl }}" readonly style="flex:1;padding:12px 14px;border:none;border-radius:8px 0 0 8px;font-size:15px;background:transparent;outline:none;height:44px;">
+                        <input id="shortlinkInput" type="text" value="<?php echo e($shortUrl); ?>" readonly style="flex:1;padding:12px 14px;border:none;border-radius:8px 0 0 8px;font-size:15px;background:transparent;outline:none;height:44px;">
                         <button type="button" onclick="copyToClipboard()" style="padding:0 18px;background:#FF9040;color:white;border:none;border-radius:0 8px 8px 0;font-size:15px;font-weight:700;height:44px;cursor:pointer;display:flex;align-items:center;transition:background 0.2s;">Copy URL</button>
                     </div>
                 </span>
             </div>
-        @endif
-        <form action="{{ url('/shorten') }}" method="POST" class="modern-form">
-            @csrf
+        <?php endif; ?>
+        <form action="<?php echo e(url('/shorten')); ?>" method="POST" class="modern-form">
+            <?php echo csrf_field(); ?>
             <input type="text" name="slug" placeholder="Nama Shortlink (opsional)" style="width:100%;padding:13px 14px;border-radius:8px;border:1.5px solid #e0e0e0;background:#f9f9f9;margin-bottom:18px;font-size:15px;">
             <input type="url" name="destination" required placeholder="Tempel URL panjang di sini..." style="width:100%;padding:13px 14px;border-radius:8px;border:1.5px solid #e0e0e0;background:#f9f9f9;margin-bottom:18px;font-size:15px;">
             <button type="submit" style="width:100%;padding:13px 0;background:#FF9040;color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:700;margin-top:8px;box-shadow:0 2px 8px rgba(255,144,64,0.08);transition:background 0.2s;">Buat Shortlink</button>
@@ -476,7 +476,7 @@
         </div>
         <div class="hero-image" id="heroImage">
             <div class="phone-mockup">
-                <img src="{{ asset('images/logohp.png') }}" alt="Mobile App Preview">
+                <img src="<?php echo e(asset('images/logohp.png')); ?>" alt="Mobile App Preview">
             </div>
         </div>
     </main>
@@ -486,7 +486,7 @@
         <p class="section-subtitle">See how our creators use Linkan to set the new standard for their business</p>
         <div class="creators-showcase">
             <div class="scroll-container">
-                <img src="{{ asset('images/BestCreator.png') }}" alt="Best Creator">
+                <img src="<?php echo e(asset('images/BestCreator.png')); ?>" alt="Best Creator">
             </div>
         </div>
     </section>
@@ -497,22 +497,22 @@
 <!-- Tombol Kategori -->
 <div class="button-container">
     <a href="#" class="category-button" onclick="changeImage(event, 'digital')">
-        <img src="{{ asset('images/iconfile.png') }}" alt="Digital Product">
+        <img src="<?php echo e(asset('images/iconfile.png')); ?>" alt="Digital Product">
         Digital Product
     </a>
     <a href="#" class="category-button" onclick="changeImage(event, 'donation')">
-        <img src="{{ asset('images/icondonation.png') }}" alt="Donations">
+        <img src="<?php echo e(asset('images/icondonation.png')); ?>" alt="Donations">
         Donations
     </a>
     <a href="#" class="category-button" onclick="changeImage(event, 'course')">
-        <img src="{{ asset('images/onlinecourse.png') }}" alt="Online Course">
+        <img src="<?php echo e(asset('images/onlinecourse.png')); ?>" alt="Online Course">
         Online Course
     </a>
 </div>
 
 <!-- Slideshow Container -->
 <div class="slideshow-container">
-    <img id="slideImage" src="{{ asset('images/onlinecoursegambar.png') }}" alt="Slideshow">
+    <img id="slideImage" src="<?php echo e(asset('images/onlinecoursegambar.png')); ?>" alt="Slideshow">
 </div>
     </section>
 
@@ -568,7 +568,7 @@
         </div>
 
         <div class="sign-up-container">
-            <a href="{{ route('register') }}" class="sign-up-now">SIGN UP NOW!</a>
+            <a href="<?php echo e(route('register')); ?>" class="sign-up-now">SIGN UP NOW!</a>
         </div>
 
     </section>
@@ -645,9 +645,9 @@
     const categories = ["digital", "course", "donation"];
 
     const images = {
-        "digital": "{{ asset('images/Product Digital.png') }}",
-        "course": "{{ asset('images/onlinecoursegambar.png') }}",
-        "donation": "{{ asset('images/Donation.png') }}"
+        "digital": "<?php echo e(asset('images/Product Digital.png')); ?>",
+        "course": "<?php echo e(asset('images/onlinecoursegambar.png')); ?>",
+        "donation": "<?php echo e(asset('images/Donation.png')); ?>"
     };
 
     function changeImage(event, category) {
@@ -699,4 +699,5 @@
     </script>
 </body>
 </html>
-@include('layout.footer')
+<?php echo $__env->make('layout.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/welcome.blade.php ENDPATH**/ ?>

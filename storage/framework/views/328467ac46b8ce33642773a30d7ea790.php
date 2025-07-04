@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Withdraw Funds</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
@@ -97,43 +97,33 @@
             border-radius: 5px;
             text-align: left;
         }
-        @media (max-width: 900px) {
-            .main-content {
-                margin-left: 0 !important;
-                padding: 10px !important;
-            }
-            .form-group, input, button {
-                width: 100% !important;
-                font-size: 16px !important;
-            }
-        }
     </style>
 </head>
 <body>
     <div class="withdraw-card">
         <h2>Withdraw Funds</h2>
-        <p>Current balance: Rp {{ number_format($currentEarnings ?? 0, 0, ',', '.') }}</p>
+        <p>Current balance: Rp <?php echo e(number_format($currentEarnings ?? 0, 0, ',', '.')); ?></p>
 
-        @if ($errors->any())
+        <?php if($errors->any()): ?>
             <div class="alert-danger">
                 <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e($error); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
             </div>
-        @endif
+        <?php endif; ?>
 
-        <form action="{{ route('payout.processWithdrawal') }}" method="POST">
-            @csrf
+        <form action="<?php echo e(route('payout.processWithdrawal')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label for="amount">Amount to Withdraw</label>
                 <div class="input-wrapper">
                     <span class="currency-prefix"></span>
                     <input style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;" type="text" id="amount" name="amount" placeholder="Rp 0" required
-                        value="{{ old('amount_raw') ? 'Rp ' . number_format(old('amount_raw'), 0, ',', '.') : '' }}"
+                        value="<?php echo e(old('amount_raw') ? 'Rp ' . number_format(old('amount_raw'), 0, ',', '.') : ''); ?>"
                         autocomplete="off">
-                    <input type="hidden" id="amount_raw" name="amount_raw" value="{{ old('amount_raw') }}">
+                    <input type="hidden" id="amount_raw" name="amount_raw" value="<?php echo e(old('amount_raw')); ?>">
                 </div>
             </div>
             <script>
@@ -165,7 +155,7 @@
                 amountInput.addEventListener('input', function(e) {
                     let value = e.target.value;
                     let unformatted = unformatRupiah(value);
-
+                    
                     if (unformatted !== '') {
                         let formatted = formatRupiah(unformatted);
                         e.target.value = formatted;
@@ -192,7 +182,7 @@
         id="method"
         name="method"
         class="form-control"
-        value="{{ old('method', $payoutDetail->method_type ?? '-') }}"
+        value="<?php echo e(old('method', $payoutDetail->method_type ?? '-')); ?>"
         readonly
         style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;"
     >
@@ -208,18 +198,18 @@
         class="form-control"
         placeholder="Enter account number or phone number"
         style="width: calc(100% - 20px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; box-sizing: border-box;"
-        value="{{ old('account_detail', $payoutDetail->account_number ?? '') }}"
+        value="<?php echo e(old('account_detail', $payoutDetail->account_number ?? '')); ?>"
         readonly
         required
     >
 </div>
 
 
-            <input type="hidden" id="account_name_hidden" name="account_name" value="{{ old('account_name', $payoutDetail->account_name ?? '') }}">
+            <input type="hidden" id="account_name_hidden" name="account_name" value="<?php echo e(old('account_name', $payoutDetail->account_name ?? '')); ?>">
 
             <div class="form-group" id="bank_name_group" style="display: none;">
                 <label for="bank_name">Bank Name</label>
-                <input type="text" id="bank_name" name="bank_name" class="form-control" value="{{ old('bank_name', $payoutDetail->bank_name ?? '') }}" placeholder="e.g., Bank BJB">
+                <input type="text" id="bank_name" name="bank_name" class="form-control" value="<?php echo e(old('bank_name', $payoutDetail->bank_name ?? '')); ?>" placeholder="e.g., Bank BJB">
             </div>
 
             <div class="form-actions">
@@ -253,4 +243,4 @@
         });
     </script>
 </body>
-</html>
+</html> <?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/homeadminS/withdraw_form.blade.php ENDPATH**/ ?>

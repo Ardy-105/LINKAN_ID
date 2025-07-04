@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ $appearance->name ?? $user->name }} | Linkan.id</title>
+    <title><?php echo e($appearance->name ?? $user->name); ?> | Linkan.id</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
@@ -24,7 +24,7 @@
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}');
+    background-image: url('<?php echo e($appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : ''); ?>');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -70,12 +70,12 @@
             font-weight: 600;
             margin-bottom: 10px;
             text-align: center;
-            color: {{ $appearance->theme_color ?? '#FF9040' }};
+            color: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;
         }
 
         .preview-bio {
             font-size: 14px;
-            color: {{ $appearance->theme_color ?? '#FF9040' }};
+            color: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;
             text-align: center;
             margin-bottom: 15px;
             padding: 0 20px;
@@ -90,7 +90,7 @@
         }
 
         .preview-social-links a {
-            color: {{ $appearance->theme_color ?? '#FF9040' }};
+            color: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;
             font-size: 20px;
             text-decoration: none;
             transition: color 0.3s ease;
@@ -153,7 +153,7 @@
         }
 
         .preview-product-button {
-            background: {{ $appearance->theme_color ?? '#FF9040' }};
+            background: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;
             color: white;
             padding: 4px 12px;
             border-radius: 4px;
@@ -201,82 +201,84 @@
 </head>
 <body>
     <div class="content-wrapper">
-        @if($appearance->banner)
+        <?php if($appearance->banner): ?>
             <div class="preview-banner">
-                <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner">
+                <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner">
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="preview-profile">
-            @if($appearance->profile_image)
-                <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile Image">
-            @else
+            <?php if($appearance->profile_image): ?>
+                <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile Image">
+            <?php else: ?>
                 <i class="fas fa-user"></i>
-            @endif
+            <?php endif; ?>
         </div>
 
-        <div class="preview-name">{{ $appearance->name ?? $user->name }}</div>
-        <div class="preview-bio">{!! $appearance->bio !!}</div>
+        <div class="preview-name"><?php echo e($appearance->name ?? $user->name); ?></div>
+        <div class="preview-bio"><?php echo $appearance->bio; ?></div>
 
              <div class="preview-social-links" id="livePreviewSocialLinks">
-                                     @if($appearance && $appearance->instagram)
-    <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
-@endif
-@if($appearance && $appearance->tiktok)
-    <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
-@endif
-@if($appearance && $appearance->whatsapp)
-    <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
-@endif
-@if($appearance && $appearance->linkedin)
-    <a href="{{ $appearance->linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
-@endif
-@if($appearance && $appearance->facebook)
-    <a href="{{ $appearance->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
-@endif
-@if($appearance && $appearance->website)
-    <a href="{{ $appearance->website }}" target="_blank"><i class="fas fa-globe"></i></a>
-@endif
-@if($appearance && $appearance->twitter)
-    <a href="{{ $appearance->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
-@endif
-@if($appearance && $appearance->youtube)
-    <a href="{{ $appearance->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
-@endif
-@if($appearance && $appearance->telegram)
-    <a href="{{ $appearance->telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
-@endif
-@if($appearance && $appearance->email)
-    <a href="mailto:{{ $appearance->email }}"><i class="fas fa-envelope"></i></a>
-@endif
-@if($appearance && $appearance->discord)
-    <a href="{{ $appearance->discord }}" target="_blank"><i class="fab fa-discord"></i></a>
-@endif
+                                     <?php if($appearance && $appearance->instagram): ?>
+    <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->tiktok): ?>
+    <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->whatsapp): ?>
+    <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->linkedin): ?>
+    <a href="<?php echo e($appearance->linkedin); ?>" target="_blank"><i class="fab fa-linkedin"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->facebook): ?>
+    <a href="<?php echo e($appearance->facebook); ?>" target="_blank"><i class="fab fa-facebook"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->website): ?>
+    <a href="<?php echo e($appearance->website); ?>" target="_blank"><i class="fas fa-globe"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->twitter): ?>
+    <a href="<?php echo e($appearance->twitter); ?>" target="_blank"><i class="fab fa-twitter"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->youtube): ?>
+    <a href="<?php echo e($appearance->youtube); ?>" target="_blank"><i class="fab fa-youtube"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->telegram): ?>
+    <a href="<?php echo e($appearance->telegram); ?>" target="_blank"><i class="fab fa-telegram"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->email): ?>
+    <a href="mailto:<?php echo e($appearance->email); ?>"><i class="fas fa-envelope"></i></a>
+<?php endif; ?>
+<?php if($appearance && $appearance->discord): ?>
+    <a href="<?php echo e($appearance->discord); ?>" target="_blank"><i class="fab fa-discord"></i></a>
+<?php endif; ?>
 
                                     </div>
-        @if($products && $products->count() > 0)
+        <?php if($products && $products->count() > 0): ?>
             <div class="preview-products">
-                @foreach($products as $product)
-                    @if($product->verification_status == 'approved')
+                <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php if($product->verification_status == 'approved'): ?>
                         <div class="preview-product-item">
                             <div class="preview-product-image">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}">
-                                @else
+                                <?php if($product->image): ?>
+                                    <img src="<?php echo e(asset('storage/' . $product->image)); ?>" alt="<?php echo e($product->title); ?>">
+                                <?php else: ?>
                                     <i class="fas fa-file-alt"></i>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <div class="product-info">
-                                <div class="preview-product-title">{{ $product->title }}</div>
+                                <div class="preview-product-title"><?php echo e($product->title); ?></div>
                             </div>
-                            <a href="{{ route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)]) }}" class="preview-product-button">
-                                {{ str_replace('_', ' ', $product->button_text ?? 'Beli') }}
+                            <a href="<?php echo e(route('track.click', ['link_id' => $user->username, 'target' => route('product.show', $product->id)])); ?>" class="preview-product-button">
+                                <?php echo e(str_replace('_', ' ', $product->button_text ?? 'Beli')); ?>
+
                             </a>
                         </div>
-                    @endif
-                @endforeach
+                    <?php endif; ?>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </body>
 </html>
+<?php /**PATH C:\Ardy\2025\Semester 4\Project2\LINKAN_ID-finalproject\resources\views/public/profile.blade.php ENDPATH**/ ?>
