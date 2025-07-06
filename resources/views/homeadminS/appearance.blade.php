@@ -563,19 +563,15 @@
     <div class="theme-options" id="themeOptions"
          style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
 
-        @php
-            $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png','sunset.png', 'mountain.png','library.png','news paper.png'];
-        @endphp
-
         @foreach ($themes as $theme)
             <div style="text-align: center;">
-                <img src="{{ asset('images/previewt/' . $theme) }}"
-                     data-bg="{{ asset('images/background/' . $theme) }}"
-                     data-name="{{ $theme }}"
+                <img src="{{ asset('storage/' . $theme->preview_image) }}"
+                     data-bg="{{ asset('storage/' . $theme->background_image) }}"
+                     data-name="{{ $theme->name }}"
                      class="theme-preview"
                      style="width: 100px; height: 70px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 8px; transition: transform 0.2s;">
                 <div style="font-size: 13px; margin-top: 6px; color: #333;">
-                    {{ ucwords(str_replace(['-', '_'], ' ', pathinfo($theme, PATHINFO_FILENAME))) }}
+                    {{ $theme->name }}
                 </div>
             </div>
         @endforeach

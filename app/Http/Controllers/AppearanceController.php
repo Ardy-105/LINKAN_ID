@@ -14,7 +14,8 @@ class AppearanceController extends Controller
         $user = Auth::user();
         $appearance = Appearance::where('user_id', $user->id)->first();
         $digitalProducts = \App\Models\DigitalProduct::where('user_id', $user->id)->latest()->get();
-        return view('homeadminS.appearance', compact('appearance', 'digitalProducts'));
+        $themes = \App\Models\Theme::all();
+        return view('homeadminS.appearance', compact('appearance', 'digitalProducts', 'themes'));
     }
 
 

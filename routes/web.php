@@ -148,6 +148,11 @@ Route::post('/cart/update-qty', [DigitalProductController::class, 'updateQty'])-
 // Checkout
 Route::match(['get', 'post'], '/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
 
+// Platform Admin Theme Management
+Route::middleware(['auth'])->prefix('platformadmin')->name('platformadmin.')->group(function () {
+    Route::resource('theme', App\Http\Controllers\PlatformAdmin\ThemeController::class);
+});
+
 // Redirect berdasarkan slug (HARUS PALING BAWAH supaya tidak override route lain)
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']);
 

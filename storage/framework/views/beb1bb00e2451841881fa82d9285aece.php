@@ -560,19 +560,15 @@
     <div class="theme-options" id="themeOptions"
          style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;">
 
-        <?php
-            $themes = ['blue ocean.png', 'city light.png', 'clasic.png', 'desert.png', 'green flower.png', 'pink candy.png', 'playstation abstract.png','sunset.png', 'mountain.png','library.png','news paper.png'];
-        ?>
-
         <?php $__currentLoopData = $themes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $theme): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div style="text-align: center;">
-                <img src="<?php echo e(asset('images/previewt/' . $theme)); ?>"
-                     data-bg="<?php echo e(asset('images/background/' . $theme)); ?>"
-                     data-name="<?php echo e($theme); ?>"
+                <img src="<?php echo e(asset('storage/' . $theme->preview_image)); ?>"
+                     data-bg="<?php echo e(asset('storage/' . $theme->background_image)); ?>"
+                     data-name="<?php echo e($theme->name); ?>"
                      class="theme-preview"
                      style="width: 100px; height: 70px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 8px; transition: transform 0.2s;">
                 <div style="font-size: 13px; margin-top: 6px; color: #333;">
-                    <?php echo e(ucwords(str_replace(['-', '_'], ' ', pathinfo($theme, PATHINFO_FILENAME)))); ?>
+                    <?php echo e($theme->name); ?>
 
                 </div>
             </div>

@@ -6,147 +6,61 @@
     <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* --- Styles dari beranda dan styling umum --- */
         body {
             background: #f9f9f9;
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
             margin: 0;
+            padding: 0;
             display: flex;
             min-height: 100vh;
         }
-        .main {
-            padding: 40px;
-            flex-grow: 1;
+        .header {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
-        .title {
-            font-size: 2em;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-        .card-earning {
-            background: #ff7f2a;
-            color: #fff;
-            border-radius: 16px;
-            padding: 30px 30px 20px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            position: relative;
-        }
-        .card-earning .total {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-        .card-earning .amount {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 10px 0 20px 0;
-        }
-        .card-earning .actions {
-            position: absolute;
-            top: 30px;
-            right: 30px;
-            display: flex;
-            gap: 10px;
-        }
-        .card-earning .actions button {
-            background: #fff;
-            color: #ff7f2a;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-        }
-        .card-earning .actions button i {
-            font-size: 1.1em;
-        }
-        .card-earning .history {
-            margin-top: 30px;
-            color: #ffd6b3;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .list-komisi {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        .sidebar {
+            width: 220px;
+            background-color: #dbe7fd;
             padding: 20px;
-        }
-        .komisi-item {
+            min-height: 100vh;
+            border-top-right-radius: 40px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border: 2px solid #fff;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.03);
-            padding: 16px 20px;
-            transition: border 0.2s;
+            flex-direction: column;
         }
-        .komisi-item.selected {
-            border: 2px solid #1a73e8;
+        .main {
+            flex: 1;
+            padding: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            min-height: 100vh;
         }
-        .komisi-item .icon {
-            background: orange;
-            color: #fff;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-        }
-        .komisi-item .info {
-            margin-left: 12px;
-        }
-        .komisi-item .email {
-            font-size: 0.95em;
-            color: #888;
-        }
-        .komisi-item .nama {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        .komisi-item .tanggal {
-            color: #888;
-            font-size: 0.95em;
-            min-width: 110px;
-            text-align: center;
-        }
-        .komisi-item .nominal {
-            font-weight: bold;
-            font-size: 1.1em;
-            min-width: 110px;
-            text-align: right;
-        }
-
+        .menu-title { font-weight: bold; font-size: 12px; margin-bottom: 20px; }
+        .sidebar a { display: flex; align-items: center; padding: 10px; text-decoration: none; color: #000; font-weight: 500; border-radius: 8px; margin-bottom: 10px; }
+        .sidebar a.active { background-color: white; font-weight: 700; }
+        .sidebar a:hover { background-color: #e1ecfa; }
+        .card-earning { background: #ff7f2a; color: #fff; border-radius: 16px; padding: 30px 30px 20px 30px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); position: relative; }
+        .card-earning .total { font-size: 1.5em; font-weight: bold; }
+        .card-earning .amount { font-size: 2.5em; font-weight: bold; margin: 10px 0 20px 0; }
+        .card-earning .actions { position: absolute; top: 30px; right: 30px; display: flex; gap: 10px; }
+        .card-earning .actions button { background: #fff; color: #ff7f2a; border: none; border-radius: 8px; padding: 8px 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+        .card-earning .actions button i { font-size: 1.1em; }
+        .card-earning .history { margin-top: 30px; color: #ffd6b3; font-size: 1em; display: flex; align-items: center; gap: 6px; }
+        .list-komisi { background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 20px; }
+        .komisi-item { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 12px; margin-bottom: 16px; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.03); padding: 16px 20px; transition: border 0.2s; }
+        .komisi-item.selected { border: 2px solid #1a73e8; }
+        .komisi-item .icon { background: orange; color: #fff; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.3em; }
+        .komisi-item .info { margin-left: 12px; }
+        .komisi-item .email { font-size: 0.95em; color: #888; }
+        .komisi-item .nama { font-weight: bold; font-size: 1.1em; }
+        .komisi-item .tanggal { color: #888; font-size: 0.95em; min-width: 110px; text-align: center; }
+        .komisi-item .nominal { font-weight: bold; font-size: 1.1em; min-width: 110px; text-align: right; }
         @media (max-width: 700px) {
-            body {
-                flex-direction: column;
-            }
-            .main {
-                padding: 10px;
-                margin-left: 0;
-            }
-            .komisi-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-                padding: 10px;
-            }
+            body { flex-direction: column; }
+            .main { padding: 10px; margin-left: 0; }
+            .komisi-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
             .komisi-item .tanggal,
-            .komisi-item .nominal {
-                min-width: unset;
-                text-align: left;
-            }
+            .komisi-item .nominal { min-width: unset; text-align: left; }
         }
     </style>
 </head>
@@ -157,7 +71,7 @@
 
     <div class="main">
         <!-- Judul -->
-        <div class="title">Commission History</div>
+        <div class="header">Commission History</div>
 
         <!-- Card Total Earnings -->
         <div class="card-earning">
