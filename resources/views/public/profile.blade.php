@@ -24,7 +24,7 @@
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-image: url('{{ $appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : '' }}');
+    background-image: url('{{ ($appearance && $appearance->background_color) ? asset('images/background/' . $appearance->background_color) : asset('images/background.png') }}');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -168,60 +168,60 @@
     </style>
 </head>
 <body>
-    <div class="content-wrapper">
-        @if($appearance->banner)
-            <div class="preview-banner">
+    <div class="content-wrapper" style="background: {{ ($appearance && $appearance->background_color) ? 'url(' . asset('images/background/' . $appearance->background_color) . ')' : '#fff' }}; background-size: cover; background-position: center;">
+        <div class="preview-banner" style="background: {{ ($appearance && $appearance->banner) ? 'none' : '#fff' }};">
+            @if($appearance && $appearance->banner)
                 <img src="{{ asset('storage/' . $appearance->banner) }}" alt="Banner">
-            </div>
-        @endif
-
-        <div class="preview-profile">
-            @if($appearance->profile_image)
-                <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile Image">
-            @else
-                <i class="fas fa-user"></i>
             @endif
         </div>
 
-        <div class="preview-name">{{ $appearance->name ?? $user->name }}</div>
-        <div class="preview-bio">{!! $appearance->bio !!}</div>
+        <div class="preview-profile">
+            @if($appearance && $appearance->profile_image)
+                <img src="{{ asset('storage/' . $appearance->profile_image) }}" alt="Profile Image">
+            @else
+                <i class="fas fa-user" style="font-size:48px;color:#ccc;"></i>
+            @endif
+        </div>
 
-             <div class="preview-social-links" id="livePreviewSocialLinks">
-                                     @if($appearance && $appearance->instagram)
-    <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
-@endif
-@if($appearance && $appearance->tiktok)
-    <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
-@endif
-@if($appearance && $appearance->whatsapp)
-    <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
-@endif
-@if($appearance && $appearance->linkedin)
-    <a href="{{ $appearance->linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
-@endif
-@if($appearance && $appearance->facebook)
-    <a href="{{ $appearance->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
-@endif
-@if($appearance && $appearance->website)
-    <a href="{{ $appearance->website }}" target="_blank"><i class="fas fa-globe"></i></a>
-@endif
-@if($appearance && $appearance->twitter)
-    <a href="{{ $appearance->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
-@endif
-@if($appearance && $appearance->youtube)
-    <a href="{{ $appearance->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
-@endif
-@if($appearance && $appearance->telegram)
-    <a href="{{ $appearance->telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
-@endif
-@if($appearance && $appearance->email)
-    <a href="mailto:{{ $appearance->email }}"><i class="fas fa-envelope"></i></a>
-@endif
-@if($appearance && $appearance->discord)
-    <a href="{{ $appearance->discord }}" target="_blank"><i class="fab fa-discord"></i></a>
-@endif
+        <div class="preview-name" style="color: {{ $appearance->theme_color ?? '#FF9040' }};">{{ $appearance->name ?? $user->name }}</div>
+        <div class="preview-bio" style="color: {{ $appearance->theme_color ?? '#FF9040' }};">{!! $appearance->bio ?? '' !!}</div>
 
-                                    </div>
+        <div class="preview-social-links" id="livePreviewSocialLinks">
+            @if($appearance && $appearance->instagram)
+                <a href="{{ $appearance->instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+            @endif
+            @if($appearance && $appearance->tiktok)
+                <a href="{{ $appearance->tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>
+            @endif
+            @if($appearance && $appearance->whatsapp)
+                <a href="{{ $appearance->whatsapp }}" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            @endif
+            @if($appearance && $appearance->linkedin)
+                <a href="{{ $appearance->linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>
+            @endif
+            @if($appearance && $appearance->facebook)
+                <a href="{{ $appearance->facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>
+            @endif
+            @if($appearance && $appearance->website)
+                <a href="{{ $appearance->website }}" target="_blank"><i class="fas fa-globe"></i></a>
+            @endif
+            @if($appearance && $appearance->twitter)
+                <a href="{{ $appearance->twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+            @endif
+            @if($appearance && $appearance->youtube)
+                <a href="{{ $appearance->youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+            @endif
+            @if($appearance && $appearance->telegram)
+                <a href="{{ $appearance->telegram }}" target="_blank"><i class="fab fa-telegram"></i></a>
+            @endif
+            @if($appearance && $appearance->email)
+                <a href="mailto:{{ $appearance->email }}"><i class="fas fa-envelope"></i></a>
+            @endif
+            @if($appearance && $appearance->discord)
+                <a href="{{ $appearance->discord }}" target="_blank"><i class="fab fa-discord"></i></a>
+            @endif
+        </div>
+
         @if($products && $products->count() > 0)
             <div class="preview-products">
                 @foreach($products as $product)
