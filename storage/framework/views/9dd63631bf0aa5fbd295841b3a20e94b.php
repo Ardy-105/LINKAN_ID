@@ -24,7 +24,7 @@
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-image: url('<?php echo e(($appearance && $appearance->background_color) ? asset('images/background/' . $appearance->background_color) : asset('images/background.png')); ?>');
+    background-image: url('<?php echo e(($appearance && $appearance->background_color) ? asset('storage/themes/backgrounds/' . $appearance->background_color) . '?v=' . time() : asset('images/background.png')); ?>');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -168,7 +168,7 @@
     </style>
 </head>
 <body>
-    <div class="content-wrapper" style="background: <?php echo e(($appearance && $appearance->background_color) ? 'url(' . asset('images/background/' . $appearance->background_color) . ')' : '#fff'); ?>; background-size: cover; background-position: center;">
+    <div class="content-wrapper" style="background: <?php echo e(($appearance && $appearance->background_color) ? 'url(' . asset('storage/themes/backgrounds/' . $appearance->background_color) . ')' : '#fff'); ?>; background-size: cover; background-position: center;">
         <div class="preview-banner" style="background: <?php echo e(($appearance && $appearance->banner) ? 'none' : '#fff'); ?>;">
             <?php if($appearance && $appearance->banner): ?>
                 <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner">

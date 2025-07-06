@@ -880,7 +880,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // Terapkan background dari database saat halaman dimuat ulang
     const currentBackground = backgroundColorInput ? backgroundColorInput.value : '';
     if (currentBackground) {
-        const matchedTheme = document.querySelector(`.theme-preview[data-name="${currentBackground}"]`);
+        const matchedTheme = Array.from(document.querySelectorAll('.theme-preview')).find(img => {
+            const bgUrl = img.getAttribute('data-bg');
+            return bgUrl && bgUrl.endsWith('/' + currentBackground);
+        });
         if (matchedTheme && previewScreen) {
             const bgUrl = matchedTheme.getAttribute('data-bg');
             previewScreen.style.backgroundImage = `url('${bgUrl}')`;
@@ -892,8 +895,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.theme-preview').forEach(img => {
         img.addEventListener('click', function () {
             const bgUrl = this.getAttribute('data-bg');
-            const bgName = this.getAttribute('data-name');
-            if (backgroundColorInput) backgroundColorInput.value = bgName;
+            const bgImage = bgUrl.split('/').pop(); // hanya ambil nama file gambar
+            if (backgroundColorInput) backgroundColorInput.value = bgImage;
             if (previewScreen) {
                 previewScreen.style.backgroundImage = `url('${bgUrl}')`;
                 previewScreen.style.backgroundSize = 'cover';
