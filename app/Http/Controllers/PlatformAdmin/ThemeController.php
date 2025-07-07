@@ -19,7 +19,7 @@ class ThemeController extends Controller
     public function index()
     {
         $this->authorizePlatformAdmin();
-        $themes = Theme::all();
+        $themes = Theme::paginate(5);
         return view('platformadmin.theme.index', compact('themes'));
     }
 

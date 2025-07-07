@@ -129,6 +129,82 @@
                 </tbody>
             </table>
         </div>
+        <!-- Custom Pagination di luar tabel, rata tengah -->
+        @if ($themes->lastPage() > 1)
+        <div style="display: flex; justify-content: center; margin-top: 32px;">
+            <div id="pagination-theme">
+                <ul style="background:none; border-radius:0; box-shadow:none; padding:0; display:inline-flex; align-items:center; list-style:none; margin:0;">
+                    {{-- First & Prev --}}
+                    <li><button class="{{ $themes->onFirstPage() ? 'opacity-50' : '' }}" aria-label="Halaman Pertama" onclick="window.location='{{ $themes->url(1) }}'" {{ $themes->onFirstPage() ? 'disabled' : '' }}>&laquo;</button></li>
+                    <li><button class="{{ $themes->onFirstPage() ? 'opacity-50' : '' }}" aria-label="Sebelumnya" onclick="window.location='{{ $themes->previousPageUrl() }}'" {{ $themes->onFirstPage() ? 'disabled' : '' }}>&lsaquo;</button></li>
+                    {{-- Numbered --}}
+                    @php
+                        $total = $themes->lastPage();
+                        $current = $themes->currentPage();
+                        $pageNumbers = [];
+                        if ($total <= 7) {
+                            for ($i = 1; $i <= $total; $i++) $pageNumbers[] = $i;
+                        } else {
+                            if ($current <= 4) {
+                                $pageNumbers = [1,2,3,4,5,'...',$total];
+                            } elseif ($current >= $total-3) {
+                                $pageNumbers = [1,'...',$total-4,$total-3,$total-2,$total-1,$total];
+                            } else {
+                                $pageNumbers = [1,'...',$current-1,$current,$current+1,'...',$total];
+                            }
+                        }
+                    @endphp
+                    @foreach ($pageNumbers as $p)
+                        @if ($p === '...')
+                            <li><span class="text-gray-400" style="color:#e0a16b;font-weight:bold;font-size:1.1em;">...</span></li>
+                        @else
+                            <li><button class="{{ $p==$current?'bg-orange-500':'bg-white' }}" aria-current="{{ $p==$current?'page':'false' }}" onclick="window.location='{{ $themes->url($p) }}'">{{ $p }}</button></li>
+                        @endif
+                    @endforeach
+                    {{-- Next & Last --}}
+                    <li><button class="{{ !$themes->hasMorePages() ? 'opacity-50' : '' }}" aria-label="Berikutnya" onclick="window.location='{{ $themes->nextPageUrl() }}'" {{ !$themes->hasMorePages() ? 'disabled' : '' }}>&rsaquo;</button></li>
+                    <li><button class="{{ !$themes->hasMorePages() ? 'opacity-50' : '' }}" aria-label="Halaman Terakhir" onclick="window.location='{{ $themes->url($themes->lastPage()) }}'" {{ !$themes->hasMorePages() ? 'disabled' : '' }}>&raquo;</button></li>
+                </ul>
+            </div>
+        </div>
+        <style>
+        #pagination-theme button {
+            transition: all 0.18s;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            margin: 0 3px;
+            border-radius: 5px;
+            min-width: 36px;
+            min-height: 36px;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgba(255,168,106,0.08);
+            cursor: pointer;
+            background: #f5f5f5;
+            color: #666;
+        }
+        #pagination-theme button[disabled], #pagination-theme .opacity-50 {
+            background: #f5f5f5 !important;
+            color: #bbb !important;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        #pagination-theme button.bg-orange-500 {
+            background: #FF9040 !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(255,144,64,0.13);
+        }
+        #pagination-theme button.bg-white {
+            background: #f5f5f5 !important;
+            color: #222 !important;
+        }
+        #pagination-theme button:hover:not([disabled]):not(.bg-orange-500) {
+            background: #FFA86A !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(255,168,106,0.10);
+        }
+        </style>
+        @endif
     </div>
 </body>
 </html> 
