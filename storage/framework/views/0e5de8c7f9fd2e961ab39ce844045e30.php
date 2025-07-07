@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Setting</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         * {
@@ -175,43 +175,51 @@
 <body>
     
     <div class="container">
-        @include('homeadmins.sidebar.sidebar')
+        <?php echo $__env->make('homeadmins.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
-                <h1><a href="{{ route('settings') }}">Settings</a> &gt; <span>Account Settings</h1>
+                <h1><a href="<?php echo e(route('settings')); ?>">Settings</a> &gt; <span>Account Settings</h1>
             </div>
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
                 <div style="color: green; margin-bottom: 15px;">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?>
 
 <!-- Form Account Detail -->
             <div class="account-detail">
                 <h2>Account Detail</h2>
-                <form id="accountForm" action="{{ route('account.update') }}" method="POST">
-                    @csrf
+                <form id="accountForm" action="<?php echo e(route('account.update')); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}">
+                        <input type="text" id="username" name="username" value="<?php echo e(old('username', $user->username)); ?>">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" readonly style="color: gray;">
+                        <input type="email" id="email" name="email" value="<?php echo e(old('email', $user->email)); ?>" readonly style="color: gray;">
                     </div>
                     <div class="form-group">
                         <label for="name">Name :</label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}">
+                        <input type="text" id="name" name="name" value="<?php echo e(old('name', $user->name)); ?>">
                     </div>    
                     <div class="form-group">
                         <label for="password">Password :</label>
                         <input type="password" id="password" name="password" placeholder="Enter new password" minlength="8" required>
                         <span style="color: #666; font-size: 12px;">Password minimal 8 karakter</span>
-                        @error('password')
-                            <span style="color: red; font-size: 12px;">{{ $message }}</span>
-                        @enderror
+                        <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <span style="color: red; font-size: 12px;"><?php echo e($message); ?></span>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div> 
                     <div class="form-group">
                         <label for="password_confirmation">Konfirmasi Password :</label>
@@ -247,9 +255,9 @@
                     <p style="color: red; margin: 10px 0;">Tindakan ini tidak dapat dibatalkan!</p>
                     <div class="popup-buttons">
                         <button class="btn-cancel" onclick="closeDeletePopup()">Cancel</button>
-                        <form action="{{ route('account.delete') }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
+                        <form action="<?php echo e(route('account.delete')); ?>" method="POST" style="display: inline;">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('DELETE'); ?>
                             <button type="submit" class="btn-confirm">Ya, Hapus Akun</button>
                         </form>
                     </div>
@@ -285,4 +293,4 @@
         }
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\LINKAN_ID\resources\views/homeadmins/myaccount.blade.php ENDPATH**/ ?>

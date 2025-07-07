@@ -41,7 +41,7 @@ class AccountController extends Controller
     public function edit()
     {
         $user = Auth::user(); // Ambil data user yang sedang login
-        return view('homeadminS.myaccount', compact('user'));
+        return view('homeadmins.myaccount', compact('user'));
     }
 
     public function delete()

@@ -31,7 +31,7 @@ public function show($id)
 
     public function create()
     {
-        return view('homeadminS.digital-product');
+        return view('homeadmins.digital-product');
     }
 
     public function store(Request $request)
@@ -88,7 +88,7 @@ public function show($id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
             
-        return view('homeadminS.digital-product', compact('product'));
+        return view('homeadmins.digital-product', compact('product'));
     }
     
     public function update(Request $request, $id)

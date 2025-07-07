@@ -114,7 +114,7 @@ class DashboardController extends Controller
         // Ambil data appearance untuk profile
         $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
 
-        return view('homeadminS.beranda', compact(
+        return view('homeadmins.beranda', compact(
             'totalProducts',
             'totalViews',
             'totalClicks',

@@ -616,7 +616,7 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        @include('homeadmins.sidebar.sidebar')
 
         <div class="main-content">
             <div class="header">
@@ -678,7 +678,7 @@
             @endif
             </div>
     <!-- Ganti section preview dengan komponen reusable -->
-    @include('homeadminS.preview', [
+    @include('homeadmins.preview', [
         'appearance' => $appearance,
         'digitalProducts' => $digitalProducts,
         'user' => Auth::user()

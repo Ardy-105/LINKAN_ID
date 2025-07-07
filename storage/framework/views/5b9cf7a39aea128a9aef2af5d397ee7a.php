@@ -135,7 +135,7 @@
 </head>
 <body>
 <div class="container">
-    <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php echo $__env->make('homeadmins.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <div class="main-content">
         <div class="header">
             <h1>Purchased Content</h1>
@@ -203,4 +203,4 @@ function copyToClipboard(text) {
 </script>
 </body>
 </html>
-<?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/mypurchase.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\LINKAN_ID\resources\views/homeadmins/mypurchase.blade.php ENDPATH**/ ?>

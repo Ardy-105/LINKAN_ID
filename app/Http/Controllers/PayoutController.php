@@ -105,7 +105,7 @@ class PayoutController extends Controller
         $currentBalance = $totalEarnings - $totalWithdrawn;
 
         // Kirim ke view
-        return view('homeadminS.payout', compact('totalEarnings', 'totalWithdrawn', 'currentBalance', 'payoutDetail'));
+        return view('homeadmins.payout', compact('totalEarnings', 'totalWithdrawn', 'currentBalance', 'payoutDetail'));
     }
 
     /**
@@ -121,7 +121,7 @@ class PayoutController extends Controller
         // Ambil detail pembayaran user yang sudah disimpan
         $payoutDetail = UserPayoutDetail::where('user_id', $user->id)->first();
 
-        return view('homeadminS.withdraw_form', compact('currentEarnings', 'payoutDetail'));
+        return view('homeadmins.withdraw_form', compact('currentEarnings', 'payoutDetail'));
     }
 
     /**
@@ -132,7 +132,7 @@ class PayoutController extends Controller
         $user = Auth::user();
         $payoutDetail = UserPayoutDetail::where('user_id', $user->id)->first();
 
-        return view('homeadminS.payout_method_form', compact('payoutDetail'));
+        return view('homeadmins.payout_method_form', compact('payoutDetail'));
     }
 
     /**
@@ -274,6 +274,6 @@ class PayoutController extends Controller
         ->latest()
         ->get();
         
-        return view('homeadminS.payout_history', compact('history'));
+        return view('homeadmins.payout_history', compact('history'));
     }
 } 

@@ -10,13 +10,13 @@ class OrdersController extends Controller
     public function index()
     {
         $orders = Orders::all();
-        return view('homeadminS.orders', compact('orders'));
+        return view('homeadmins.orders', compact('orders'));
     }
 
     public function show($id)
     {
         $order = Orders::findOrFail($id);
-        return view('homeadminS.orders.show', compact('order'));
+        return view('homeadmins.orders.show', compact('order'));
     }
 }
 

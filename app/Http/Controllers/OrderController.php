@@ -78,7 +78,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return view('homeadminS.orders', [
+        return view('homeadmins.orders', [
             'transactions' => $transactions
         ]);
     }

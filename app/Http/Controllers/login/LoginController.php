@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    protected $redirectTo = '/homeadminS/beranda';
+    protected $redirectTo = '/homeadmins/beranda';
 
     public function showLoginForm()
     {

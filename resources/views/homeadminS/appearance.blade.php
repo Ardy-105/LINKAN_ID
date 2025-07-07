@@ -432,7 +432,7 @@
 </head>
 <body>
     <div class="container">
-        @include('homeadminS.sidebar.sidebar')
+        @include('homeadmins.sidebar.sidebar')
 
         <div class="main-content">
             <form method="POST" action="{{ route('appearance.update') }}" enctype="multipart/form-data" id="appearanceForm">

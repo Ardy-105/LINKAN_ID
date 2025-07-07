@@ -9,7 +9,7 @@ class AdminController extends Controller
 {
     public function beranda()
     {
-        return view('homeadminS.beranda');
+        return view('homeadmins.beranda');
     }
 
     public function myLinkan()
@@ -18,7 +18,7 @@ class AdminController extends Controller
         $digitalProducts = DigitalProduct::where('user_id', $user->id)->latest()->get();
         $appearance = \App\Models\Appearance::where('user_id', $user->id)->first();
 
-        return view('homeadminS.mylinkan', compact('digitalProducts', 'appearance'));
+        return view('homeadmins.mylinkan', compact('digitalProducts', 'appearance'));
     }
 
     public function myPurchase()
@@ -31,7 +31,7 @@ class AdminController extends Controller
             ->get();
         // Ambil produk digital unik yang sudah dibeli user
         $purchasedProducts = $purchases->pluck('product')->unique('id')->values();
-        return view('homeadminS.mypurchase', [
+        return view('homeadmins.mypurchase', [
             'purchases' => $purchases,
             'purchasedProducts' => $purchasedProducts
         ]);
