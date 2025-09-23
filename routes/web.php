@@ -74,44 +74,44 @@ Route::get('/dashboard', function () {
 // Admin Routes (middleware auth)
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/homeadminS/beranda', [DashboardController::class, 'beranda'])->name('beranda.admins');
+    Route::get('/homeadmins/beranda', [DashboardController::class, 'beranda'])->name('beranda.admins');
 
-    Route::get('/homeadminS/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
+    Route::get('/homeadmins/mylinkan', [AdminController::class, 'myLinkan'])->name('mylinkan');
 
     // Appearance
-    Route::get('/homeadminS/appearance', [AppearanceController::class, 'index'])->name('appearance');
-    Route::post('/homeadminS/appearance', [AppearanceController::class, 'update'])->name('appearance.update');
+    Route::get('/homeadmins/appearance', [AppearanceController::class, 'index'])->name('appearance');
+    Route::post('/homeadmins/appearance', [AppearanceController::class, 'update'])->name('appearance.update');
 
     // Settings
-    Route::get('/homeadminS/settings', [SettingController::class, 'index'])->name('settings');
+    Route::get('/homeadmins/settings', [SettingController::class, 'index'])->name('settings');
 
     // Account Settings
-    Route::get('/homeadminS/account-settings', [AccountController::class, 'edit'])->name('account.settings');
-    Route::post('/homeadminS/account-settings/update', [AccountController::class, 'update'])->name('account.update');
-    Route::delete('/homeadminS/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
+    Route::get('/homeadmins/account-settings', [AccountController::class, 'edit'])->name('account.settings');
+    Route::post('/homeadmins/account-settings/update', [AccountController::class, 'update'])->name('account.update');
+    Route::delete('/homeadmins/account-settings/delete', [AccountController::class, 'delete'])->name('account.delete');
 
     // Payout Routes (Dipindahkan keluar dari grup 'admin' dan disesuaikan dengan URL yang diakses user)
-    Route::get('/homeadminS/payout-settings', [PayoutController::class, 'index'])->name('payout.index');
-    Route::get('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'showWithdrawForm'])->name('payout.showWithdrawForm');
-    Route::post('/homeadminS/payout-settings/withdraw', [PayoutController::class, 'processWithdrawal'])->name('payout.processWithdrawal');
-    Route::get('/homeadminS/payout-settings/history', [PayoutController::class, 'showPayoutHistory'])->name('payout.showPayoutHistory');
+    Route::get('/homeadmins/payout-settings', [PayoutController::class, 'index'])->name('payout.index');
+    Route::get('/homeadmins/payout-settings/withdraw', [PayoutController::class, 'showWithdrawForm'])->name('payout.showWithdrawForm');
+    Route::post('/homeadmins/payout-settings/withdraw', [PayoutController::class, 'processWithdrawal'])->name('payout.processWithdrawal');
+    Route::get('/homeadmins/payout-settings/history', [PayoutController::class, 'showPayoutHistory'])->name('payout.showPayoutHistory');
 
     // Payout Method Settings
-    Route::get('/homeadminS/payout-settings/method', [PayoutController::class, 'showPayoutMethodForm'])->name('payout.showMethodForm');
-    Route::post('/homeadminS/payout-settings/method', [PayoutController::class, 'savePayoutMethod'])->name('payout.saveMethod');
+    Route::get('/homeadmins/payout-settings/method', [PayoutController::class, 'showPayoutMethodForm'])->name('payout.showMethodForm');
+    Route::post('/homeadmins/payout-settings/method', [PayoutController::class, 'savePayoutMethod'])->name('payout.saveMethod');
 
     // Statistik
-    Route::get('/homeadminS/statistic', [StatisticController::class, 'index'])->name('statistic');
+    Route::get('/homeadmins/statistic', [StatisticController::class, 'index'])->name('statistic');
     Route::get('/get-chart-data', [StatisticController::class, 'getChartData'])->name('statistic.chart-data');
 
     // Orders
-    Route::get('/homeadminS/orders', [OrderController::class, 'index'])->name('orders');
-    Route::get('/homeadminS/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
+    Route::get('/homeadmins/orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/homeadmins/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
 
-    // Digital Products Resource
+    // Digital Products Resources
     Route::resource('digital-product', DigitalProductController::class);
 
-    Route::get('/homeadminS/mypurchase', [AdminController::class, 'myPurchase'])->name('mypurchase');
+    Route::get('/homeadmins/mypurchase', [AdminController::class, 'myPurchase'])->name('mypurchase');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail'])->name('orders.detail');
@@ -147,6 +147,11 @@ Route::post('/cart/update-qty', [DigitalProductController::class, 'updateQty'])-
 
 // Checkout
 Route::match(['get', 'post'], '/checkout/{id}', [DigitalProductController::class, 'checkout'])->name('checkout');
+
+// Platform Admin Theme Management
+Route::middleware(['auth'])->prefix('platformadmin')->name('platformadmin.')->group(function () {
+    Route::resource('theme', App\Http\Controllers\PlatformAdmin\ThemeController::class);
+});
 
 // Redirect berdasarkan slug (HARUS PALING BAWAH supaya tidak override route lain)
 Route::get('/{slug}', [ShortlinkController::class, 'redirect']);

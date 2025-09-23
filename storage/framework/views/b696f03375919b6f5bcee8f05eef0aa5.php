@@ -428,7 +428,7 @@
 </head>
 <body>
     <div class="container">
-        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('homeadmins.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header">
@@ -505,4 +505,4 @@
     </div>
 </body>
 </html>
-<?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/payout_history.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\LINKAN_ID\resources\views/homeadmins/payout_history.blade.php ENDPATH**/ ?>

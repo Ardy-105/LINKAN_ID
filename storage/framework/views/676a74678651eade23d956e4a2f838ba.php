@@ -14,46 +14,14 @@
     background-color: #f9f9f9;
 }
 
-.sidebar {
-    width: 220px;
-    background-color: #dbe7fd;
-    padding: 20px;
-    min-height: 100vh;
-    border-top-right-radius: 40px;
-    display: flex;
-    flex-direction: column;
-}
 
-.menu-title {
-    font-weight: bold;
-    font-size: 12px;
-    margin-bottom: 20px;
-}
-
-.sidebar a {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    text-decoration: none;
-    color: #000;
-    font-weight: 500;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.sidebar a.active {
-    background-color: white;
-    font-weight: 700;
-}
-
-.sidebar a:hover {
-    background-color: #e1ecfa;
-}
-
-.content {
-    flex: 1;
-    padding: 40px;
-}
+        .main {
+            flex: 1;
+            padding: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
 
 .header {
     font-size: 28px;
@@ -444,7 +412,7 @@ tr:not(:last-child) {
     <?php echo $__env->make('platformadmin.sidebar.sidebarplatform', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     
-    <div class="content">
+    <div class="main">
         <div class="header">Verification Content</div>
 
         

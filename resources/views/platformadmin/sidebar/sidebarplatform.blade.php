@@ -1,80 +1,56 @@
 <style>
+.sidebar {
+    width: 220px !important;
+    background-color: #dbe7fd !important;
+    min-height: 100vh !important;
+    padding: 20px !important;
+    border-top-right-radius: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
 
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            background-color: #e0e7ff;
-            min-height: 100vh;
-            padding: 20px;
-        }
+.sidebar .logo {
+    width: 120px;
+    margin-bottom: 30px;
+}
 
-        .sidebar .logo {
-            width: 120px;
-            margin-bottom: 30px;
-        }
+.sidebar a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.3s;
+}
 
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #1a1a1a;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
+.sidebar a.active {
+    background-color: #FF9040;
+    color: white;
+    font-weight: 700;
+}
 
-        .sidebar a:hover {
-            background-color: #d1d9ff;
-        }
-
-        .sidebar a i {
-            margin-right: 10px;
-            width: 20px;
-        }
-
-        .sidebar hr {
-            border: none;
-            border-top: 3px solid #000;
-            margin: 15px 0;
-        }
-/* Tambahkan ini ke dalam tag <style> di bagian atas */
-    .sidebar a.active {
+.sidebar a:hover {
     background-color: #FF9040;
     color: white;
 }
 
-@media (max-width: 900px) {
-    .sidebar {
-        left: -250px;
-        position: fixed;
-        top: 0;
-        transition: left 0.3s;
-        z-index: 999;
-    }
-    .sidebar.active {
-        left: 0;
-    }
-    .sidebar-toggle {
-        display: block;
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 2000;
-        background: #FF9040;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        font-size: 24px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
+.sidebar a i {
+    margin-right: 10px;
+    width: 20px;
 }
-@media (min-width: 901px) {
-    .sidebar-toggle {
-        display: none;
-    }
+
+.sidebar hr {
+    border: none;
+    border-top: 3px solid #000;
+    margin: 15px 0;
+}
+
+.sidebar a.active i,
+.sidebar a:hover i {
+    color: white !important;
 }
 </style>
 
@@ -90,8 +66,10 @@
     <a href="{{ route('verifikasi.platformadmin') }}" class="{{ request()->routeIs('verifikasi.platformadmin') ? 'active' : '' }}">
         <i class="fas fa-check-circle"></i> Verification
     </a>
+    <a href="{{ route('platformadmin.theme.index') }}" class="{{ request()->routeIs('platformadmin.theme.*') ? 'active' : '' }}">
+        <i class="fas fa-paint-brush"></i> Kelola Theme
+    </a>
     <hr>
-
     <div class="marketing-tools">
         <a href="{{ route('welcome') }}">
             <span style="display: flex; align-items: center;">
@@ -101,15 +79,3 @@
         </a>
     </div>
 </div>
-
-<script>
-    // Tutup sidebar jika klik di luar sidebar pada mobile
-    document.addEventListener('click', function(e) {
-        const sidebar = document.querySelector('.sidebar');
-        const toggle = document.querySelector('.sidebar-toggle');
-        if (window.innerWidth <= 900 && sidebar && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
-            sidebar.classList.remove('active');
-        }
-    });
-</script>
-

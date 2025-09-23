@@ -307,7 +307,7 @@
 </head>
 <body>
     <div class="container">
-        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('homeadmins.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         <div class="main-content">
             <div class="header">
                 <h2 class="order-header">Order History</h2>
@@ -373,7 +373,7 @@
             const currentSearch = $('#searchInput').val().trim();
 
             // Tambahkan parameter filter ke request
-            $.get(`/homeadminS/orders/${id}`, {
+            $.get(`/homeadmins/orders/${id}`, {
                 status: currentStatus,
                 date: currentDate,
                 search: currentSearch
@@ -460,7 +460,7 @@
 
             // Kirim request ke server
             $.ajax({
-                url: '/homeadminS/orders',
+                url: '/homeadmins/orders',
                 method: 'GET',
                 data: requestData,
                 success: function(response) {
@@ -589,4 +589,4 @@
         });
     </script>
 </body>
-</html><?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/orders.blade.php ENDPATH**/ ?>
+</html><?php /**PATH C:\LINKAN_ID\resources\views/homeadmins/orders.blade.php ENDPATH**/ ?>

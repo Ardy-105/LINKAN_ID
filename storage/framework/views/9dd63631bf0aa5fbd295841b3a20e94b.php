@@ -24,7 +24,7 @@
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    background-image: url('<?php echo e($appearance && $appearance->background_color ? asset('images/background/' . $appearance->background_color) : ''); ?>');
+    background-image: url('<?php echo e(($appearance && $appearance->background_color) ? asset('storage/themes/backgrounds/' . $appearance->background_color) . '?v=' . time() : asset('images/background.png')); ?>');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -168,60 +168,60 @@
     </style>
 </head>
 <body>
-    <div class="content-wrapper">
-        <?php if($appearance->banner): ?>
-            <div class="preview-banner">
+    <div class="content-wrapper" style="background: <?php echo e(($appearance && $appearance->background_color) ? 'url(' . asset('storage/themes/backgrounds/' . $appearance->background_color) . ')' : '#fff'); ?>; background-size: cover; background-position: center;">
+        <div class="preview-banner" style="background: <?php echo e(($appearance && $appearance->banner) ? 'none' : '#fff'); ?>;">
+            <?php if($appearance && $appearance->banner): ?>
                 <img src="<?php echo e(asset('storage/' . $appearance->banner)); ?>" alt="Banner">
-            </div>
-        <?php endif; ?>
-
-        <div class="preview-profile">
-            <?php if($appearance->profile_image): ?>
-                <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile Image">
-            <?php else: ?>
-                <i class="fas fa-user"></i>
             <?php endif; ?>
         </div>
 
-        <div class="preview-name"><?php echo e($appearance->name ?? $user->name); ?></div>
-        <div class="preview-bio"><?php echo $appearance->bio; ?></div>
+        <div class="preview-profile">
+            <?php if($appearance && $appearance->profile_image): ?>
+                <img src="<?php echo e(asset('storage/' . $appearance->profile_image)); ?>" alt="Profile Image">
+            <?php else: ?>
+                <i class="fas fa-user" style="font-size:48px;color:#ccc;"></i>
+            <?php endif; ?>
+        </div>
 
-             <div class="preview-social-links" id="livePreviewSocialLinks">
-                                     <?php if($appearance && $appearance->instagram): ?>
-    <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->tiktok): ?>
-    <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->whatsapp): ?>
-    <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->linkedin): ?>
-    <a href="<?php echo e($appearance->linkedin); ?>" target="_blank"><i class="fab fa-linkedin"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->facebook): ?>
-    <a href="<?php echo e($appearance->facebook); ?>" target="_blank"><i class="fab fa-facebook"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->website): ?>
-    <a href="<?php echo e($appearance->website); ?>" target="_blank"><i class="fas fa-globe"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->twitter): ?>
-    <a href="<?php echo e($appearance->twitter); ?>" target="_blank"><i class="fab fa-twitter"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->youtube): ?>
-    <a href="<?php echo e($appearance->youtube); ?>" target="_blank"><i class="fab fa-youtube"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->telegram): ?>
-    <a href="<?php echo e($appearance->telegram); ?>" target="_blank"><i class="fab fa-telegram"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->email): ?>
-    <a href="mailto:<?php echo e($appearance->email); ?>"><i class="fas fa-envelope"></i></a>
-<?php endif; ?>
-<?php if($appearance && $appearance->discord): ?>
-    <a href="<?php echo e($appearance->discord); ?>" target="_blank"><i class="fab fa-discord"></i></a>
-<?php endif; ?>
+        <div class="preview-name" style="color: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;"><?php echo e($appearance->name ?? $user->name); ?></div>
+        <div class="preview-bio" style="color: <?php echo e($appearance->theme_color ?? '#FF9040'); ?>;"><?php echo $appearance->bio ?? ''; ?></div>
 
-                                    </div>
+        <div class="preview-social-links" id="livePreviewSocialLinks">
+            <?php if($appearance && $appearance->instagram): ?>
+                <a href="<?php echo e($appearance->instagram); ?>" target="_blank"><i class="fab fa-instagram"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->tiktok): ?>
+                <a href="<?php echo e($appearance->tiktok); ?>" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->whatsapp): ?>
+                <a href="<?php echo e($appearance->whatsapp); ?>" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->linkedin): ?>
+                <a href="<?php echo e($appearance->linkedin); ?>" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->facebook): ?>
+                <a href="<?php echo e($appearance->facebook); ?>" target="_blank"><i class="fab fa-facebook"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->website): ?>
+                <a href="<?php echo e($appearance->website); ?>" target="_blank"><i class="fas fa-globe"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->twitter): ?>
+                <a href="<?php echo e($appearance->twitter); ?>" target="_blank"><i class="fab fa-twitter"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->youtube): ?>
+                <a href="<?php echo e($appearance->youtube); ?>" target="_blank"><i class="fab fa-youtube"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->telegram): ?>
+                <a href="<?php echo e($appearance->telegram); ?>" target="_blank"><i class="fab fa-telegram"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->email): ?>
+                <a href="mailto:<?php echo e($appearance->email); ?>"><i class="fas fa-envelope"></i></a>
+            <?php endif; ?>
+            <?php if($appearance && $appearance->discord): ?>
+                <a href="<?php echo e($appearance->discord); ?>" target="_blank"><i class="fab fa-discord"></i></a>
+            <?php endif; ?>
+        </div>
+
         <?php if($products && $products->count() > 0): ?>
             <div class="preview-products">
                 <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

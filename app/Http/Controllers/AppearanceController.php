@@ -14,7 +14,8 @@ class AppearanceController extends Controller
         $user = Auth::user();
         $appearance = Appearance::where('user_id', $user->id)->first();
         $digitalProducts = \App\Models\DigitalProduct::where('user_id', $user->id)->latest()->get();
-        return view('homeadminS.appearance', compact('appearance', 'digitalProducts'));
+        $themes = \App\Models\Theme::all();
+        return view('homeadmins.appearance', compact('appearance', 'digitalProducts', 'themes'));
     }
 
 
@@ -74,18 +75,18 @@ if ($request->has('delete_profile_image') && $request->delete_profile_image == 1
         $appearance->name = $request->name;
         $appearance->bio = $request->bio;
         $appearance->theme_color = $request->theme_color;
-        $appearance->background_color = $request->background_color;
+        $appearance->background_color = $request->background_color ?? '#ffffff'; 
         $appearance->instagram = $request->instagram;
         $appearance->tiktok = $request->tiktok;
         $appearance->whatsapp = $request->whatsapp;
         $appearance->linkedin = $request->linkedin;
-$appearance->facebook = $request->facebook;
-$appearance->website = $request->website;
-$appearance->twitter = $request->twitter;
-$appearance->youtube = $request->youtube;
-$appearance->telegram = $request->telegram;
-$appearance->email = $request->email;
-$appearance->discord = $request->discord;
+        $appearance->facebook = $request->facebook;
+        $appearance->website = $request->website;
+        $appearance->twitter = $request->twitter;
+        $appearance->youtube = $request->youtube;
+        $appearance->telegram = $request->telegram;
+        $appearance->email = $request->email;
+        $appearance->discord = $request->discord;
 
         $appearance->is_active = true;
 

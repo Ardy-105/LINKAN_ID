@@ -29,7 +29,7 @@ class StatisticController extends Controller
             ->where('transactions.status', 'success')
             ->sum('transactions.total_price');
 
-        return view('homeadminS.statistic', compact(
+        return view('homeadmins.statistic', compact(
             'totalViews',
             'totalClicks',
             'totalSales',

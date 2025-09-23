@@ -530,7 +530,7 @@
 </head>
 <body>
      <div class="container">
-        <?php echo $__env->make('homeadminS.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('homeadmins.sidebar.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <div class="main-content">
             <div class="header" style="background:#fff; border-radius:14px; box-shadow:0 2px 8px rgba(24,24,24,0.06); padding:18px 24px 14px 24px; margin-bottom:32px; display:flex; align-items:center; justify-content:space-between;">

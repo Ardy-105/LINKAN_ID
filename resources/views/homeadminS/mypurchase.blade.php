@@ -149,7 +149,7 @@
 </head>
 <body>
 <div class="container">
-    @include('homeadminS.sidebar.sidebar')
+    @include('homeadmins.sidebar.sidebar')
     <div class="main-content">
         <div class="header">
             <h1>Purchased Content</h1>

@@ -22,6 +22,7 @@ class ShortlinkController extends Controller
         Shortlink::create([
             'slug' => $request->slug,
             'destination' => $request->destination,
+            'user_id' => auth()->id(),
         ]);
 
        // return back()->with('success', 'Shortlink berhasil dibuat: https://Linkan.id/' . $request->slug);
@@ -41,7 +42,9 @@ class ShortlinkController extends Controller
 
     public function index()
     {
-        $shortlinks = Shortlink::orderBy('created_at', 'desc')->paginate(5);
+        $shortlinks = Shortlink::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->paginate(5);
         return view('shortlink.create', compact('shortlinks'));
     }
 }

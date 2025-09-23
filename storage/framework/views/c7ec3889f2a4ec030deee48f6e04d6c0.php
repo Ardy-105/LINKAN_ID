@@ -152,4 +152,4 @@
         });
     </script>
 </body>
-</html> <?php /**PATH C:\LINKAN_ID\resources\views/homeadminS/payout_method_form.blade.php ENDPATH**/ ?>
+</html> <?php /**PATH C:\LINKAN_ID\resources\views/homeadmins/payout_method_form.blade.php ENDPATH**/ ?>
